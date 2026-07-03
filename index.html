@@ -1,230 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>notepad</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الرحيبة الطبي | عيادات، أطباء، صيدليات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg: #FAF8F4;
+            --fg: #1B2A1B;
+            --accent: #0E7C5F;
+            --accent-dark: #095E47;
+            --accent-light: #D6F0E5;
+            --card: #FFFFFF;
+            --border: #DDE3DD;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); }
+        h1, h2, h3 { font-family: 'Noto Kufi Arabic', sans-serif; }
+        .hero-bg { background: linear-gradient(160deg, #0E7C5F 0%, #073D2E 100%); }
+        .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .badge-clinic { background: #FDE8E8; color: #9B1C1C; }
+        .badge-doctor { background: #DBEAFE; color: #1E40AF; }
+        .badge-pharmacy { background: #D1FAE5; color: #065F46; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; items-center: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+    </style>
 </head>
-<style type="text/css">
-ol,ul{
-display:block;
-list-style-type:none;
-margin:3px;
-}
-</style><body>
-<div>&lt;!DOCTYPE html&gt;<br>
-&lt;html lang="ar" dir="rtl"&gt;<br>
-&lt;head&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;meta charset="UTF-8"&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;title&gt;&#1583;&#1604;&#1610;&#1604; &#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; &#1575;&#1604;&#1591;&#1576;&#1610; | &#1593;&#1610;&#1575;&#1583;&#1575;&#1578;&#1548; &#1571;&#1591;&#1576;&#1575;&#1569;&#1548; &#1589;&#1610;&#1583;&#1604;&#1610;&#1575;&#1578;&lt;/title&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&amp;family=IBM+Plex+Sans+Arabic:wght@400;600;700&amp;display=swap" rel="stylesheet"&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"&gt;<br>
-&nbsp;&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp; &lt;style&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :root {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --bg: #FAF8F4;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --fg: #1B2A1B;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --accent: #0E7C5F;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --accent-dark: #095E47;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --accent-light: #D6F0E5;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --card: #FFFFFF;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --border: #DDE3DD;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * { margin: 0; padding: 0; box-sizing: border-box; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; h1, h2, h3 { font-family: 'Noto Kufi Arabic', sans-serif; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .hero-bg { background: linear-gradient(160deg, #0E7C5F 0%, #073D2E 100%); }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.3s ease; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .badge-clinic { background: #FDE8E8; color: #9B1C1C; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .badge-doctor { background: #DBEAFE; color: #1E40AF; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .badge-pharmacy { background: #D1FAE5; color: #065F46; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; items-center: center; justify-content: center; z-index: 1000; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .modal-overlay.active { display: flex; }<br>
-&nbsp;&nbsp;&nbsp; &lt;/style&gt;<br>
-&lt;/head&gt;<br>
-&lt;body&gt;<br>
-<br>
-&nbsp;&nbsp;&nbsp; &lt;!-- &#1588;&#1585;&#1610;&#1591; &#1575;&#1604;&#1578;&#1606;&#1602;&#1604; --&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;nav class="bg-[#073D2E] text-white py-4 px-6 sticky top-0 z-50 shadow-md"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="max-w-7xl mx-auto flex justify-between items-center"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="#" class="flex items-center gap-3 font-bold text-lg"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;i class="fas fa-heartbeat text-amber-500"&gt;&lt;/i&gt; &#1583;&#1604;&#1610;&#1604; &#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; &#1575;&#1604;&#1591;&#1576;&#1610;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/a&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;/nav&gt;<br>
-<br>
-&nbsp;&nbsp;&nbsp; &lt;!-- &#1575;&#1604;&#1605;&#1602;&#1583;&#1605;&#1577; &#1608;&#1575;&#1604;&#1576;&#1581;&#1579; --&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;header class="hero-bg pt-20 pb-16 px-4 text-white text-center"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="max-w-3xl mx-auto"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h1 class="text-3xl sm:text-4xl font-bold mb-4"&gt;&#1575;&#1604;&#1585;&#1593;&#1575;&#1610;&#1577; &#1575;&#1604;&#1589;&#1581;&#1610;&#1577; &#1575;&#1604;&#1571;&#1602;&#1585;&#1576; &#1573;&#1604;&#1610;&#1603; &#1576;&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577;&lt;/h1&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p class="text-white/70 text-sm mb-8"&gt;&#1583;&#1604;&#1610;&#1604; &#1591;&#1576;&#1610; &#1601;&#1608;&#1585;&#1610; &#1588;&#1575;&#1605;&#1604; &#1608;&#1605;&#1581;&#1583;&#1579; &#1605;&#1581;&#1604;&#1610;&#1575;&#1611;&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="search-container flex items-center gap-3 p-2 rounded-xl max-w-xl mx-auto"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;i class="fas fa-search text-white/40 mr-2"&gt;&lt;/i&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type="text" id="searchInput" oninput="filterData()" class="bg-transparent text-white outline-none w-full py-2 placeholder-white/50 text-sm" placeholder="&#1575;&#1576;&#1581;&#1579; &#1576;&#1575;&#1587;&#1605; &#1575;&#1604;&#1583;&#1603;&#1578;&#1608;&#1585;&#1548; &#1575;&#1604;&#1589;&#1610;&#1583;&#1604;&#1610;&#1577;&#1548; &#1575;&#1604;&#1575;&#1582;&#1578;&#1589;&#1575;&#1589;&#1548; &#1571;&#1608; &#1575;&#1604;&#1593;&#1606;&#1608;&#1575;&#1606;..."&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="grid grid-cols-3 gap-4 max-w-md mx-auto mt-8 text-sm"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="bg-white/5 p-3 rounded-lg border border-white/10"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-xl font-bold count-doctors"&gt;0&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-xs text-white/60"&gt;&#1571;&#1591;&#1576;&#1575;&#1569;&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="bg-white/5 p-3 rounded-lg border border-white/10"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-xl font-bold count-pharmacies"&gt;0&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-xs text-white/60"&gt;&#1589;&#1610;&#1583;&#1604;&#1610;&#1575;&#1578;&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="bg-white/5 p-3 rounded-lg border border-white/10"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-xl font-bold count-clinics"&gt;0&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-xs text-white/60"&gt;&#1605;&#1585;&#1575;&#1603;&#1586; &#1591;&#1576;&#1610;&#1577;&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;/header&gt;<br>
-<br>
-&nbsp;&nbsp;&nbsp; &lt;!-- &#1575;&#1604;&#1593;&#1585;&#1590; &#1575;&#1604;&#1585;&#1574;&#1610;&#1587;&#1610; --&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;main class="max-w-7xl mx-auto px-4 py-12"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div id="directoryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- &#1587;&#1610;&#1578;&#1605; &#1581;&#1602;&#1606; &#1575;&#1604;&#1603;&#1585;&#1608;&#1578; &#1607;&#1606;&#1575; &#1576;&#1608;&#1575;&#1587;&#1591;&#1577; &#1575;&#1604;&#1580;&#1575;&#1601;&#1575;&#1587;&#1603;&#1585;&#1576;&#1578; --&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div id="noResults" class="hidden text-center py-12 text-gray-500 text-lg"&gt;&#1604;&#1605; &#1606;&#1580;&#1583; &#1606;&#1578;&#1575;&#1574;&#1580; &#1578;&#1591;&#1575;&#1576;&#1602; &#1576;&#1581;&#1579;&#1603;.&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;/main&gt;<br>
-<br>
-&nbsp;&nbsp;&nbsp; &lt;!-- &#1606;&#1575;&#1601;&#1584;&#1577; &#1578;&#1601;&#1575;&#1589;&#1610;&#1604; &#1575;&#1604;&#1591;&#1576;&#1610;&#1576;/&#1575;&#1604;&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; --&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;div id="detailsModal" class="modal-overlay" onclick="closeModal()"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="bg-white rounded-2xl p-6 max-w-md w-full relative m-4" onclick="event.stopPropagation()"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600"&gt;&lt;i class="fas fa-times text-lg"&gt;&lt;/i&gt;&lt;/button&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div id="modalBody"&gt;&lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-<br>
-&nbsp;&nbsp;&nbsp; &lt;script&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // &#1605;&#1589;&#1601;&#1608;&#1601;&#1577; &#1575;&#1604;&#1576;&#1610;&#1575;&#1606;&#1575;&#1578; &#1575;&#1604;&#1590;&#1582;&#1605;&#1577; &#1608;&#1575;&#1604;&#1588;&#1575;&#1605;&#1604;&#1577; (18 &#1583;&#1603;&#1578;&#1608;&#1585; + 15 &#1589;&#1610;&#1583;&#1604;&#1610;&#1577; + 2 &#1605;&#1585;&#1603;&#1586;)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const medicalData = [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // === &#1575;&#1604;&#1571;&#1591;&#1576;&#1575;&#1569; (18 &#1583;&#1603;&#1578;&#1608;&#1585;) ===<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 1, name: "&#1583;. &#1605;&#1581;&#1605;&#1583; &#1593;&#1604;&#1610; &#1580;&#1608;&#1585;", type: "doctor", specialty: "&#1580;&#1585;&#1575;&#1581;&#1577; &#1593;&#1575;&#1605;&#1577; &#1608;&#1578;&#1606;&#1592;&#1610;&#1585;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1603;&#1608;&#1593; &#1575;&#1604;&#1590;&#1605;&#1610;&#1585;", phone: "098568456", hours: "10:00 &#1589; - 2:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 2, name: "&#1583;. &#1605;&#1581;&#1605;&#1583; &#1601;&#1575;&#1610;&#1586; &#1591;&#1581;&#1591;&#1608;&#1581;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1580;&#1604;&#1583;&#1610;&#1577; &#1608;&#1586;&#1607;&#1585;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1576;&#1580;&#1575;&#1606;&#1576; &#1580;&#1575;&#1605;&#1593; &#1606;&#1608;&#1585;", phone: "085236552", hours: "4:00 &#1605; - 8:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 3, name: "&#1583;. &#1605;&#1593;&#1578;&#1586; &#1573;&#1587;&#1605;&#1575;&#1593;&#1610;&#1604;", type: "doctor", specialty: "&#1580;&#1585;&#1575;&#1581;&#1577; &#1608;&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1571;&#1587;&#1606;&#1575;&#1606;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1583;&#1582;&#1604;&#1577; &#1587;&#1604;&#1605;&#1609;", phone: "098535842", hours: "11:00 &#1589; - 6:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 4, name: "&#1583;. &#1571;&#1581;&#1605;&#1583; &#1575;&#1604;&#1588;&#1610;&#1582;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1571;&#1591;&#1601;&#1575;&#1604; &#1608;&#1606;&#1605;&#1608;&#1607;&#1605;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1588;&#1575;&#1585;&#1593; &#1575;&#1604;&#1593;&#1575;&#1605;", phone: "0933111222", hours: "9:00 &#1589; - 1:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 5, name: "&#1583;. &#1585;&#1575;&#1606;&#1610;&#1575; &#1575;&#1604;&#1581;&#1587;&#1610;&#1606;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1606;&#1587;&#1575;&#1569; &#1608;&#1575;&#1604;&#1578;&#1608;&#1604;&#1610;&#1583; &#1608;&#1580;&#1585;&#1575;&#1581;&#1578;&#1607;&#1575;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1581;&#1610; &#1575;&#1604;&#1594;&#1585;&#1576;&#1610;", phone: "0944555666", hours: "2:00 &#1605; - 6:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 6, name: "&#1583;. &#1576;&#1575;&#1587;&#1604; &#1575;&#1604;&#1582;&#1591;&#1610;&#1576;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1602;&#1604;&#1576; &#1608;&#1575;&#1604;&#1571;&#1608;&#1593;&#1610;&#1577; &#1575;&#1604;&#1583;&#1605;&#1608;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1587;&#1575;&#1581;&#1577; &#1575;&#1604;&#1605;&#1585;&#1603;&#1586;", phone: "0955777888", hours: "3:00 &#1605; - 7:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 7, name: "&#1583;. &#1610;&#1608;&#1587;&#1601; &#1575;&#1604;&#1587;&#1610;&#1583;", type: "doctor", specialty: "&#1580;&#1585;&#1575;&#1581;&#1577; &#1575;&#1604;&#1593;&#1592;&#1575;&#1605; &#1608;&#1575;&#1604;&#1605;&#1601;&#1575;&#1589;&#1604;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1602;&#1585;&#1576; &#1605;&#1606; &#1575;&#1604;&#1605;&#1587;&#1578;&#1608;&#1589;&#1601;", phone: "0966888999", hours: "12:00 &#1592; - 5:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 8, name: "&#1583;. &#1601;&#1575;&#1591;&#1605;&#1577; &#1575;&#1604;&#1586;&#1607;&#1585;&#1575;&#1569;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1593;&#1610;&#1606; &#1608;&#1580;&#1585;&#1575;&#1581;&#1578;&#1607;&#1575;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1580;&#1575;&#1583;&#1577; &#1575;&#1604;&#1585;&#1574;&#1610;&#1587;&#1610;&#1577;", phone: "0911223344", hours: "10:00 &#1589; - 3:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 9, name: "&#1583;. &#1587;&#1575;&#1605;&#1585; &#1575;&#1604;&#1587;&#1610;&#1583; &#1571;&#1581;&#1605;&#1583;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1571;&#1584;&#1606; &#1608;&#1575;&#1604;&#1571;&#1606;&#1601; &#1608;&#1575;&#1604;&#1581;&#1606;&#1580;&#1585;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1576;&#1580;&#1575;&#1606;&#1576; &#1605;&#1602;&#1587;&#1605; &#1575;&#1604;&#1607;&#1575;&#1578;&#1601;", phone: "0922334455", hours: "4:00 &#1605; - 8:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 10, name: "&#1583;. &#1582;&#1575;&#1604;&#1583; &#1575;&#1604;&#1593;&#1576;&#1583; &#1575;&#1604;&#1604;&#1607;", type: "doctor", specialty: "&#1575;&#1604;&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1576;&#1575;&#1591;&#1606;&#1610;&#1577; &#1608;&#1575;&#1604;&#1607;&#1590;&#1605;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1581;&#1575;&#1585;&#1577; &#1575;&#1604;&#1602;&#1604;&#1593;&#1577;", phone: "0988776655", hours: "9:00 &#1589; - 2:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 11, name: "&#1583;. &#1605;&#1606;&#1609; &#1575;&#1604;&#1603;&#1585;&#1583;&#1610;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1594;&#1583;&#1583; &#1575;&#1604;&#1589;&#1605; &#1608;&#1575;&#1604;&#1587;&#1603;&#1585;&#1610;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1591;&#1585;&#1610;&#1602; &#1583;&#1605;&#1588;&#1602;", phone: "0932456789", hours: "11:00 &#1589; - 4:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 12, name: "&#1583;. &#1593;&#1604;&#1575;&#1569; &#1575;&#1604;&#1583;&#1610;&#1606; &#1578;&#1585;&#1603;&#1605;&#1575;&#1606;", type: "doctor", specialty: "&#1580;&#1585;&#1575;&#1581;&#1577; &#1575;&#1604;&#1605;&#1587;&#1575;&#1604;&#1603; &#1575;&#1604;&#1576;&#1608;&#1604;&#1610;&#1577; &#1608;&#1575;&#1604;&#1578;&#1606;&#1575;&#1587;&#1604;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1587;&#1608;&#1602; &#1575;&#1604;&#1571;&#1591;&#1576;&#1575;&#1569;", phone: "0947123456", hours: "1:00 &#1605; - 6:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 13, name: "&#1583;. &#1606;&#1575;&#1583;&#1610;&#1575; &#1605;&#1585;&#1575;&#1583;", type: "doctor", specialty: "&#1591;&#1576; &#1575;&#1604;&#1571;&#1591;&#1601;&#1575;&#1604; &#1608;&#1575;&#1604;&#1585;&#1590;&#1593;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1602;&#1585;&#1576; &#1581;&#1583;&#1610;&#1602;&#1577; &#1575;&#1604;&#1576;&#1604;&#1583;&#1610;&#1577;", phone: "0956321478", hours: "10:00 &#1589; - 2:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 14, name: "&#1583;. &#1593;&#1605;&#1575;&#1585; &#1575;&#1604;&#1581;&#1575;&#1601;&#1592;", type: "doctor", specialty: "&#1575;&#1604;&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1593;&#1589;&#1576;&#1610;&#1577; &#1608;&#1580;&#1585;&#1575;&#1581;&#1578;&#1607;&#1575;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1588;&#1575;&#1585;&#1593; &#1575;&#1604;&#1593;&#1585;&#1610;&#1590;", phone: "0963147852", hours: "3:00 &#1605; - 7:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 15, name: "&#1583;. &#1607;&#1575;&#1604;&#1577; &#1575;&#1604;&#1591;&#1608;&#1610;&#1604;", type: "doctor", specialty: "&#1605;&#1593;&#1575;&#1604;&#1580;&#1577; &#1578;&#1602;&#1608;&#1610;&#1605; &#1575;&#1604;&#1571;&#1587;&#1606;&#1575;&#1606; &#1608;&#1575;&#1604;&#1601;&#1603;&#1610;&#1606;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1576;&#1585;&#1580; &#1575;&#1604;&#1571;&#1591;&#1576;&#1575;&#1569; &#1575;&#1604;&#1580;&#1583;&#1610;&#1583;", phone: "0974258163", hours: "2:00 &#1605; - 8:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 16, name: "&#1583;. &#1605;&#1575;&#1586;&#1606; &#1602;&#1575;&#1587;&#1605;", type: "doctor", specialty: "&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1603;&#1604;&#1609; &#1608;&#1590;&#1594;&#1591; &#1575;&#1604;&#1583;&#1605;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1576;&#1580;&#1575;&#1606;&#1576; &#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1588;&#1601;&#1575;&#1569;", phone: "0981593572", hours: "10:00 &#1589; - 4:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 17, name: "&#1583;. &#1585;&#1610;&#1605; &#1605;&#1589;&#1591;&#1601;&#1609;", type: "doctor", specialty: "&#1575;&#1604;&#1591;&#1576; &#1575;&#1604;&#1606;&#1601;&#1587;&#1610; &#1608;&#1578;&#1593;&#1583;&#1610;&#1604; &#1575;&#1604;&#1587;&#1604;&#1608;&#1603;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1581;&#1610; &#1575;&#1604;&#1605;&#1583;&#1575;&#1585;&#1587;", phone: "0991472583", hours: "12:00 &#1592; - 5:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 18, name: "&#1583;. &#1581;&#1605;&#1586;&#1577; &#1601;&#1610;&#1575;&#1590;", type: "doctor", specialty: "&#1575;&#1604;&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1589;&#1583;&#1585;&#1610;&#1577; &#1608;&#1575;&#1604;&#1580;&#1607;&#1575;&#1586; &#1575;&#1604;&#1578;&#1606;&#1601;&#1587;&#1610;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1602;&#1585;&#1576; &#1601;&#1585;&#1606; &#1575;&#1604;&#1576;&#1604;&#1583;&#1610;&#1577;", phone: "0935789123", hours: "4:00 &#1605; - 8:00 &#1605;" },<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // === &#1575;&#1604;&#1589;&#1610;&#1583;&#1604;&#1610;&#1575;&#1578; (15 &#1589;&#1610;&#1583;&#1604;&#1610;&#1577;) ===<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 101, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1588;&#1601;&#1575;&#1569;", type: "pharmacy", specialty: "&#1578;&#1571;&#1605;&#1610;&#1606; &#1603;&#1575;&#1601;&#1577; &#1575;&#1604;&#1571;&#1583;&#1608;&#1610;&#1577; &#1608;&#1576;&#1583;&#1575;&#1574;&#1604;&#1607;&#1575;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1588;&#1575;&#1585;&#1593; &#1575;&#1604;&#1593;&#1575;&#1605; &#1575;&#1604;&#1585;&#1574;&#1610;&#1587;&#1610;", phone: "0117820100", hours: "24 &#1587;&#1575;&#1593;&#1577; (&#1605;&#1606;&#1575;&#1608;&#1576;&#1577;)" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 102, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1606;&#1608;&#1585;", type: "pharmacy", specialty: "&#1571;&#1583;&#1608;&#1610;&#1577; &#1608;&#1605;&#1587;&#1578;&#1581;&#1590;&#1585;&#1575;&#1578; &#1578;&#1580;&#1605;&#1610;&#1604; &#1604;&#1604;&#1571;&#1591;&#1601;&#1575;&#1604;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1576;&#1580;&#1575;&#1606;&#1576; &#1580;&#1575;&#1605;&#1593; &#1606;&#1608;&#1585;", phone: "0117820101", hours: "8:00 &#1589; - 11:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 103, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1587;&#1604;&#1575;&#1605;&#1577;", type: "pharmacy", specialty: "&#1578;&#1571;&#1605;&#1610;&#1606; &#1581;&#1604;&#1610;&#1576; &#1575;&#1604;&#1571;&#1591;&#1601;&#1575;&#1604; &#1608;&#1575;&#1604;&#1605;&#1603;&#1605;&#1604;&#1575;&#1578;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1603;&#1608;&#1593; &#1575;&#1604;&#1590;&#1605;&#1610;&#1585;", phone: "0117820102", hours: "9:00 &#1589; - 12:00 &#1604;&#1610;&#1604;&#1575;&#1611;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 104, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1585;&#1581;&#1605;&#1577;", type: "pharmacy", specialty: "&#1571;&#1583;&#1608;&#1610;&#1577; &#1575;&#1604;&#1571;&#1605;&#1585;&#1575;&#1590; &#1575;&#1604;&#1605;&#1586;&#1605;&#1606;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1581;&#1610; &#1575;&#1604;&#1588;&#1605;&#1575;&#1604;&#1610;", phone: "0117820103", hours: "8:00 &#1589; - 10:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 105, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1605;&#1585;&#1603;&#1586;", type: "pharmacy", specialty: "&#1605;&#1587;&#1578;&#1604;&#1586;&#1605;&#1575;&#1578; &#1591;&#1576;&#1610;&#1577; &#1608;&#1573;&#1587;&#1593;&#1575;&#1601;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1587;&#1575;&#1581;&#1577; &#1575;&#1604;&#1605;&#1585;&#1603;&#1586; &#1575;&#1604;&#1591;&#1576;&#1610;", phone: "0117820104", hours: "24 &#1587;&#1575;&#1593;&#1577; &#1605;&#1578;&#1608;&#1575;&#1589;&#1604;&#1577;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 106, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1581;&#1603;&#1605;&#1577;", type: "pharmacy", specialty: "&#1571;&#1583;&#1608;&#1610;&#1577; &#1605;&#1581;&#1604;&#1610;&#1577; &#1608;&#1571;&#1580;&#1606;&#1576;&#1610;&#1577; &#1605;&#1608;&#1579;&#1608;&#1602;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1591;&#1585;&#1610;&#1602; &#1575;&#1604;&#1605;&#1587;&#1578;&#1608;&#1589;&#1601;", phone: "0117820105", hours: "8:30 &#1589; - 11:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 107, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1603;&#1585;&#1605;", type: "pharmacy", specialty: "&#1585;&#1593;&#1575;&#1610;&#1577; &#1608;&#1593;&#1606;&#1575;&#1610;&#1577; &#1576;&#1575;&#1604;&#1576;&#1588;&#1585;&#1577; &#1608;&#1575;&#1604;&#1591;&#1601;&#1604;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1583;&#1582;&#1604;&#1577; &#1587;&#1604;&#1605;&#1609;", phone: "0117820106", hours: "9:00 &#1589; - 10:30 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 108, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1576;&#1606; &#1587;&#1610;&#1606;&#1575;", type: "pharmacy", specialty: "&#1578;&#1571;&#1605;&#1610;&#1606; &#1571;&#1583;&#1608;&#1610;&#1577; &#1575;&#1604;&#1590;&#1594;&#1591; &#1608;&#1575;&#1604;&#1587;&#1603;&#1585;&#1610;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1581;&#1610; &#1575;&#1604;&#1578;&#1590;&#1575;&#1605;&#1606;", phone: "0117820107", hours: "8:00 &#1589; - 11:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 109, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1602;&#1583;&#1587;", type: "pharmacy", specialty: "&#1603;&#1575;&#1601;&#1577; &#1575;&#1604;&#1605;&#1587;&#1578;&#1581;&#1590;&#1585;&#1575;&#1578; &#1575;&#1604;&#1589;&#1610;&#1583;&#1604;&#1575;&#1606;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1581;&#1575;&#1585;&#1577; &#1575;&#1604;&#1602;&#1604;&#1593;&#1577;", phone: "0117820108", hours: "9:00 &#1589; - 12:00 &#1604;&#1610;&#1604;&#1575;&#1611;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 110, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1593;&#1575;&#1601;&#1610;&#1577;", type: "pharmacy", specialty: "&#1571;&#1583;&#1608;&#1610;&#1577; &#1608;&#1601;&#1610;&#1578;&#1575;&#1605;&#1610;&#1606;&#1575;&#1578; &#1608;&#1605;&#1603;&#1605;&#1604;&#1575;&#1578; &#1594;&#1584;&#1575;&#1574;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1588;&#1575;&#1585;&#1593; &#1575;&#1604;&#1593;&#1585;&#1610;&#1590;", phone: "0117820109", hours: "8:00 &#1589; - 10:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 111, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1573;&#1610;&#1605;&#1575;&#1606;", type: "pharmacy", specialty: "&#1578;&#1571;&#1605;&#1610;&#1606; &#1581;&#1604;&#1610;&#1576; &#1608;&#1605;&#1587;&#1578;&#1604;&#1586;&#1605;&#1575;&#1578; &#1573;&#1587;&#1593;&#1575;&#1601;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1602;&#1585;&#1576; &#1605;&#1587;&#1580;&#1583; &#1575;&#1604;&#1607;&#1583;&#1575;&#1610;&#1577;", phone: "0117820110", hours: "9:30 &#1589; - 11:30 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 112, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1605;&#1587;&#1578;&#1602;&#1576;&#1604;", type: "pharmacy", specialty: "&#1571;&#1580;&#1607;&#1586;&#1577; &#1602;&#1610;&#1575;&#1587; &#1575;&#1604;&#1590;&#1594;&#1591; &#1608;&#1575;&#1604;&#1587;&#1603;&#1585;&#1610;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1591;&#1585;&#1610;&#1602; &#1575;&#1604;&#1605;&#1583;&#1575;&#1585;&#1587;", phone: "0117820111", hours: "8:00 &#1589; - 11:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 113, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1585;&#1580;&#1575;&#1569;", type: "pharmacy", specialty: "&#1582;&#1583;&#1605;&#1575;&#1578; &#1589;&#1610;&#1583;&#1604;&#1575;&#1606;&#1610;&#1577; &#1605;&#1578;&#1603;&#1575;&#1605;&#1604;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1581;&#1610; &#1575;&#1604;&#1594;&#1585;&#1576;&#1610;", phone: "0117820112", hours: "9:00 &#1589; - 10:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 114, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1581;&#1610;&#1575;&#1577;", type: "pharmacy", specialty: "&#1571;&#1583;&#1608;&#1610;&#1577; &#1593;&#1575;&#1605;&#1577; &#1608;&#1582;&#1604;&#1591;&#1575;&#1578; &#1580;&#1604;&#1583;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1587;&#1575;&#1581;&#1577; &#1575;&#1604;&#1587;&#1608;&#1602;", phone: "0117820113", hours: "8:30 &#1589; - 11:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 115, name: "&#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1591;&#1610;&#1576;&#1577;", type: "pharmacy", specialty: "&#1578;&#1571;&#1605;&#1610;&#1606; &#1603;&#1575;&#1601;&#1577; &#1571;&#1606;&#1608;&#1575;&#1593; &#1575;&#1604;&#1604;&#1602;&#1575;&#1581;&#1575;&#1578; &#1608;&#1575;&#1604;&#1571;&#1605;&#1589;&#1575;&#1604;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1576;&#1580;&#1575;&#1606;&#1576; &#1583;&#1608;&#1575;&#1585; &#1575;&#1604;&#1588;&#1607;&#1583;&#1575;&#1569;", phone: "0117820114", hours: "24 &#1587;&#1575;&#1593;&#1577; &#1605;&#1606;&#1575;&#1608;&#1576;&#1577;" },<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // === &#1575;&#1604;&#1605;&#1585;&#1575;&#1603;&#1586; &#1575;&#1604;&#1591;&#1576;&#1610;&#1577; (&#1605;&#1585;&#1603;&#1586;&#1610;&#1606; 2) ===<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 201, name: "&#1605;&#1587;&#1578;&#1608;&#1589;&#1601; &#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; &#1575;&#1604;&#1591;&#1576;&#1610; &#1575;&#1604;&#1593;&#1575;&#1605;", type: "clinic", specialty: "&#1585;&#1593;&#1575;&#1610;&#1577; &#1593;&#1575;&#1605;&#1577;&#1548; &#1573;&#1587;&#1593;&#1575;&#1601;&#1575;&#1578;&#1548; &#1604;&#1602;&#1575;&#1581;&#1575;&#1578; &#1571;&#1591;&#1601;&#1575;&#1604; &#1588;&#1604;&#1604; &#1608;&#1581;&#1589;&#1576;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1575;&#1604;&#1588;&#1575;&#1585;&#1593; &#1575;&#1604;&#1585;&#1574;&#1610;&#1587;&#1610; - &#1602;&#1585;&#1576; &#1575;&#1604;&#1605;&#1582;&#1601;&#1585;", phone: "0117824444", hours: "8:00 &#1589; - 4:00 &#1605;" },<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; { id: 202, name: "&#1605;&#1585;&#1603;&#1586; &#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; &#1575;&#1604;&#1578;&#1582;&#1589;&#1589;&#1610; &#1575;&#1604;&#1582;&#1610;&#1585;&#1610;", type: "clinic", specialty: "&#1605;&#1593;&#1575;&#1610;&#1583;&#1575;&#1578; &#1575;&#1582;&#1578;&#1589;&#1575;&#1589;&#1610;&#1577;&#1548; &#1593;&#1610;&#1575;&#1583;&#1577; &#1587;&#1606;&#1610;&#1577;&#1548; &#1578;&#1582;&#1591;&#1610;&#1591; &#1602;&#1604;&#1576;&#1548; &#1571;&#1588;&#1593;&#1577; &#1578;&#1589;&#1608;&#1610;&#1585;&#1610;&#1577;", address: "&#1575;&#1604;&#1585;&#1581;&#1610;&#1576;&#1577; - &#1608;&#1587;&#1591; &#1575;&#1604;&#1576;&#1604;&#1583; - &#1587;&#1575;&#1581;&#1577; &#1575;&#1604;&#1605;&#1585;&#1603;&#1586;", phone: "0117829999", hours: "9:00 &#1589; - 9:00 &#1605;" }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ];<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // &#1583;&#1575;&#1604;&#1577; &#1604;&#1593;&#1585;&#1590; &#1608;&#1581;&#1602;&#1606; &#1575;&#1604;&#1603;&#1585;&#1608;&#1578; &#1601;&#1610; &#1575;&#1604;&#1608;&#1575;&#1580;&#1607;&#1577;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; function renderDirectory(data) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const grid = document.getElementById('directoryGrid');<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; grid.innerHTML = '';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data.forEach(item =&gt; {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; let badgeClass = '';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; let badgeText = '';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; let icon = '';<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (item.type === 'doctor') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; badgeClass = 'badge-doctor';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; badgeText = '&#1591;&#1576;&#1610;&#1576; &#1578;&#1582;&#1589;&#1589;&#1610;';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; icon = 'fa-user-md text-blue-600';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if (item.type === 'pharmacy') {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; badgeClass = 'badge-pharmacy';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; badgeText = '&#1589;&#1610;&#1583;&#1604;&#1610;&#1577;';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; icon = 'fa-capsules text-emerald-600';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; badgeClass = 'badge-clinic';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; badgeText = '&#1605;&#1585;&#1603;&#1586; &#1591;&#1576;&#1610;';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; icon = 'fa-hospital text-red-600';<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; grid.innerHTML += `<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="card p-5 cursor-pointer flex flex-col justify-between" onclick="openModal(${item.id})"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="flex justify-between items-center mb-3"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;span class="badge ${badgeClass} text-xs px-2.5 py-1 rounded-full font-semibold"&gt;${badgeText}&lt;/span&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;i class="fas ${icon} text-lg"&gt;&lt;/i&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h3 class="text-lg font-bold text-gray-800 mb-1"&gt;${item.name}&lt;/h3&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p class="text-xs text-emerald-700 font-medium mb-4"&gt;${item.specialty}&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p class="text-xs text-gray-500 mb-1"&gt;&lt;i class="fas fa-map-marker-alt text-gray-400 ml-1"&gt;&lt;/i&gt; ${item.address}&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;button class="w-full mt-4 bg-gray-50 hover:bg-emerald-50 border py-2 rounded-xl text-xs font-semibold text-gray-600 transition-colors"&gt;&#1593;&#1585;&#1590; &#1603;&#1575;&#1605;&#1604; &#1575;&#1604;&#1578;&#1601;&#1575;&#1589;&#1610;&#1604;&lt;/button&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // &#1578;&#1581;&#1583;&#1610;&#1579; &#1573;&#1581;&#1589;&#1575;&#1574;&#1610;&#1575;&#1578; &#1575;&#1604;&#1593;&#1583;&#1575;&#1583;&#1575;&#1578; &#1601;&#1608;&#1602;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; function updateStats() {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const docs = medicalData.filter(item =&gt; item.type === 'doctor').length;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const pharms = medicalData.filter(item =&gt; item.type === 'pharmacy').length;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const clinics = medicalData.filter(item =&gt; item.type === 'clinic').length;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.querySelector('.count-doctors').innerText = docs;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.querySelector('.count-pharmacies').innerText = pharms;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.querySelector('.count-clinics').innerText = clinics;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // &#1583;&#1575;&#1604;&#1577; &#1575;&#1604;&#1601;&#1604;&#1578;&#1585;&#1577; &#1608;&#1575;&#1604;&#1576;&#1581;&#1579; &#1575;&#1604;&#1601;&#1608;&#1585;&#1610; &#1575;&#1604;&#1601;&#1593;&#1575;&#1604;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; function filterData() {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const q = document.getElementById('searchInput').value.toLowerCase().trim();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const filtered = medicalData.filter(item =&gt; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; item.name.toLowerCase().includes(q) || <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; item.specialty.toLowerCase().includes(q) || <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; item.address.toLowerCase().includes(q)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; renderDirectory(filtered);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.getElementById('noResults').classList.toggle('hidden', filtered.length &gt; 0);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // &#1583;&#1575;&#1604;&#1577; &#1601;&#1578;&#1581; &#1575;&#1604;&#1606;&#1575;&#1601;&#1584;&#1577; &#1575;&#1604;&#1605;&#1606;&#1576;&#1579;&#1602;&#1577; &#1604;&#1585;&#1572;&#1610;&#1577; &#1575;&#1604;&#1578;&#1601;&#1575;&#1589;&#1610;&#1604;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; function openModal(id) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const item = medicalData.find(d =&gt; d.id === id);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!item) return;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.getElementById('modalBody').innerHTML = `<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="text-center pb-4 border-b"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;h3 class="text-xl font-bold text-gray-900"&gt;${item.name}&lt;/h3&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p class="text-sm text-emerald-700 font-medium mt-1"&gt;${item.specialty}&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/div&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="py-5 space-y-4 text-sm text-gray-700"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;strong class="text-gray-900"&gt;&#128205; &#1575;&#1604;&#1593;&#1606;&#1608;&#1575;&#1606; &#1608;&#1575;&#1604;&#1578;&#1608;&#1575;&#1580;&#1583;:&lt;/strong&gt; ${item.address}&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;p&gt;&lt;strong class="text-gray-900"&gt;&#9200; &#1571;&#1608;&#1602;&#1575;&#1578; &#1575;&#1604;&#1583;&#1608;&#1575;&#1605;:&lt;/strong&gt; ${item.hours}&lt;/p&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 flex justify-between items-center mt-3"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;span class="font-bold text-emerald-900"&gt;&#128222; &#1585;&#1602;&#1605; &#1575;&#1604;&#1578;&#1608;&#1575;&#1589;&#1604;: ${item.phone}&lt;/span&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="tel:${item.phone}" cl</div>
+<body>
+
+    <!-- شريط التنقل -->
+    <nav class="bg-[#073D2E] text-white py-4 px-6 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 font-bold text-lg">
+                <i class="fas fa-heartbeat text-amber-500"></i> دليل الرحيبة الطبي
+            </a>
+        </div>
+    </nav>
+
+    <!-- المقدمة والبحث -->
+    <header class="hero-bg pt-20 pb-16 px-4 text-white text-center">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-4">الرعاية الصحية الأقرب إليك بالرحيبة</h1>
+            <p class="text-white/70 text-sm mb-8">دليل طبي فوري شامل ومحدث محلياً</p>
+            
+            <div class="search-container flex items-center gap-3 p-2 rounded-xl max-w-xl mx-auto">
+                <i class="fas fa-search text-white/40 mr-2"></i>
+                <input type="text" id="searchInput" oninput="filterData()" class="bg-transparent text-white outline-none w-full py-2 placeholder-white/50 text-sm" placeholder="ابحث باسم الدكتور، الصيدلية، الاختصاص، أو العنوان...">
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 max-w-md mx-auto mt-8 text-sm">
+                <div class="bg-white/5 p-3 rounded-lg border border-white/10">
+                    <div class="text-xl font-bold count-doctors">0</div>
+                    <div class="text-xs text-white/60">أطباء</div>
+                </div>
+                <div class="bg-white/5 p-3 rounded-lg border border-white/10">
+                    <div class="text-xl font-bold count-pharmacies">0</div>
+                    <div class="text-xs text-white/60">صيدليات</div>
+                </div>
+                <div class="bg-white/5 p-3 rounded-lg border border-white/10">
+                    <div class="text-xl font-bold count-clinics">0</div>
+                    <div class="text-xs text-white/60">مراكز طبية</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- العرض الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div id="directoryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- سيتم حقن الكروت هنا بواسطة الجافاسكربت -->
+        </div>
+        <div id="noResults" class="hidden text-center py-12 text-gray-500 text-lg">لم نجد نتائج تطابق بحثك.</div>
+    </main>
+
+    <!-- نافذة تفاصيل الطبيب/الصيدلية -->
+    <div id="detailsModal" class="modal-overlay" onclick="closeModal()">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full relative m-4" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // مصفوفة البيانات الضخمة والشاملة (18 دكتور + 15 صيدلية + 2 مركز)
+        const medicalData = [
+            // === الأطباء (18 دكتور) ===
+            { id: 1, name: "د. محمد علي جور", type: "doctor", specialty: "جراحة عامة وتنظيرية", address: "الرحيبة - كوع الضمير", phone: "098568456", hours: "10:00 ص - 2:00 م" },
+            { id: 2, name: "د. محمد فايز طحطوح", type: "doctor", specialty: "أمراض جلدية وزهرة", address: "الرحيبة - بجانب جامع نور", phone: "085236552", hours: "4:00 م - 8:00 م" },
+            { id: 3, name: "د. معتز إسماعيل", type: "doctor", specialty: "جراحة وأمراض الأسنان", address: "الرحيبة - دخلة سلمى", phone: "098535842", hours: "11:00 ص - 6:00 م" },
+            { id: 4, name: "د. أحمد الشيخ", type: "doctor", specialty: "أمراض الأطفال ونموهم", address: "الرحيبة - الشارع العام", phone: "0933111222", hours: "9:00 ص - 1:00 م" },
+            { id: 5, name: "د. رانيا الحسين", type: "doctor", specialty: "أمراض النساء والتوليد وجراحتها", address: "الرحيبة - الحي الغربي", phone: "0944555666", hours: "2:00 م - 6:00 م" },
+            { id: 6, name: "د. باسل الخطيب", type: "doctor", specialty: "أمراض القلب والأوعية الدموية", address: "الرحيبة - ساحة المركز", phone: "0955777888", hours: "3:00 م - 7:00 م" },
+            { id: 7, name: "د. يوسف السيد", type: "doctor", specialty: "جراحة العظام والمفاصل", address: "الرحيبة - القرب من المستوصف", phone: "0966888999", hours: "12:00 ظ - 5:00 م" },
+            { id: 8, name: "د. فاطمة الزهراء", type: "doctor", specialty: "أمراض العين وجراحتها", address: "الرحيبة - الجادة الرئيسية", phone: "0911223344", hours: "10:00 ص - 3:00 م" },
+            { id: 9, name: "د. سامر السيد أحمد", type: "doctor", specialty: "أمراض الأذن والأنف والحنجرة", address: "الرحيبة - بجانب مقسم الهاتف", phone: "0922334455", hours: "4:00 م - 8:00 م" },
+            { id: 10, name: "د. خالد العبد الله", type: "doctor", specialty: "الأمراض الباطنية والهضمية", address: "الرحيبة - حارة القلعة", phone: "0988776655", hours: "9:00 ص - 2:00 م" },
+            { id: 11, name: "د. منى الكردي", type: "doctor", specialty: "أمراض الغدد الصم والسكري", address: "الرحيبة - طريق دمشق", phone: "0932456789", hours: "11:00 ص - 4:00 م" },
+            { id: 12, name: "د. علاء الدين تركمان", type: "doctor", specialty: "جراحة المسالك البولية والتناسلية", address: "الرحيبة - سوق الأطباء", phone: "0947123456", hours: "1:00 م - 6:00 م" },
+            { id: 13, name: "د. ناديا مراد", type: "doctor", specialty: "طب الأطفال والرضع", address: "الرحيبة - قرب حديقة البلدية", phone: "0956321478", hours: "10:00 ص - 2:00 م" },
+            { id: 14, name: "د. عمار الحافظ", type: "doctor", specialty: "الأمراض العصبية وجراحتها", address: "الرحيبة - الشارع العريض", phone: "0963147852", hours: "3:00 م - 7:00 م" },
+            { id: 15, name: "د. هالة الطويل", type: "doctor", specialty: "معالجة تقويم الأسنان والفكين", address: "الرحيبة - برج الأطباء الجديد", phone: "0974258163", hours: "2:00 م - 8:00 م" },
+            { id: 16, name: "د. مازن قاسم", type: "doctor", specialty: "أمراض الكلى وضغط الدم", address: "الرحيبة - بجانب صيدلية الشفاء", phone: "0981593572", hours: "10:00 ص - 4:00 م" },
+          { id: 17, name: "د. ريم مصطفى", type: "doctor", specialty: "الطب النفسي وتعديل السلوك", address: "الرحيبة - حي المدارس", phone: "0991472583", hours: "12:00 ظ - 5:00 م" },
+            { id: 18, name: "د. حمزة فياض", type: "doctor", specialty: "الأمراض الصدرية والجهاز التنفسي", address: "الرحيبة - قرب فرن البلدية", phone: "0935789123", hours: "4:00 م - 8:00 م" },
+
+            // === الصيدليات (15 صيدلية) ===
+            { id: 101, name: "صيدلية الشفاء", type: "pharmacy", specialty: "تأمين كافة الأدوية وبدائلها", address: "الرحيبة - الشارع العام الرئيسي", phone: "0117820100", hours: "24 ساعة (مناوبة)" },
+            { id: 102, name: "صيدلية النور", type: "pharmacy", specialty: "أدوية ومستحضرات تجميل للأطفال", address: "الرحيبة - بجانب جامع نور", phone: "0117820101", hours: "8:00 ص - 11:00 م" },
+            { id: 103, name: "صيدلية السلامة", type: "pharmacy", specialty: "تأمين حليب الأطفال والمكملات", address: "الرحيبة - كوع الضمير", phone: "0117820102", hours: "9:00 ص - 12:00 ليلاً" },
+            { id: 104, name: "صيدلية الرحمة", type: "pharmacy", specialty: "أدوية الأمراض المزمنة", address: "الرحيبة - الحي الشمالي", phone: "0117820103", hours: "8:00 ص - 10:00 م" },
+            { id: 105, name: "صيدلية المركز", type: "pharmacy", specialty: "مستلزمات طبية وإسعافية", address: "الرحيبة - ساحة المركز الطبي", phone: "0117820104", hours: "24 ساعة متواصلة" },
+            { id: 106, name: "صيدلية الحكمة", type: "pharmacy", specialty: "أدوية محلية وأجنبية موثوقة", address: "الرحيبة - طريق المستوصف", phone: "0117820105", hours: "8:30 ص - 11:00 م" },
+            { id: 107, name: "صيدلية كرم", type: "pharmacy", specialty: "رعاية وعناية بالبشرة والطفل", address: "الرحيبة - دخلة سلمى", phone: "0117820106", hours: "9:00 ص - 10:30 م" },
+            { id: 108, name: "صيدلية ابن سينا", type: "pharmacy", specialty: "تأمين أدوية الضغط والسكري", address: "الرحيبة - حي التضامن", phone: "0117820107", hours: "8:00 ص - 11:00 م" },
+            { id: 109, name: "صيدلية القدس", type: "pharmacy", specialty: "كافة المستحضرات الصيدلانية", address: "الرحيبة - حارة القلعة", phone: "0117820108", hours: "9:00 ص - 12:00 ليلاً" },
+            { id: 110, name: "صيدلية العافية", type: "pharmacy", specialty: "أدوية وفيتامينات ومكملات غذائية", address: "الرحيبة - الشارع العريض", phone: "0117820109", hours: "8:00 ص - 10:00 م" },
+            { id: 111, name: "صيدلية الإيمان", type: "pharmacy", specialty: "تأمين حليب ومستلزمات إسعافية", address: "الرحيبة - قرب مسجد الهداية", phone: "0117820110", hours: "9:30 ص - 11:30 م" },
+            { id: 112, name: "صيدلية المستقبل", type: "pharmacy", specialty: "أجهزة قياس الضغط والسكري", address: "الرحيبة - طريق المدارس", phone: "0117820111", hours: "8:00 ص - 11:00 م" },
+            { id: 113, name: "صيدلية الرجاء", type: "pharmacy", specialty: "خدمات صيدلانية متكاملة", address: "الرحيبة - الحي الغربي", phone: "0117820112", hours: "9:00 ص - 10:00 م" },
+            { id: 114, name: "صيدلية الحياة", type: "pharmacy", specialty: "أدوية عامة وخلطات جلدية", address: "الرحيبة - ساحة السوق", phone: "0117820113", hours: "8:30 ص - 11:00 م" },
+            { id: 115, name: "صيدلية طيبة", type: "pharmacy", specialty: "تأمين كافة أنواع اللقاحات والأمصال", address: "الرحيبة - بجانب دوار الشهداء", phone: "0117820114", hours: "24 ساعة مناوبة" },
+
+            // === المراكز الطبية (مركزين 2) ===
+            { id: 201, name: "مستوصف الرحيبة الطبي العام", type: "clinic", specialty: "رعاية عامة، إسعافات، لقاحات أطفال شلل وحصبة", address: "الرحيبة - الشارع الرئيسي - قرب المخفر", phone: "0117824444", hours: "8:00 ص - 4:00 م" },
+            { id: 202, name: "مركز الرحيبة التخصصي الخيري", type: "clinic", specialty: "معايدات اختصاصية، عيادة سنية، تخطيط قلب، أشعة تصويرية", address: "الرحيبة - وسط البلد - ساحة المركز", phone: "0117829999", hours: "9:00 ص - 9:00 م" }
+        ];
+      // دالة لعرض وحقن الكروت في الواجهة
+        function renderDirectory(data) {
+            const grid = document.getElementById('directoryGrid');
+            grid.innerHTML = '';
+            
+            data.forEach(item => {
+                let badgeClass = '';
+                let badgeText = '';
+                let icon = '';
+
+                if (item.type === 'doctor') {
+                    badgeClass = 'badge-doctor';
+                    badgeText = 'طبيب تخصصي';
+                    icon = 'fa-user-md text-blue-600';
+                } else if (item.type === 'pharmacy') {
+                    badgeClass = 'badge-pharmacy';
+                    badgeText = 'صيدلية';
+                    icon = 'fa-capsules text-emerald-600';
+                } else {
+                    badgeClass = 'badge-clinic';
+                    badgeText = 'مركز طبي';
+                    icon = 'fa-hospital text-red-600';
+                }
+                
+                grid.innerHTML += 
+                    <div class="card p-5 cursor-pointer flex flex-col justify-between" onclick="openModal(${item.id})">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="badge ${badgeClass} text-xs px-2.5 py-1 rounded-full font-semibold">${badgeText}</span>
+                                <i class="fas ${icon} text-lg"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-1">${item.name}</h3>
+                            <p class="text-xs text-emerald-700 font-medium mb-4">${item.specialty}</p>
+                            <p class="text-xs text-gray-500 mb-1"><i class="fas fa-map-marker-alt text-gray-400 ml-1"></i> ${item.address}</p>
+                        </div>
+                        <button class="w-full mt-4 bg-gray-50 hover:bg-emerald-50 border py-2 rounded-xl text-xs font-semibold text-gray-600 transition-colors">عرض كامل التفاصيل</button>
+                    </div>
+                ;
+            });
+        }
+
+        // تحديث إحصائيات العدادات فوق
+        function updateStats() {
+            const docs = medicalData.filter(item => item.type === 'doctor').length;
+            const pharms = medicalData.filter(item => item.type === 'pharmacy').length;
+            const clinics = medicalData.filter(item => item.type === 'clinic').length;
+            
+            document.querySelector('.count-doctors').innerText = docs;
+            document.querySelector('.count-pharmacies').innerText = pharms;
+            document.querySelector('.count-clinics').innerText = clinics;
+        }
+
+        // دالة الفلترة والبحث الفوري الفعال
+        function filterData() {
+            const q = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filtered = medicalData.filter(item => 
+                item.name.toLowerCase().includes(q) || 
+                item.specialty.toLowerCase().includes(q) || 
+                item.address.toLowerCase().includes(q)
+            );
+            renderDirectory(filtered);
+            document.getElementById('noResults').classList.toggle('hidden', filtered.length > 0);
+        }
+
+        // دالة فتح النافذة المنبثقة لرؤية التفاصيل
+        function openModal(id) {
+            const item = medicalData.find(d => d.id === id);
+            if (!item) return;
+            
+            document.getElementById('modalBody').innerHTML = `
+                <div class="text-center pb-4 border-b">
+                    <h3 class="text-xl font-bold text-gray-900">${item.name}</h3>
+                    <p class="text-sm text-emerald-700 font-medium mt-1">${item.specialty}</p>
+                </div>
+                <div class="py-5 space-y-4 text-sm text-gray-700">
+                    <p><strong class="text-gray-900">📍 العنوان والتواجد:</strong> ${item.address}</p>
+                    <p><strong class="text-gray-900">⏰ أوقات الدوام:</strong> ${item.hours}</p>
+                    <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 flex justify-between items-center mt-3">
+                        <span class="font-bold text-emerald-900">📞 رقم التواصل: ${item.phone}</span>
+                        <a href="tel:${item.phone}" class="bg-emerald-600 text-white p-2 rounded-full w-9 h-9 flex items-center justify-center hover:bg-emerald-700 transition-colors shadow">
+                            <i class="fas fa-phone-alt text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailsModal').classList.add('active');
+        }
+
+        // إغلاق النافذة المنبثقة
+        function closeModal() { 
+            document.getElementById('detailsModal').classList.remove('active'); 
+        }
+
+        // تشغيل كود البناء فور جهوزية الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDirectory(medicalData);
+            updateStats();
+        });
+    </script>
 </body>
 </html>
