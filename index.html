@@ -70,6 +70,7 @@
             </div>
         </div>
     </header>
+
     <!-- العرض الرئيسي -->
     <main class="max-w-7xl mx-auto px-4 py-12">
         <div id="directoryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -106,7 +107,7 @@
             { id: 14, name: "د. عمار الحافظ", type: "doctor", specialty: "الأمراض العصبية وجراحتها", address: "الرحيبة - الشارع العريض", phone: "0963147852", hours: "3:00 م - 7:00 م" },
             { id: 15, name: "د. هالة الطويل", type: "doctor", specialty: "معالجة تقويم الأسنان والفكين", address: "الرحيبة - برج الأطباء الجديد", phone: "0974258163", hours: "2:00 م - 8:00 م" },
             { id: 16, name: "د. مازن قاسم", type: "doctor", specialty: "أمراض الكلى وضغط الدم", address: "الرحيبة - بجانب صيدلية الشفاء", phone: "0981593572", hours: "10:00 ص - 4:00 م" },
-          { id: 17, name: "د. ريم مصطفى", type: "doctor", specialty: "الطب النفسي وتعديل السلوك", address: "الرحيبة - حي المدارس", phone: "0991472583", hours: "12:00 ظ - 5:00 م" },
+            { id: 17, name: "د. ريم مصطفى", type: "doctor", specialty: "الطب النفسي وتعديل السلوك", address: "الرحيبة - حي المدارس", phone: "0991472583", hours: "12:00 ظ - 5:00 م" },
             { id: 18, name: "د. حمزة فياض", type: "doctor", specialty: "الأمراض الصدرية والجهاز التنفسي", address: "الرحيبة - قرب فرن البلدية", phone: "0935789123", hours: "4:00 م - 8:00 م" },
 
             // === الصيدليات (15 صيدلية) ===
@@ -130,7 +131,8 @@
             { id: 201, name: "مستوصف الرحيبة الطبي العام", type: "clinic", specialty: "رعاية عامة، إسعافات، لقاحات أطفال شلل وحصبة", address: "الرحيبة - الشارع الرئيسي - قرب المخفر", phone: "0117824444", hours: "8:00 ص - 4:00 م" },
             { id: 202, name: "مركز الرحيبة التخصصي الخيري", type: "clinic", specialty: "معايدات اختصاصية، عيادة سنية، تخطيط قلب، أشعة تصويرية", address: "الرحيبة - وسط البلد - ساحة المركز", phone: "0117829999", hours: "9:00 ص - 9:00 م" }
         ];
-      // دالة لعرض وحقن الكروت في الواجهة
+
+        // دالة لعرض وحقن الكروت في الواجهة
         function renderDirectory(data) {
             const grid = document.getElementById('directoryGrid');
             grid.innerHTML = '';
@@ -154,7 +156,7 @@
                     icon = 'fa-hospital text-red-600';
                 }
                 
-                grid.innerHTML += 
+                grid.innerHTML += `
                     <div class="card p-5 cursor-pointer flex flex-col justify-between" onclick="openModal(${item.id})">
                         <div>
                             <div class="flex justify-between items-center mb-3">
@@ -167,7 +169,7 @@
                         </div>
                         <button class="w-full mt-4 bg-gray-50 hover:bg-emerald-50 border py-2 rounded-xl text-xs font-semibold text-gray-600 transition-colors">عرض كامل التفاصيل</button>
                     </div>
-                ;
+                `;
             });
         }
 
