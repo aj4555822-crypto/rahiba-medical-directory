@@ -3,1195 +3,871 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دليل الرحيبة الطبي | عيادات، أطباء، صيدليات، مراكز طبية، مخابر</title>
+    <title>دليل الرحيبة الطبي المتكامل</title>
+    <!-- تضمين مكتبة خطوط جوجل ومكتبة FontAwesome للأيقونات -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- تضمين مكتبة Tailwind CSS للتنسيق السريع والأنيق -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         :root {
-            --bg: #FAF8F4;
-            --bg-deep: #F0EDE6;
-            --fg: #1B2A1B;
-            --fg-light: #3D4F3D;
-            --muted: #7A8B7A;
-            --accent: #0E7C5F;
-            --accent-dark: #095E47;
-            --accent-light: #D6F0E5;
-            --gold: #C4962C;
-            --gold-light: #F5ECD0;
-            --card: #FFFFFF;
-            --border: #DDE3DD;
-            --danger: #D94F4F;
-            --clinic: #0E7C5F;
-            --doctor: #2563EB;
-            --pharmacy: #C4962C;
-            --center: #9333EA;
-            --lab: #DC2626;
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --fg: #1e293b;
+            --fg-light: #475569;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            
+            /* ألوان التصنيفات */
+            --clinic: #0284c7;
+            --center: #0d9488;
+            --lab: #7c3aed;
+            --doctor: #2563eb;
+            --pharmacy: #db2777;
+            --gold: #d97706;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
-            background: var(--bg);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
             color: var(--fg);
-            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        h1, h2, h3, h4, h5 {
-            font-family: 'Noto Kufi Arabic', sans-serif;
+        .nav-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
         }
 
-        .hero-bg {
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%);
-        }
-
-        .hero-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(196,150,44,0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 20%, rgba(14,124,95,0.3) 0%, transparent 40%),
-                        radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 40%);
-            animation: heroFloat 20s ease-in-out infinite;
-        }
-
-        @keyframes heroFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(-2%, 1%) rotate(1deg); }
-            66% { transform: translate(1%, -1%) rotate(-0.5deg); }
-        }
-
-        .medical-shape {
-            position: absolute;
-            opacity: 0.06;
-            animation: floatShape 15s ease-in-out infinite;
-        }
-        .medical-shape:nth-child(2) { animation-delay: -5s; }
-        .medical-shape:nth-child(3) { animation-delay: -10s; }
-
-        @keyframes floatShape {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-        }
-
-        .pulse-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid rgba(196,150,44,0.3);
-            animation: pulseRing 3s ease-out infinite;
-        }
-
-        @keyframes pulseRing {
-            0% { transform: scale(0.8); opacity: 0.6; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        .search-container {
-            backdrop-filter: blur(20px);
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        .search-container:focus-within {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(196,150,44,0.5);
-            box-shadow: 0 0 40px rgba(196,150,44,0.15);
-        }
-
-        .search-input {
-            background: transparent;
-            color: white;
-            outline: none;
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
-        }
-        .search-input::placeholder { color: rgba(255,255,255,0.5); }
-
-        .filter-btn {
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
-        }
-        .filter-btn::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 3px;
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-        .filter-btn:hover::after, .filter-btn.active::after { width: 100%; }
-        .filter-btn.active {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -5px rgba(0,0,0,0.15);
-        }
-
+        /* كروت الأقسام والتأثيرات الحركية */
         .card {
-            background: var(--card);
+            background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
+            border-radius: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(20px);
         }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 4px;
-            height: 0;
-            transition: height 0.4s ease;
-            border-radius: 0 0 4px 0;
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .card:hover::before { height: 100%; }
         .card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
-            border-color: transparent;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
-        .card.clinic-card::before { background: var(--clinic); }
-        .card.doctor-card::before { background: var(--doctor); }
-        .card.pharmacy-card::before { background: var(--pharmacy); }
-        .card.center-card::before { background: var(--center); }
-        .card.lab-card::before { background: var(--lab); }
+        /* شارات التصنيف */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+        }
+        .badge-clinic { background-color: var(--clinic); }
+        .badge-center { background-color: var(--center); }
+        .badge-lab { background-color: var(--lab); }
+        .badge-doctor { background-color: var(--doctor); }
+        .badge-pharmacy { background-color: var(--pharmacy); }
 
-        .badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; letter-spacing: 0.02em; }
-        .badge-clinic { background: var(--accent-light); color: var(--accent-dark); }
-        .badge-doctor { background: #DBEAFE; color: #1E40AF; }
-        .badge-pharmacy { background: var(--gold-light); color: #92610A; }
-        .badge-center { background: #F3E8FF; color: #6B21A8; }
-        .badge-lab { background: #FEE2E2; color: #991B1B; }
-
+        /* أيقونات الأقسام */
         .cat-icon {
-            width: 52px; height: 52px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
         }
-        .cat-icon-clinic { background: var(--accent-light); color: var(--accent); }
-        .cat-icon-doctor { background: #DBEAFE; color: #2563EB; }
-        .cat-icon-pharmacy { background: var(--gold-light); color: var(--gold); }
-        .cat-icon-center { background: #F3E8FF; color: #9333EA; }
-        .cat-icon-lab { background: #FEE2E2; color: #DC2626; }
-
-        .call-btn {
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .call-btn::before {
-            content: '';
-            position: absolute; top: 50%; left: 50%;
-            width: 0; height: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transition: all 0.5s ease;
-            transform: translate(-50%, -50%);
-        }
-        .call-btn:hover::before { width: 200%; height: 200%; }
-        .call-btn:hover { transform: scale(1.05); }
-
-        .stat-card {
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-3px); }
-
-        .ornament-line {
-            display: flex; align-items: center; gap: 12px; justify-content: center;
-        }
-        .ornament-line::before, .ornament-line::after {
-            content: '';
-            width: 60px; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        }
-
-        html { scroll-behavior: smooth; }
-
-        .navbar {
-            backdrop-filter: blur(20px);
-            transition: all 0.4s ease;
-        }
-        .navbar.scrolled {
-            background: rgba(7,61,46,0.95);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
-        }
-
-        .toast {
-            position: fixed; bottom: 30px; left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--fg); color: white;
-            padding: 14px 28px; border-radius: 12px;
-            font-size: 0.9rem; z-index: 9999; opacity: 0;
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        .back-to-top {
-            position: fixed; bottom: 30px; left: 30px;
-            width: 48px; height: 48px; border-radius: 50%;
-            background: var(--accent); color: white;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; opacity: 0; transform: translateY(20px);
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 20px rgba(14,124,95,0.4);
-            z-index: 100; border: none;
-        }
-        .back-to-top.visible { opacity: 1; transform: translateY(0); }
-        .back-to-top:hover { background: var(--accent-dark); transform: translateY(-3px); }
-
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-        }
-        .mobile-menu.open { transform: translateX(0); }
-
-        .reveal {
-            opacity: 0; transform: translateY(30px);
-            transition: all 0.7s cubic-bezier(0.4,0,0.2,1);
-        }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.15); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.1); }
-        }
-        .heartbeat { animation: heartbeat 2s ease-in-out infinite; }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
+        .cat-icon-clinic { background-color: rgba(2, 132, 199, 0.1); color: var(--clinic); }
+        .cat-icon-center { background-color: rgba(13, 148, 136, 0.1); color: var(--center); }
+        .cat-icon-lab { background-color: rgba(124, 58, 237, 0.1); color: var(--lab); }
+        .cat-icon-doctor { background-color: rgba(37, 99, 235, 0.1); color: var(--doctor); }
+        .cat-icon-pharmacy { background-color: rgba(219, 39, 119, 0.1); color: var(--pharmacy); }
 
         .detail-row {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.85rem; color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--fg-light);
         }
-        .detail-row i { width: 16px; text-align: center; font-size: 0.75rem; }
+        .detail-row i {
+            width: 1rem;
+            text-align: center;
+            color: var(--muted);
+        }
 
+        /* المودال المنبثق */
         .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 1000; display: none;
-            align-items: center; justify-content: center; padding: 20px;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            padding: 1rem;
         }
-        .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: var(--card); border-radius: 20px;
-            max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;
-            transform: scale(0.9); opacity: 0;
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
-        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
-
-        .dot-pattern {
-            background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
-            background-size: 30px 30px;
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
-        .filters-scroll {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .filters-scroll::-webkit-scrollbar { display: none; }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
         }
 
-        @media (max-width: 640px) {
-            .stat-card { padding: 10px 8px !important; }
+        /* التنبيهات */
+        .toast {
+            position: fixed;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: white;
+            padding: 0.85rem 1.75rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            z-index: 200;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.85rem;
+            font-weight: 600;
         }
+        .toast.show { bottom: 24px; }
 
-        /* تصاميم ميزة الحجز المضافة */
-        .slot-btn {
-            transition: all 0.2s ease;
-        }
-        .slot-btn.disabled {
-            background: #E5E7EB !important;
-            color: #9CA3AF !important;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
         .slot-btn.selected {
-            background: var(--doctor) !important;
+            background-color: var(--accent) !important;
             color: white !important;
-            border-color: var(--doctor) !important;
+            border-color: var(--accent) !important;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800">
 
-    <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-20">
-                <a href="#" class="flex items-center gap-3 text-white no-underline">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-sm border border-white/20">
-                        <i class="fas fa-heartbeat text-lg sm:text-xl" style="color: var(--gold)"></i>
-                    </div>
-                    <div>
-                        <div class="text-base sm:text-lg font-bold leading-tight" style="font-family: 'Noto Kufi Arabic'">دليل الرحيبة</div>
-                        <div class="text-[10px] sm:text-xs opacity-60">للخدمات الطبية</div>
-                    </div>
-                </a>
-                <div class="hidden lg:flex items-center gap-7">
-                    <a href="#home" class="text-white/80 hover:text-white text-sm transition-colors no-underline">الرئيسية</a>
-                    <a href="#clinics" class="text-white/80 hover:text-white text-sm transition-colors no-underline">العيادات</a>
-                    <a href="#centers" class="text-white/80 hover:text-white text-sm transition-colors no-underline">المراكز الطبية</a>
-                    <a href="#labs" class="text-white/80 hover:text-white text-sm transition-colors no-underline">المخابر</a>
-                    <a href="#doctors" class="text-white/80 hover:text-white text-sm transition-colors no-underline">الأطباء</a>
-                    <a href="#pharmacies" class="text-white/80 hover:text-white text-sm transition-colors no-underline">الصيدليات</a>
-                    <a href="#admin-panel" class="text-white/80 hover:text-white text-sm transition-colors no-underline"><i class="fas fa-lock ml-1"></i>لوحة التحكم</a>
-                    <a href="#contact" class="text-white/80 hover:text-white text-sm transition-colors no-underline">تواصل معنا</a>
-                </div>
-                <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()" aria-label="فتح القائمة">
-                    <i class="fas fa-bars" id="menuIcon"></i>
-                </button>
+    <!-- نافبار علوي هيدر -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-4 md:px-8 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <a href="#" class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-lg font-bold shadow-md shadow-blue-200">
+                <i class="fas fa-heartbeat"></i>
             </div>
-        </div>
-    </nav>
+            <div>
+                <span class="block font-bold text-slate-900 text-base leading-tight" style="font-family:'Noto Kufi Arabic'">رعاية الرحيبة</span>
+                <span class="block text-[10px] text-slate-400 font-semibold tracking-wider">REHAIBA MEDICAL</span>
+            </div>
+        </a>
+        
+        <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-600">
+            <a href="#hero" class="hover:text-blue-600 transition-colors">الرئيسية</a>
+            <a href="#clinics" class="hover:text-blue-600 transition-colors">العيادات</a>
+            <a href="#doctors" class="hover:text-blue-600 transition-colors">الأطباء</a>
+            <a href="#pharmacies" class="hover:text-blue-600 transition-colors">الصيدليات</a>
+            <a href="#admin-panel" class="px-3 py-1.5 bg-slate-100 rounded-lg hover:bg-blue-50 text-blue-600 transition-all"><i class="fas fa-lock-open ml-1"></i>لوحة العيادة</a>
+        </nav>
 
-    <div class="mobile-menu fixed top-0 right-0 w-72 h-full z-50 bg-[#073D2E] shadow-2xl" id="mobileMenu">
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-10">
-                <div class="flex items-center gap-3 text-white">
-                    <i class="fas fa-heartbeat text-xl" style="color: var(--gold)"></i>
-                    <span class="font-bold" style="font-family: 'Noto Kufi Arabic'">دليل الرحيبة</span>
-                </div>
-                <button onclick="toggleMobileMenu()" class="text-white/60 hover:text-white text-xl" aria-label="إغلاق القائمة">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="flex flex-col gap-1">
-                <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
-                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
-                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
-                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
-                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
-                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
-                <a href="#admin-panel" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-lock w-5"></i> لوحة التحكم</a>
-                <a href="#contact" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-envelope w-5"></i> تواصل معنا</a>
-            </div>
+        <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600" aria-label="القائمة">
+            <i id="menuIcon" class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- قائمة الموبايل الجانبية -->
+    <div id="menuOverlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden" onclick="toggleMobileMenu()"></div>
+    <div id="mobileMenu" class="fixed top-0 bottom-0 right-0 w-64 bg-white z-50 shadow-2xl p-6 flex flex-col gap-4 transition-transform duration-300 translate-x-full md:hidden">
+        <div class="flex items-center justify-between pb-4 border-b">
+            <span class="font-bold text-sm text-slate-900">تصفح الدليل</span>
+            <button onclick="toggleMobileMenu()" class="text-slate-400"><i class="fas fa-times"></i></button>
         </div>
+        <a href="#hero" onclick="toggleMobileMenu()" class="py-2 text-xs font-bold text-slate-700 hover:text-blue-600">الرئيسية</a>
+        <a href="#clinics" onclick="toggleMobileMenu()" class="py-2 text-xs font-bold text-slate-700 hover:text-blue-600">العيادات والمراكز</a>
+        <a href="#doctors" onclick="toggleMobileMenu()" class="py-2 text-xs font-bold text-slate-700 hover:text-blue-600">الأطباء المناوبين</a>
+        <a href="#pharmacies" onclick="toggleMobileMenu()" class="py-2 text-xs font-bold text-slate-700 hover:text-blue-600">الصيدليات</a>
+        <a href="#admin-panel" onclick="toggleMobileMenu()" class="py-2 mt-4 text-xs font-bold text-center bg-blue-50 text-blue-600 rounded-xl"><i class="fas fa-user-shield ml-1"></i>لوحة التحكم السريعة</a>
     </div>
-    <div class="fixed inset-0 bg-black/50 z-40 hidden" id="menuOverlay" onclick="toggleMobileMenu()"></div>
 
-    <section id="home" class="hero-bg min-h-screen flex items-center relative">
-        <div class="medical-shape" style="top:15%;right:8%">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="white"><rect x="30" y="10" width="20" height="60" rx="4"/><rect x="10" y="30" width="60" height="20" rx="4"/></svg>
-        </div>
-        <div class="medical-shape" style="bottom:20%;left:5%">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="white"><circle cx="30" cy="30" r="25" stroke="white" stroke-width="3" fill="none"/><rect x="25" y="15" width="10" height="30" rx="3"/><rect x="15" y="25" width="30" height="10" rx="3"/></svg>
-        </div>
-        <div class="medical-shape" style="top:60%;right:80%">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="white"><path d="M20 35 C20 35 5 25 5 15 C5 8 12 3 20 10 C28 3 35 8 35 15 C35 25 20 35 20 35Z"/></svg>
-        </div>
+    <!-- قسم الهيرو الرئيسي والبحث الشامل -->
+    <section id="hero" class="pt-32 pb-16 px-4 md:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-6">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>دليل مدينة الرحيبة الطبي المباشر
+            </span>
+            <h1 class="text-3xl md:text-5xl font-black text-slate-900 leading-tight" style="font-family: 'Noto Kufi Arabic'">
+                ابحث عن طبيبك، عيادتك <br><span class="text-blue-600">واحجز موعدك فوراً</span>
+            </h1>
+            <p class="text-sm text-slate-500 leading-relaxed max-w-xl">
+                منصة خدمية تتيح لأهالي مدينة الرحيبة العثور الفوري على المراكز الطبية والمخبرية، الصيدليات المناوبة، مع إمكانية حجز فترات المعاينة الحية لدى العيادات التخصصية مباشرة ومتابعتها.
+            </p>
 
-        <div class="pulse-ring" style="width:200px;height:200px;top:10%;left:10%"></div>
-        <div class="pulse-ring" style="width:150px;height:150px;bottom:15%;right:15%;animation-delay:1s"></div>
-        <div class="pulse-ring" style="width:100px;height:100px;top:40%;right:30%;animation-delay:2s"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 mb-6 text-white/80 text-sm">
-                    <i class="fas fa-map-marker-alt" style="color: var(--gold)"></i>
-                    <span>مدينة الرحيبة - ريف دمشق</span>
+            <!-- صندوق البحث الذكي -->
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-xl shadow-slate-100 flex flex-col md:flex-row gap-2 max-w-2xl">
+                <div class="flex-1 flex items-center gap-3 px-3 py-2 bg-slate-50 rounded-xl border border-slate-100">
+                    <i class="fas fa-search text-slate-400 text-sm"></i>
+                    <input type="text" id="heroSearch" oninput="handleSearch(this.value)" placeholder="ابحث باسم الطبيب، نوع العيادة، المختبر الطبي أو الصيدلية..." class="w-full bg-transparent text-xs outline-none text-slate-800">
                 </div>
+                <button onclick="resetSearch()" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                    إعادة تعيين
+                </button>
+            </div>
 
-                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" style="font-family: 'Noto Kufi Arabic'">
-                    دليلك الطبي الشامل
-                    <br>
-                    <span style="color: var(--gold)">في الرحيبة</span>
-                </h1>
-
-                <p class="text-white/65 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-                    اعثر على أقرب عيادة، مركز طبي، مخبر، طبيب أو صيدلية في مدينة الرحيبة. دليلك الموثوق للرعاية الصحية.
-                </p>
-
-                <div class="search-container rounded-2xl p-2 max-w-2xl mx-auto flex items-center gap-2">
-                    <div class="flex-1 flex items-center gap-3 px-4">
-                        <i class="fas fa-search text-white/40"></i>
-                        <input type="text" id="heroSearch" class="search-input w-full py-3 text-sm sm:text-base"
-                               placeholder="ابحث عن عيادة، مركز، مخبر، طبيب أو صيدلية..." oninput="handleSearch(this.value)">
-                    </div>
-                    <button onclick="handleSearch(document.getElementById('heroSearch').value)"
-                            class="px-6 sm:px-8 py-3 rounded-xl text-white font-semibold text-sm sm:text-base transition-all hover:opacity-90 flex-shrink-0"
-                            style="background: var(--gold)">بحث</button>
+            <!-- إحصائيات سريعة للرحيبة -->
+            <div class="grid grid-cols-3 gap-4 pt-4 max-w-lg text-center">
+                <div class="bg-white p-3 rounded-xl border border-slate-100">
+                    <div class="text-xl md:text-2xl font-black text-blue-600 count-up" data-target="3">0</div>
+                    <div class="text-[10px] text-slate-400 font-bold mt-1">عيادات تخصصية</div>
                 </div>
-
-                <div class="grid grid-cols-5 gap-2 sm:gap-4 mt-12 max-w-2xl mx-auto">
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center">
-                        <div class="text-xl sm:text-3xl font-black text-white count-up" data-target="9">0</div>
-                        <div class="text-[9px] sm:text-xs text-white/50 mt-1">عيادة</div>
-                    </div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center">
-                        <div class="text-xl sm:text-3xl font-black text-white count-up" data-target="5">0</div>
-                        <div class="text-[9px] sm:text-xs text-white/50 mt-1">مركز طبي</div>
-                    </div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center">
-                        <div class="text-xl sm:text-3xl font-black text-white count-up" data-target="5">0</div>
-                        <div class="text-[9px] sm:text-xs text-white/50 mt-1">مخبر</div>
-                    </div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center">
-                        <div class="text-xl sm:text-3xl font-black text-white count-up" data-target="12">0</div>
-                        <div class="text-[9px] sm:text-xs text-white/50 mt-1">طبيب</div>
-                    </div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center">
-                        <div class="text-xl sm:text-3xl font-black text-white count-up" data-target="8">0</div>
-                        <div class="text-[9px] sm:text-xs text-white/50 mt-1">صيدلية</div>
-                    </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100">
+                    <div class="text-xl md:text-2xl font-black text-teal-600 count-up" data-target="4">0</div>
+                    <div class="text-[10px] text-slate-400 font-bold mt-1">أطباء ومخابر</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100">
+                    <div class="text-xl md:text-2xl font-black text-pink-600 count-up" data-target="1">0</div>
+                    <div class="text-[10px] text-slate-400 font-bold mt-1">صيدليات مركزية</div>
                 </div>
             </div>
         </div>
-
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="var(--bg)"/>
-            </svg>
+        <div class="lg:col-span-5 hidden lg:block">
+            <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80" alt="صورة طبية" class="w-full h-[450px] object-cover rounded-3xl shadow-2xl shadow-blue-100 border border-white">
         </div>
     </section>
 
-    <section class="py-6 sticky top-16 sm:top-20 z-30" style="background: var(--bg); border-bottom: 1px solid var(--border)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between gap-3">
-                <div class="filters-scroll flex items-center gap-2 sm:gap-3 flex-1">
-                    <button class="filter-btn active px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="all" onclick="setFilter('all', this)">
-                        <i class="fas fa-th-large ml-1 sm:ml-2"></i>الكل
-                    </button>
-                    <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="clinic" onclick="setFilter('clinic', this)">
-                        <i class="fas fa-hospital ml-1 sm:ml-2" style="color:var(--clinic)"></i>العيادات
-                    </button>
-                    <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="center" onclick="setFilter('center', this)">
-                        <i class="fas fa-clinic-medical ml-1 sm:ml-2" style="color:var(--center)"></i>المراكز الطبية
-                    </button>
-                    <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="lab" onclick="setFilter('lab', this)">
-                        <i class="fas fa-flask ml-1 sm:ml-2" style="color:var(--lab)"></i>المخابر
-                    </button>
-                    <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="doctor" onclick="setFilter('doctor', this)">
-                        <i class="fas fa-user-md ml-1 sm:ml-2" style="color:var(--doctor)"></i>الأطباء
-                    </button>
-                    <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="pharmacy" onclick="setFilter('pharmacy', this)">
-                        <i class="fas fa-pills ml-1 sm:ml-2" style="color:var(--pharmacy)"></i>الصيدليات
-                    </button>
-                </div>
-                <div class="hidden sm:flex items-center gap-2 bg-white rounded-xl px-4 py-2 border border-gray-200 flex-shrink-0">
-                    <i class="fas fa-search text-gray-400 text-sm"></i>
-                    <input type="text" id="inlineSearch" placeholder="تصفية النتائج..."
-                           class="outline-none text-sm bg-transparent w-40" oninput="handleSearch(this.value)">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="clinics" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-hospital text-sm" style="color: var(--clinic)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">العيادات الطبية</h2>
-                <p class="text-sm" style="color: var(--muted)">أبرز العيادات التخصصية في مدينة الرحيبة</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="clinicsGrid"></div>
-        </div>
-    </section>
-
-    <section id="centers" class="py-12 sm:py-16" style="background: var(--bg-deep)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-clinic-medical text-sm" style="color: var(--center)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">المراكز الطبية</h2>
-                <p class="text-sm" style="color: var(--muted)">مراكز طبية متكاملة تقدم خدمات صحية شاملة</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="centersGrid"></div>
-        </div>
-    </section>
-
-    <section id="labs" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-flask text-sm" style="color: var(--lab)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">مخابر التحاليل الطبية</h2>
-                <p class="text-sm" style="color: var(--muted)">مخابر مجهزة بأحدث الأجهزة لجميع أنواع التحاليل</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="labsGrid"></div>
-        </div>
-    </section>
-
-    <section id="doctors" class="py-12 sm:py-16" style="background: var(--bg-deep)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-user-md text-sm" style="color: var(--doctor)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">الأطباء المختصون</h2>
-                <p class="text-sm" style="color: var(--muted)">نخبة من الأطباء في مختلف التخصصات الطبية - اضغط على الطبيب لحجز موعد</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="doctorsGrid"></div>
-        </div>
-    </section>
-
-    <section id="pharmacies" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-pills text-sm" style="color: var(--pharmacy)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">الصيدليات</h2>
-                <p class="text-sm" style="color: var(--muted)">صيدليات مدينة الرحيبة المتوفرة على مدار الساعة</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="pharmaciesGrid"></div>
-        </div>
-    </section>
-
-    <div id="noResults" class="hidden py-20 text-center" style="background: var(--bg)">
-        <div class="max-w-md mx-auto">
-            <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-5">
-                <i class="fas fa-search text-3xl text-gray-300"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2" style="font-family: 'Noto Kufi Arabic'">لم يتم العثور على نتائج</h3>
-            <p class="text-sm mb-6" style="color: var(--muted)">جرّب البحث بكلمات مختلفة أو تصفّح الأقسام</p>
-            <button onclick="resetSearch()" class="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90" style="background: var(--accent)">عرض الكل</button>
+    <!-- أزرار الفلترة السريعة للتنقل -->
+    <div class="sticky top-[73px] z-30 bg-slate-50/90 backdrop-blur-md py-4 border-b border-slate-200/60 px-4">
+        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar justify-start md:justify-center">
+            <button onclick="setFilter('all', this)" data-filter="all" class="filter-btn px-4 py-2 text-xs font-bold rounded-xl border transition-all shrink-0 active">الكل</button>
+            <button onclick="setFilter('clinic', this)" data-filter="clinic" class="filter-btn px-4 py-2 text-xs font-bold rounded-xl border transition-all shrink-0">العيادات</button>
+            <button onclick="setFilter('center', this)" data-filter="center" class="filter-btn px-4 py-2 text-xs font-bold rounded-xl border transition-all shrink-0">المراكز الطبية</button>
+            <button onclick="setFilter('lab', this)" data-filter="lab" class="filter-btn px-4 py-2 text-xs font-bold rounded-xl border transition-all shrink-0">المخابر</button>
+            <button onclick="setFilter('doctor', this)" data-filter="doctor" class="filter-btn px-4 py-2 text-xs font-bold rounded-xl border transition-all shrink-0">الأطباء (حجز حي)</button>
+            <button onclick="setFilter('pharmacy', this)" data-filter="pharmacy" class="filter-btn px-4 py-2 text-xs font-bold rounded-xl border transition-all shrink-0">الصيدليات</button>
         </div>
     </div>
 
-    <section id="admin-panel" class="py-12 sm:py-16" style="background: var(--bg)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-lock text-sm" style="color: var(--doctor)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">لوحة إدارة المواعيد (خاص بالطبيب / السكرتيرة)</h2>
-                <p class="text-sm" style="color: var(--muted)">تنظيم ومعالجة طلبات حجوزات المرضى اليومية بشكل فوري</p>
+    <!-- شبكة عرض البيانات الرئيسية الموزعة والمصفاة تلقائياً -->
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-12 space-y-16">
+        
+        <!-- قسم العيادات التخصصية -->
+        <section id="clinics" class="space-y-6">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-200">
+                <i class="fas fa-hospital text-sky-600 text-lg"></i>
+                <h2 class="text-lg font-bold text-slate-900" style="font-family:'Noto Kufi Arabic'">العيادات الطبية التخصصية</h2>
             </div>
+            <div id="clinicsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
 
-            <div class="max-w-5xl mx-auto card p-6 bg-white shadow-xl border border-gray-100">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4 mb-6">
-                    <div>
-                        <label class="block text-xs text-gray-400 font-bold mb-1">اختر العيادة لعرض مواعيدها:</label>
-                        <select id="adminDoctorSelect" onchange="renderAdminAppointments()" class="px-4 py-2 border rounded-xl text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-blue-500 font-semibold"></select>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="clearAllAppointments()" class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-xs font-bold hover:bg-red-100 transition-all"><i class="fas fa-trash-alt ml-1"></i>تفريغ جدول اليوم</button>
-                        <button onclick="window.print()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold hover:bg-gray-200 transition-all"><i class="fas fa-print ml-1"></i>طباعة الجدول</button>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right text-sm">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-600 border-b">
-                                <th class="p-3 font-semibold">توقيت الموعد</th>
-                                <th class="p-3 font-semibold">اسم المريض</th>
-                                <th class="p-3 font-semibold">رقم الهاتف</th>
-                                <th class="p-3 font-semibold">حالة الموعد</th>
-                                <th class="p-3 font-semibold text-center">إجراءات الإدارة</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminAppointmentsTable" class="divide-y">
-                            </tbody>
-                    </table>
-                </div>
+        <!-- قسم المراكز الطبية الشاملة -->
+        <section id="centers" class="space-y-6">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-200">
+                <i class="fas fa-clinic-medical text-teal-600 text-lg"></i>
+                <h2 class="text-lg font-bold text-slate-900" style="font-family:'Noto Kufi Arabic'">المراكز الطبية التخصصية الشاملة</h2>
             </div>
+            <div id="centersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- قسم مخابر التحاليل الطبية -->
+        <section id="labs" class="space-y-6">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-200">
+                <i class="fas fa-flask text-purple-600 text-lg"></i>
+                <h2 class="text-lg font-bold text-slate-900" style="font-family:'Noto Kufi Arabic'">مخابر التحاليل الطبية والأشعة</h2>
+            </div>
+            <div id="labsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- قسم الأطباء ونظام المواعيد والدوام -->
+        <section id="doctors" class="space-y-6">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-user-md text-blue-600 text-lg"></i>
+                    <h2 class="text-lg font-bold text-slate-900" style="font-family:'Noto Kufi Arabic'">الأطباء وجدول المعاينات اليومي المتاح</h2>
+                </div>
+                <span class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-lg font-bold">يبدأ الدوام 4:00 مساءً</span>
+            </div>
+            <div id="doctorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- قسم الصيدليات والمناوبات -->
+        <section id="pharmacies" class="space-y-6">
+            <div class="flex items-center gap-2 pb-2 border-b border-slate-200">
+                <i class="fas fa-pills text-pink-600 text-lg"></i>
+                <h2 class="text-lg font-bold text-slate-900" style="font-family:'Noto Kufi Arabic'">الصيدليات والصيدليات المناوبة</h2>
+            </div>
+            <div id="pharmaciesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- واجهة عدم وجود نتائج للبحث -->
+        <div id="noResults" class="text-center py-16 hidden">
+            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl"><i class="fas fa-search-minus"></i></div>
+            <h3 class="font-bold text-slate-700 mb-1">عذراً، لا توجد منشآت طبية تطابق بحثك الحالي</h3>
+            <p class="text-xs text-slate-400">تأكد من كتابة الكلمات بشكل صحيح أو اضغط على زر إعادة التعيين لعرض كل القائمة الطبية.</p>
         </div>
-    </section>
 
-    <section id="contact" class="py-12 sm:py-16" style="background: var(--bg-deep)">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <div class="ornament-line mb-3"><i class="fas fa-envelope text-sm" style="color: var(--gold)"></i></div>
-                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">تواصل معنا</h2>
-                <p class="text-sm" style="color: var(--muted)">ساعدنا في تحديث الدليل أو أضف عيادتك، مركزك، أو مخبرك</p>
-            </div>
-            <div class="max-w-2xl mx-auto">
-                <div class="card p-6 sm:p-8 border-0 shadow-lg">
-                    <form onsubmit="handleContactSubmit(event)">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">الاسم الكامل</label>
-                                <input type="text" required id="contactName" class="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all focus:ring-2" style="border-color: var(--border); background: var(--bg)" placeholder="أدخل اسمك">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">رقم الهاتف</label>
-                                <input type="tel" required id="contactPhone" class="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all focus:ring-2" style="border-color: var(--border); background: var(--bg)" placeholder="09XXXXXXXX">
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">نوع الإضافة</label>
-                            <select required id="contactType" class="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all focus:ring-2" style="border-color: var(--border); background: var(--bg)">
-                                <option value="">اختر النوع</option>
-                                <option value="clinic">إضافة عيادة</option>
-                                <option value="center">إضافة مركز طبي</option>
-                                <option value="lab">إضافة مخبر</option>
-                                <option value="doctor">إضافة طبيب</option>
-                                <option value="pharmacy">إضافة صيدلية</option>
-                                <option value="update">تحديث بيانات</option>
-                                <option value="other">أخرى</option>
-                            </select>
-                        </div>
-                        <div class="mb-5">
-                            <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">الرسالة</label>
-                            <textarea required id="contactMessage" rows="4" class="w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all focus:ring-2 resize-none" style="border-color: var(--border); background: var(--bg)" placeholder="اكتب رسالتك هنا..."></textarea>
-                        </div>
-                        <button type="submit" class="w-full py-3.5 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2" style="background: var(--accent)">
-                            <i class="fas fa-paper-plane"></i> إرسال الرسالة
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+        <hr class="border-slate-200 my-12">
 
-    <footer class="py-10 sm:py-14" style="background: #073D2E">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:col-span-4 gap-8 mb-10">
-                <div class="sm:col-span-2 lg:col-span-1">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><i class="fas fa-heartbeat" style="color: var(--gold)"></i></div>
-                        <span class="text-white font-bold" style="font-family: 'Noto Kufi Arabic'">دليل الرحيبة</span>
-                    </div>
-                    <p class="text-white/50 text-sm leading-relaxed">دليلك الشامل للخدمات الطبية في مدينة الرحيبة. عيادات، مراكز طبية، مخابر، أطباء وصيدليات في مكان واحد.</p>
-                </div>
+        <!-- لوحة الإدارة المستقلة للطبيب والسكرتيرة لتنظيم المواعيد داخل العيادة -->
+        <section id="admin-panel" class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden max-w-4xl mx-auto">
+            <div class="bg-slate-900 p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">روابط سريعة</h4>
-                    <div class="flex flex-col gap-2">
-                        <a href="#home" class="text-white/50 hover:text-white text-sm transition-colors no-underline">الرئيسية</a>
-                        <a href="#clinics" class="text-white/50 hover:text-white text-sm transition-colors no-underline">العيادات</a>
-                        <a href="#centers" class="text-white/50 hover:text-white text-sm transition-colors no-underline">المراكز الطبية</a>
-                        <a href="#labs" class="text-white/50 hover:text-white text-sm transition-colors no-underline">المخابر</a>
-                        <a href="#doctors" class="text-white/50 hover:text-white text-sm transition-colors no-underline">الأطباء</a>
-                        <a href="#pharmacies" class="text-white/50 hover:text-white text-sm transition-colors no-underline">الصيدليات</a>
-                    </div>
+                    <span class="text-[10px] bg-blue-600 text-white font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">لوحة العيادة الحية</span>
+                    <h2 class="text-base font-bold mt-1" style="font-family:'Noto Kufi Arabic'"><i class="fas fa-user-shield ml-2 text-blue-400"></i>لوحة إدارة المواعيد اليومية (خاصة بالسكرتيرة والطبيب)</h2>
+                    <p class="text-[11px] text-slate-400 mt-0.5">من هنا يتم إدارة طلبات الحجز التي يرسلها المرضى عبر الموقع وتحديث حالة كل فترة زمنية.</p>
                 </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">معلومات المدينة</h4>
-                    <div class="flex flex-col gap-2 text-white/50 text-sm">
-                        <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt w-4" style="color: var(--gold)"></i> ريف دمشق، سوريا</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-users w-4" style="color: var(--gold)"></i> حوالي 30,000 نسمة</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-compass w-4" style="color: var(--gold)"></i> شمال شرق دمشق</div>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">تواصل معنا</h4>
-                    <div class="flex flex-col gap-2 text-white/50 text-sm">
-                        <div class="flex items-center gap-2"><i class="fas fa-phone w-4" style="color: var(--gold)"></i><span dir="ltr">+963 11 XXX XXXX</span></div>
-                        <div class="flex items-center gap-2"><i class="fas fa-envelope w-4" style="color: var(--gold)"></i> info@rahiba-med.sy</div>
-                    </div>
-                    <div class="flex items-center gap-3 mt-4">
-                        <a href="#" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all" aria-label="فيسبوك"><i class="fab fa-facebook-f text-sm"></i></a>
-                        <a href="#" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all" aria-label="تيليجرام"><i class="fab fa-telegram-plane text-sm"></i></a>
-                        <a href="#" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all" aria-label="واتساب"><i class="fab fa-whatsapp text-sm"></i></a>
-                    </div>
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <select id="adminDoctorSelect" onchange="renderAdminAppointments()" class="bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl outline-none border border-slate-700 w-full md:w-auto focus:border-blue-500"></select>
+                    <button onclick="clearAllAppointments()" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shrink-0" title="تفريغ كل المواعيد لليوم الجديد"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>
-            <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p class="text-white/40 text-xs">جميع الحقوق محفوظة 2026 - دليل الرحيبة الطبي</p>
-                <p class="text-white/30 text-xs">صنع بكل عناية لخدمة أهالي الرحيبة</p>
+            <div class="p-4 md:p-6 overflow-x-auto">
+                <table class="w-full text-right text-xs border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-100 text-slate-400 font-bold bg-slate-50">
+                            <th class="p-3">الفترة الزمنية</th>
+                            <th class="p-3">اسم المريض</th>
+                            <th class="p-3">رقم الهاتف</th>
+                            <th class="p-3">الحالة الحالية</th>
+                            <th class="p-3 text-center">إجراءات الإدارة السريعة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminAppointmentsTable" class="divide-y divide-slate-100 text-slate-700 font-medium">
+                        <!-- تُبنى أسطر الفترات هنا ديناميكياً عبر الجافاسكربت -->
+                    </tbody>
+                </table>
             </div>
+        </section>
+
+    </main>
+
+    <!-- المودال التفاعلي المنبثق للتفاصيل والحجز الفوري للمرضى -->
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModal(event)">
+        <div id="modalContent" class="modal-box">
+            <!-- يُبنى المحتوى هنا تلقائياً عند النقر على أي منشأة أو طبيب -->
         </div>
+    </div>
+
+    <!-- عنصر التنبيه الصغير السفلي التلقائي -->
+    <div id="toast" class="toast">تمت العملية بنجاح!</div>
+
+    <!-- الفوتر السفلي وحقوق النظام -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 px-4 text-center border-t border-slate-800 mt-24">
+        <p class="font-bold text-slate-300">دليل مدينة الرحيبة الطبي المتكامل © 2026</p>
+        <p class="text-[10px] text-slate-500 mt-1">جميع الحقوق محفوظة. تم تطوير النظام لمساعدة وتسهيل حجز العيادات الطبية والمشافي.</p>
     </footer>
 
-    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">
-        <i class="fas fa-chevron-up"></i>
+    <!-- زر الصعود السريع للأعلى -->
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all opacity-0 translate-y-4 pointer-events-none z-40 hover:bg-blue-700" aria-label="أعلى الصفحة">
+        <i class="fas fa-arrow-up text-sm"></i>
     </button>
 
-    <div class="toast" id="toast"></div>
+    <!-- ======================== سكريبت الجافاسكربت بالكامل مصلح وجاهز ======================== -->
+    <script>
+        // مصفوفة بيانات العيادات الطبية للرحيبة
+        const clinicsData = [
+            { id: 1, name: "عيادة الرحيبة الطبية الشاملة", type: "clinic", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "011-555-0001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250" },
+            { id: 2, name: "عيادة الأسنان التخصصية", type: "clinic", specialty: "طب الأسنان", address: "شارع النصر، بجانب صيدلية الشفاء", phone: "011-555-0002", hours: "9:00 ص - 8:00 م", description: "متخصصة في جراحة الفم والأسنان، تركيبات وتقويم أسنان بأحدث التقنيات", rating: 4.7, image: "https://picsum.photos/seed/clinic2/400/250" },
+            { id: 3, name: "عيادة طب الأطفال", type: "clinic", specialty: "طب الأطفال", address: "حي الأمل، بالقرب من مدرسة الرحيبة", phone: "011-555-0003", hours: "10:00 ص - 6:00 م", description: "رعاية صحية متكاملة للأطفال من الولادة حتى سن المراهقة", rating: 4.3, image: "https://picsum.photos/seed/clinic3/400/250" }
+        ];
 
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal-content" id="modalContent" onclick="event.stopPropagation()"></div>
-    </div>
+        // مصفوفة المراكز الطبية الشاملة
+        const centersData = [
+            { id: 30, name: "مركز الرحيبة الطبي المتكامل", type: "center", specialty: "رعاية طبية شاملة", address: "الشارع الرئيسي، مبنى الرحيبة الطبي", phone: "011-555-0030", hours: "8:00 ص - 10:00 م", description: "مركز طبي متكامل يضم عدة تخصصات", rating: 4.7, image: "https://picsum.photos/seed/center1/400/250", services: "باطنية، أطفال، عيون" }
+        ];
 
-<script>
-    // تم إضافة مصفوفات دوام تبدأ من 16:00 (4 م) وتنتهي 22:00 (10 م) للأطباء لتوليد فترات حجز ديناميكية
-    const clinicsData = [
-        { id: 1, name: "عيادة الرحيبة الطبية الشاملة", type: "clinic", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "011-555-0001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250" },
-        { id: 2, name: "عيادة الأسنان التخصصية", type: "clinic", specialty: "طب الأسنان", address: "شارع النصر، بجانب صيدلية الشفاء", phone: "011-555-0002", hours: "9:00 ص - 8:00 م", description: "متخصصة في جراحة الفم والأسنان، تركيبات وتقويم أسنان بأحدث التقنيات", rating: 4.7, image: "https://picsum.photos/seed/clinic2/400/250" },
-        { id: 3, name: "عيادة طب الأطفال", type: "clinic", specialty: "طب الأطفال", address: "حي الأمل، بالقرب من مدرسة الرحيبة", phone: "011-555-0003", hours: "10:00 ص - 6:00 م", description: "رعاية صحية متكاملة للأطفال من الولادة حتى سن المراهقة", rating: 4.3, image: "https://picsum.photos/seed/clinic3/400/250" }
-    ];
+        // مصفوفة المخابر الطبية (هنا تم إصلاح الخطأ الإملائي للفاصلة بنجاح لتظهر البيانات بالكامل)
+        const labsData = [
+            { id: 40, name: "مخبر الرحيبة للتحاليل الطبية", type: "lab", specialty: "تحاليل دم شاملة", address: "الشارع الرئيسي", phone: "011-555-0040", hours: "7:00 ص - 8:00 م", description: "مخبر مجهز بأحدث الأجهزة الآلية", rating: 4.7, image: "https://picsum.photos/seed/lab1/400/250", tests: "CBC، كيمياء" }
+        ];
 
-    const centersData = [
-        { id: 30, name: "مركز الرحيبة الطبي المتكامل", type: "center", specialty: "رعاية طبية شاملة", address: "الشارع الرئيسي، مبنى الرحيبة الطبي", phone: "011-555-0030", hours: "8:00 ص - 10:00 م", description: "مركز طبي متكامل يضم عدة تخصصات", rating: 4.7, image: "https://picsum.photos/seed/center1/400/250", services: "باطنية، أطفال، عيون" }
-    ];
+        // مصفوفة الأطباء والدوام المسائي المطلوب من الساعة 4 م (16:00) وحتى 10 م (22:00) لحجز فترات حية
+        const doctorsData = [
+            { id: 10, name: "د. أحمد الخطيب", type: "doctor", specialty: "طب عام وباطنية", clinic: "عيادة الرحيبة الطبية", phone: "011-555-0010", hours: "4:00 م - 10:00 م", startHour: 16, endHour: 22, experience: "15 سنة", description: "استشاري باطنية وطب أسرة، خريج جامعة دمشق", rating: 4.8, image: "https://picsum.photos/seed/doc1/400/250" },
+            { id: 11, name: "د. محمد العبد الله", type: "doctor", specialty: "جراحة أسنان", clinic: "عيادة الأسنان التخصصية", phone: "011-555-0011", hours: "4:00 م - 10:00 م", startHour: 16, endHour: 22, experience: "10 سنوات", description: "متخصص في جراحة الفم والتركيبات الثابتة", rating: 4.7, image: "https://picsum.photos/seed/doc2/400/250" },
+            { id: 12, name: "د. فاطمة الحسن", type: "doctor", specialty: "طب الأطفال", clinic: "عيادة طب الأطفال", phone: "011-555-0012", hours: "4:00 م - 10:00 م", startHour: 16, endHour: 22, experience: "12 سنة", description: "أخصائية طب أطفال، خريجة جامعة دمشق", rating: 4.6, image: "https://picsum.photos/seed/doc3/400/250" }
+        ];
 
-    const labsData = [
-        { id: 40, name: "مخبر الرحيبة للتحاليل الطبية", type: "lab", specialty: "تحاليل دم شاملة", address: "الشارع الرئيسي"، phone: "011-555-0040", hours: "7:00 ص - 8:00 م", description: "مخبر مجهز بأحدث الأجهزة الآلية", rating: 4.7, image: "https://picsum.photos/seed/lab1/400/250", tests: "CBC، كيمياء" }
-    ];
+        // مصفوفة الصيدليات
+        const pharmaciesData = [
+            { id: 22, name: "صيدلية الرحيبة الرئيسية", type: "pharmacy", address: "الساحة الرئيسية", phone: "011-555-0022", hours: "24 ساعة", description: "توفر جميع الأدوية وتلبي الاحتياجات الإسعافية الطارئة على مدار الساعة", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250" }
+        ];
 
-    // أوقات الأطباء تمت تهيئتها لتبدأ من 4 مساءً حتى 10 مساءً لتناسب طلبك تماماً
-    const doctorsData = [
-        { id: 10, name: "د. أحمد الخطيب", type: "doctor", specialty: "طب عام وباطنية", clinic: "عيادة الرحيبة الطبية", phone: "011-555-0010", hours: "4:00 م - 10:00 م", startHour: 16, endHour: 22, experience: "15 سنة", description: "استشاري باطنية وطب أسرة، خريج جامعة دمشق", rating: 4.8, image: "https://picsum.photos/seed/doc1/400/250" },
-        { id: 11, name: "د. محمد العبد الله", type: "doctor", specialty: "جراحة أسنان", clinic: "عيادة الأسنان التخصصية", phone: "011-555-0011", hours: "4:00 م - 10:00 م", startHour: 16, endHour: 22, experience: "10 سنوات", description: "متخصص في جراحة الفم والتركيبات الثابتة", rating: 4.7, image: "https://picsum.photos/seed/doc2/400/250" },
-        { id: 12, name: "د. فاطمة الحسن", type: "doctor", specialty: "طب الأطفال", clinic: "عيادة طب الأطفال", phone: "011-555-0012", hours: "4:00 م - 10:00 م", startHour: 16, endHour: 22, experience: "12 سنة", description: "أخصائية طب أطفال، خريجة جامعة دمشق", rating: 4.6, image: "https://picsum.photos/seed/doc3/400/250" }
-    ];
-
-    const pharmaciesData = [
-        { id: 22, name: "صيدلية الرحيبة الرئيسية", type: "pharmacy", address: "الساحة الرئيسية", phone: "011-555-0022", hours: "24 ساعة", description: "توفر جميع الأدوية", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250" }
-    ];
-
-    let currentFilter = 'all';
-    let searchQuery = '';
-    const allData = [...clinicsData, ...centersData, ...labsData, ...doctorsData, ...pharmaciesData];
-    
-    // إدارة الذاكرة المحلية (LocalStorage) لتخزين حجوزات العيادات بشكل دائم ومتجدد
-    let appointments = JSON.parse(localStorage.getItem('medical_bookings')) || [];
-    let selectedSlot = null;
-
-    // تهيئة ميزة الحجز عند فتح الملف
-    document.addEventListener('DOMContentLoaded', () => {
-        const allBtn = document.querySelector('[data-filter="all"]');
-        allBtn.style.background = 'var(--accent)';
-        allBtn.style.color = 'white';
-        allBtn.style.borderColor = 'var(--accent)';
-
-        renderData();
-        buildAdminDoctorSelect();
-        renderAdminAppointments();
-        setTimeout(animateCounters, 500);
-    });
-
-    // تكوين القائمة المنسدلة في لوحة إدارة العيادة
-    function buildAdminDoctorSelect() {
-        const select = document.getElementById('adminDoctorSelect');
-        select.innerHTML = doctorsData.map(doc => `<option value="${doc.id}">${doc.name} - ${doc.specialty}</option>`).join('');
-    }
-
-    // توليد الأوقات المتاحة تلقائياً كل نصف ساعة بناءً على دوام كل طبيب
-    function generateTimeSlots(doctor) {
-        const slots = [];
-        let currentMinutes = doctor.startHour * 60;
-        const endMinutes = doctor.endHour * 60;
-
-        while(currentMinutes < endMinutes) {
-            const h = Math.floor(currentMinutes / 60);
-            const m = currentMinutes % 60;
-            const timeString = `${h > 12 ? h - 12 : h}:${m === 0 ? '00' : m} ${h >= 12 ? 'مساءً' : 'صباحاً'}`;
-            slots.push(timeString);
-            currentMinutes += 30; // الحجز مبرمج كل 30 دقيقة ويمكنك تعديلها
-        }
-        return slots;
-    }
-
-    // واجهة اختيار الفترات الزمنية عند المريض في المودال
-    function selectTimeSlot(btn, time) {
-        document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedSlot = time;
-    }
-
-    // معالجة طلب حجز موعد جديد من قبل المريض
-    function handleBookingSubmit(e, docId) {
-        e.preventDefault();
-        const patientName = document.getElementById('bookName').value.trim();
-        const patientPhone = document.getElementById('bookPhone').value.trim();
-
-        if(!selectedSlot) {
-            alert('الرجاء اختيار التوقيت المناسب من جدول المواعيد المتاحة أولاً.');
-            return;
-        }
-
-        const newAppointment = {
-            id: Date.now(),
-            doctorId: parseInt(docId),
-            patientName: patientName,
-            patientPhone: patientPhone,
-            timeSlot: selectedSlot,
-            status: 'قيد الانتظار'
-        };
-
-        appointments.push(newAppointment);
-        localStorage.setItem('medical_bookings', JSON.stringify(appointments));
+        let currentFilter = 'all';
+        let searchQuery = '';
+        const allData = [...clinicsData, ...centersData, ...labsData, ...doctorsData, ...pharmaciesData];
         
-        showToast(`تم تقديم طلب الحجز بنجاح الساعة ${selectedSlot}`);
-        closeModal();
-        renderAdminAppointments(); // تحديث فوري داخل لوحة تحكم السكرتيرة/الطبيب
-    }
+        // جلب أو تهيئة نظام الحجوزات الطبية في التخزين المحلي للمتصفح LocalStorage
+        let appointments = JSON.parse(localStorage.getItem('medical_bookings')) || [];
+        let selectedSlot = null;
 
-    // عرض وتحديث المواعيد في لوحة تحكم الطبيب والسكرتيرة
-    function renderAdminAppointments() {
-        const activeDocId = parseInt(document.getElementById('adminDoctorSelect').value);
-        const currentDoctor = doctorsData.find(d => d.id === activeDocId);
-        const tableBody = document.getElementById('adminAppointmentsTable');
-        
-        if(!currentDoctor) return;
-        
-        const allPossibleSlots = generateTimeSlots(currentDoctor);
-        const doctorBookings = appointments.filter(app => app.doctorId === activeDocId);
-
-        let html = '';
-        allPossibleSlots.forEach(slot => {
-            const booking = doctorBookings.find(b => b.timeSlot === slot);
-            
-            if(booking) {
-                let statusColor = 'text-yellow-600 bg-yellow-50';
-                if(booking.status === 'مقبول') statusColor = 'text-green-600 bg-green-50';
-                if(booking.status === 'منتهي') statusColor = 'text-gray-500 bg-gray-100';
-
-                html += `
-                    <tr class="hover:bg-gray-50 bg-blue-50/30">
-                        <td class="p-3 font-bold text-blue-600">${slot}</td>
-                        <td class="p-3 font-semibold">${booking.patientName}</td>
-                        <td class="p-3 text-xs">${booking.patientPhone}</td>
-                        <td class="p-3"><span class="px-2 py-1 rounded-full text-xs font-bold ${statusColor}">${booking.status}</span></td>
-                        <td class="p-3 flex justify-center gap-1">
-                            <button onclick="changeStatus(${booking.id}, 'مقبول')" class="px-2 py-1 bg-green-600 text-white text-xs font-bold rounded-lg hover:bg-green-700 transition-all">قبول</button>
-                            <button onclick="changeStatus(${booking.id}, 'منتهي')" class="px-2 py-1 bg-gray-600 text-white text-xs font-bold rounded-lg hover:bg-gray-700 transition-all">إنهاء الزيارة</button>
-                            <button onclick="deleteAppointment(${booking.id})" class="px-2 py-1 bg-red-100 text-red-600 text-xs font-bold rounded-lg hover:bg-red-200 transition-all">إلغاء</button>
-                        </td>
-                    </tr>`;
-            } else {
-                html += `
-                    <tr class="hover:bg-gray-50">
-                        <td class="p-3 text-gray-500">${slot}</td>
-                        <td class="p-3 text-gray-400 italic">فارغ (متاح للحجز)</td>
-                        <td class="p-3 text-gray-300">-</td>
-                        <td class="p-3"><span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">متاح</span></td>
-                        <td class="p-3 text-gray-300 text-center">-</td>
-                    </tr>`;
+        // عند تحميل الصفحة بالكامل
+        document.addEventListener('DOMContentLoaded', () => {
+            const allBtn = document.querySelector('[data-filter="all"]');
+            if(allBtn) {
+                allBtn.style.background = 'var(--accent)';
+                allBtn.style.color = 'white';
+                allBtn.style.borderColor = 'var(--accent)';
             }
+
+            renderData();
+            buildAdminDoctorSelect();
+            renderAdminAppointments();
+            setTimeout(animateCounters, 500);
         });
 
-        tableBody.innerHTML = html;
-    }
+        // بناء قائمة الأطباء في لوحة تحكم السكرتيرة/الطبيب
+        function buildAdminDoctorSelect() {
+            const select = document.getElementById('adminDoctorSelect');
+            if(!select) return;
+            select.innerHTML = doctorsData.map(doc => `<option value="${doc.id}">${doc.name} - ${doc.specialty}</option>`).join('');
+        }
 
-    // تعديل حالة الحجز من اللوحة (مقبول / منتهي الزيارة)
-    function changeStatus(id, newStatus) {
-        appointments = appointments.map(app => app.id === id ? {...app, status: newStatus} : app);
-        localStorage.setItem('medical_bookings', JSON.stringify(appointments));
-        showToast(`تم تحديث حالة الحجز إلى ${newStatus}`);
-        renderAdminAppointments();
-    }
+        // توليد فترات زمنية حية كل نصف ساعة بناءً على ساعات عمل الطبيب المحددة
+        function generateTimeSlots(doctor) {
+            const slots = [];
+            let currentMinutes = doctor.startHour * 60;
+            const endMinutes = doctor.endHour * 60;
 
-    // حذف/إلغاء حجز موعد من اللوحة
-    function deleteAppointment(id) {
-        if(confirm('هل أنت متأكد من إلغاء وحذف هذا الموعد؟')) {
-            appointments = appointments.filter(app => app.id !== id);
+            while(currentMinutes < endMinutes) {
+                const h = Math.floor(currentMinutes / 60);
+                const m = currentMinutes % 60;
+                const timeString = `${h > 12 ? h - 12 : h}:${m === 0 ? '00' : m} ${h >= 12 ? 'مساءً' : 'صباحاً'}`;
+                slots.push(timeString);
+                currentMinutes += 30; // مدة المعاينة الافتراضية 30 دقيقة
+            }
+            return slots;
+        }
+
+        // واجهة اختيار الفترة للمريض من المودال المنبثق
+        function selectTimeSlot(btn, time) {
+            document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedSlot = time;
+        }
+
+        // معالجة وحفظ طلب حجز موعد جديد للمريض في الذاكرة المحلية
+        function handleBookingSubmit(e, docId) {
+            e.preventDefault();
+            const patientName = document.getElementById('bookName').value.trim();
+            const patientPhone = document.getElementById('bookPhone').value.trim();
+
+            if(!selectedSlot) {
+                alert('الرجاء تحديد فترة زمنية مناسبة من جدول المواعيد المتاحة أولاً.');
+                return;
+            }
+
+            const newAppointment = {
+                id: Date.now(),
+                doctorId: parseInt(docId),
+                patientName: patientName,
+                patientPhone: patientPhone,
+                timeSlot: selectedSlot,
+                status: 'قيد الانتظار'
+            };
+
+            appointments.push(newAppointment);
             localStorage.setItem('medical_bookings', JSON.stringify(appointments));
-            showToast('تم إلغاء الموعد وتفريغ الفطرة الزمنية');
+            
+            showToast(`تم إرسال طلب الحجز بنجاح لفترة: ${selectedSlot}`);
+            closeModal();
+            renderAdminAppointments(); // تحديث فوري وشامل للوحة الطبيب بالخلفية
+        }
+
+        // تحديث وعرض المواعيد الحية داخل لوحة التحكم المستقلة للطبيب أو السكرتيرة
+        function renderAdminAppointments() {
+            const select = document.getElementById('adminDoctorSelect');
+            if(!select) return;
+            const activeDocId = parseInt(select.value);
+            const currentDoctor = doctorsData.find(d => d.id === activeDocId);
+            const tableBody = document.getElementById('adminAppointmentsTable');
+            
+            if(!currentDoctor || !tableBody) return;
+            
+            const allPossibleSlots = generateTimeSlots(currentDoctor);
+            const doctorBookings = appointments.filter(app => app.doctorId === activeDocId);
+
+            let html = '';
+            allPossibleSlots.forEach(slot => {
+                const booking = doctorBookings.find(b => b.timeSlot === slot);
+                
+                if(booking) {
+                    let statusColor = 'text-yellow-600 bg-yellow-50';
+                    if(booking.status === 'مقبول') statusColor = 'text-green-600 bg-green-50';
+                    if(booking.status === 'منتهي') statusColor = 'text-gray-500 bg-gray-100';
+
+                    html += `
+                        <tr class="hover:bg-gray-50 bg-blue-50/30">
+                            <td class="p-3 font-bold text-blue-600">${slot}</td>
+                            <td class="p-3 font-semibold">${booking.patientName}</td>
+                            <td class="p-3 text-xs text-slate-500">${booking.patientPhone}</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusColor}">${booking.status}</span></td>
+                            <td class="p-3 flex justify-center gap-1">
+                                <button onclick="changeStatus(${booking.id}, 'مقبول')" class="px-2 py-1 bg-green-600 text-white text-[10px] font-bold rounded-md hover:bg-green-700 transition-all">قبول الموعد</button>
+                                <button onclick="changeStatus(${booking.id}, 'منتهي')" class="px-2 py-1 bg-slate-600 text-white text-[10px] font-bold rounded-md hover:bg-slate-700 transition-all">إنهاء الزيارة</button>
+                                <button onclick="deleteAppointment(${booking.id})" class="px-2 py-1 bg-red-100 text-red-600 text-[10px] font-bold rounded-md hover:bg-red-200 transition-all">إلغاء</button>
+                            </td>
+                        </tr>`;
+                } else {
+                    html += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 text-slate-400">${slot}</td>
+                            <td class="p-3 text-slate-400 italic font-normal text-[11px]">فترة فارغة ومتاحة حالياً</td>
+                            <td class="p-3 text-slate-300 text-center">-</td>
+                            <td class="p-3"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">شاغر</span></td>
+                            <td class="p-3 text-slate-300 text-center">-</td>
+                        </tr>`;
+                }
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // تغيير حالة الحجز من قبل السكرتيرة (مقبول / منتهي الزيارة)
+        function changeStatus(id, newStatus) {
+            appointments = appointments.map(app => app.id === id ? {...app, status: newStatus} : app);
+            localStorage.setItem('medical_bookings', JSON.stringify(appointments));
+            showToast(`تم تغيير حالة الحجز بنجاح إلى: ${newStatus}`);
             renderAdminAppointments();
         }
-    }
 
-    // تفريغ جدول المواعيد بالكامل لليوم الجديد
-    function clearAllAppointments() {
-        const activeDocId = parseInt(document.getElementById('adminDoctorSelect').value);
-        if(confirm('هل تريد مسح وتفريغ جميع مواعيد هذا الطبيب لليوم الحالي؟')) {
-            appointments = appointments.filter(app => app.doctorId !== activeDocId);
-            localStorage.setItem('medical_bookings', JSON.stringify(appointments));
-            showToast('تم تفريغ جدول العيادة بنجاح');
-            renderAdminAppointments();
-        }
-    }
-
-    // بناء محتوى بطاقات العرض الطبية للزوار
-    function createCard(item) {
-        const typeMap = {
-            clinic: { cardClass: 'clinic-card', badgeClass: 'badge-clinic', iconClass: 'cat-icon-clinic', icon: 'fa-hospital', label: 'عيادة', color: 'var(--clinic)' },
-            center: { cardClass: 'center-card', badgeClass: 'badge-center', iconClass: 'cat-icon-center', icon: 'fa-clinic-medical', label: 'مركز طبي', color: 'var(--center)' },
-            lab: { cardClass: 'lab-card', badgeClass: 'badge-lab', iconClass: 'cat-icon-lab', icon: 'fa-flask', label: 'مخبر', color: 'var(--lab)' },
-            doctor: { cardClass: 'doctor-card', badgeClass: 'badge-doctor', iconClass: 'cat-icon-doctor', icon: 'fa-user-md', label: 'طبيب', color: 'var(--doctor)' },
-            pharmacy: { cardClass: 'pharmacy-card', badgeClass: 'badge-pharmacy', iconClass: 'cat-icon-pharmacy', icon: 'fa-pills', label: 'صيدلية', color: 'var(--pharmacy)' }
-        };
-
-        const t = typeMap[item.type] || typeMap.clinic;
-
-        const fullStars = Math.floor(item.rating);
-        const halfStar = item.rating % 1 >= 0.5;
-        let starsHTML = '';
-        for (let i = 0; i < fullStars; i++) starsHTML += '<i class="fas fa-star"></i>';
-        if (halfStar) starsHTML += '<i class="fas fa-star-half-alt"></i>';
-        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-        for (let i = 0; i < emptyStars; i++) starsHTML += '<i class="far fa-star"></i>';
-
-        let detailsHTML = '';
-        if (item.type === 'clinic') {
-            detailsHTML = `
-                <div class="detail-row"><i class="fas fa-stethoscope"></i><span>${item.specialty}</span></div>
-                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
-                <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
-        } else if (item.type === 'center') {
-            detailsHTML = `
-                <div class="detail-row"><i class="fas fa-star-of-life"></i><span>${item.specialty}</span></div>
-                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
-                <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
-        } else if (item.type === 'lab') {
-            detailsHTML = `
-                <div class="detail-row"><i class="fas fa-microscope"></i><span>${item.specialty}</span></div>
-                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
-                <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
-        } else if (item.type === 'doctor') {
-            detailsHTML = `
-                <div class="detail-row"><i class="fas fa-graduation-cap"></i><span>${item.specialty}</span></div>
-                <div class="detail-row"><i class="fas fa-hospital"></i><span>${item.clinic}</span></div>
-                <div class="detail-row"><i class="fas fa-clock"></i><span class="text-blue-600 font-bold">${item.hours}</span></div>`;
-        } else {
-            detailsHTML = `
-                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
-                <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>
-                ${item.night ? '<div class="detail-row"><i class="fas fa-moon" style="color: var(--gold)"></i><span style="color: var(--gold); font-weight: 600">خدمة ليلية</span></div>' : ''}`;
+        // إلغاء حجز المريض بالكامل وحذفه لتفريغ الفترة الزمنية مجدداً
+        function deleteAppointment(id) {
+            if(confirm('هل أنت متأكد تماماً من رغبتك في إلغاء وحذف هذا الموعد الطبي؟')) {
+                appointments = appointments.filter(app => app.id !== id);
+                localStorage.setItem('medical_bookings', JSON.stringify(appointments));
+                showToast('تم إلغاء طلب الموعد وتفريغ التوقيت بنجاح.');
+                renderAdminAppointments();
+            }
         }
 
-        const buttonLabel = item.type === 'doctor' ? '<i class="fas fa-calendar-check"></i>حجز موعد عيادة' : '<i class="fas fa-phone-alt"></i>اتصال';
+        // مسح وتفريغ جدول المواعيد للطبيب لبدء يوم حجز جديد ونظيف
+        function clearAllAppointments() {
+            const select = document.getElementById('adminDoctorSelect');
+            if(!select) return;
+            const activeDocId = parseInt(select.value);
+            if(confirm('هل ترغب بتفريغ وحذف جميع المواعيد المحجوزة لهذا الطبيب لبدء يوم عمل جديد؟')) {
+                appointments = appointments.filter(app => app.doctorId !== activeDocId);
+                localStorage.setItem('medical_bookings', JSON.stringify(appointments));
+                showToast('تم تصفير جدول المواعيد لليوم الجديد بنجاح.');
+                renderAdminAppointments();
+            }
+        }
 
-        return `
-            <div class="card ${t.cardClass} cursor-pointer reveal" onclick="openModal(${item.id})" data-type="${item.type}">
-                <div class="relative h-40 overflow-hidden rounded-t-2xl">
-                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">
-                    <div class="absolute top-3 right-3"><span class="badge ${t.badgeClass}">${t.label}</span></div>
-                    ${item.night ? '<div class="absolute top-3 left-3"><span class="badge" style="background:rgba(196,150,44,0.9);color:white"><i class="fas fa-moon ml-1"></i>ليلي</span></div>' : ''}
-                </div>
-                <div class="p-5">
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="cat-icon ${t.iconClass}"><i class="fas ${t.icon}"></i></div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-sm mb-1 leading-tight" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">${item.name}</h3>
-                            <div class="flex items-center gap-1 text-[11px]" style="color: ${t.color}">
-                                ${starsHTML}
-                                <span class="mr-1 font-semibold">${item.rating}</span>
+        // بناء كروت العرض الطبية للواجهة الرئيسية
+        function createCard(item) {
+            const typeMap = {
+                clinic: { cardClass: 'clinic-card', badgeClass: 'badge-clinic', iconClass: 'cat-icon-clinic', icon: 'fa-hospital', label: 'عيادة', color: 'var(--clinic)' },
+                center: { cardClass: 'center-card', badgeClass: 'badge-center', iconClass: 'cat-icon-center', icon: 'fa-clinic-medical', label: 'مركز طبي', color: 'var(--center)' },
+                lab: { cardClass: 'lab-card', badgeClass: 'badge-lab', iconClass: 'cat-icon-lab', icon: 'fa-flask', label: 'مخبر تحاليل', color: 'var(--lab)' },
+                doctor: { cardClass: 'doctor-card', badgeClass: 'badge-doctor', iconClass: 'cat-icon-doctor', icon: 'fa-user-md', label: 'طبيب تخصصي', color: 'var(--doctor)' },
+                pharmacy: { cardClass: 'pharmacy-card', badgeClass: 'badge-pharmacy', iconClass: 'cat-icon-pharmacy', icon: 'fa-pills', label: 'صيدلية', color: 'var(--pharmacy)' }
+            };
+
+            const t = typeMap[item.type] || typeMap.clinic;
+
+            const fullStars = Math.floor(item.rating);
+            const halfStar = item.rating % 1 >= 0.5;
+            let starsHTML = '';
+            for (let i = 0; i < fullStars; i++) starsHTML += '<i class="fas fa-star"></i>';
+            if (halfStar) starsHTML += '<i class="fas fa-star-half-alt"></i>';
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) starsHTML += '<i class="far fa-star"></i>';
+
+            let detailsHTML = '';
+            if (item.type === 'clinic') {
+                detailsHTML = `
+                    <div class="detail-row"><i class="fas fa-stethoscope"></i><span>${item.specialty}</span></div>
+                    <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
+                    <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
+            } else if (item.type === 'center') {
+                detailsHTML = `
+                    <div class="detail-row"><i class="fas fa-star-of-life"></i><span>${item.specialty}</span></div>
+                    <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
+                    <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
+            } else if (item.type === 'lab') {
+                detailsHTML = `
+                    <div class="detail-row"><i class="fas fa-microscope"></i><span>${item.specialty}</span></div>
+                    <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
+                    <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
+            } else if (item.type === 'doctor') {
+                detailsHTML = `
+                    <div class="detail-row"><i class="fas fa-graduation-cap"></i><span>${item.specialty}</span></div>
+                    <div class="detail-row"><i class="fas fa-hospital"></i><span>${item.clinic}</span></div>
+                    <div class="detail-row"><i class="fas fa-clock"></i><span class="text-blue-600 font-bold">${item.hours}</span></div>`;
+            } else {
+                detailsHTML = `
+                    <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
+                    <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>
+                    ${item.night ? '<div class="detail-row"><i class="fas fa-moon" style="color: var(--gold)"></i><span style="color: var(--gold); font-weight: 600">خدمة ليلية مناوبة</span></div>' : ''}`;
+            }
+
+            const buttonLabel = item.type === 'doctor' ? '<i class="fas fa-calendar-check"></i> احجز الموعد الآن' : '<i class="fas fa-phone-alt"></i> اتصال سريع';
+
+            return `
+                <div class="card ${t.cardClass} cursor-pointer reveal" onclick="openModal(${item.id})" data-type="${item.type}">
+                    <div class="relative h-40 overflow-hidden rounded-t-2xl">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">
+                        <div class="absolute top-3 right-3"><span class="badge ${t.badgeClass}">${t.label}</span></div>
+                        ${item.night ? '<div class="absolute top-3 left-3"><span class="badge" style="background:rgba(196,150,44,0.9);color:white"><i class="fas fa-moon ml-1"></i>مناوب</span></div>' : ''}
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="cat-icon ${t.iconClass}"><i class="fas ${t.icon}"></i></div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-slate-800 text-xs mb-1 truncate" style="font-family: 'Noto Kufi Arabic'">${item.name}</h3>
+                                <div class="flex items-center gap-1 text-[11px]" style="color: ${t.color}">
+                                    ${starsHTML}
+                                    <span class="mr-1 font-semibold">${item.rating}</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="flex flex-col gap-1.5 mb-4">${detailsHTML}</div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="event.stopPropagation(); openModal(${item.id})" class="call-btn flex-1 py-2.5 rounded-xl text-white text-xs font-bold text-center flex items-center justify-center gap-2" style="background: ${t.color}">
+                                ${buttonLabel}
+                            </button>
+                            <button onclick="event.stopPropagation(); openModal(${item.id})" class="w-10 h-10 rounded-xl border flex items-center justify-center text-slate-400 transition-all hover:bg-slate-50 border-slate-200" aria-label="عرض التفاصيل الكاملة للمنشأة">
+                                <i class="fas fa-info-circle text-sm"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex flex-col gap-1.5 mb-4">${detailsHTML}</div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="event.stopPropagation(); openModal(${item.id})" class="call-btn flex-1 py-2.5 rounded-xl text-white text-xs font-semibold text-center no-underline flex items-center justify-center gap-2" style="background: ${t.color}">
-                            ${buttonLabel}
-                        </button>
-                        <button onclick="event.stopPropagation(); openModal(${item.id})" class="w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50" style="border-color: var(--border); color: var(--muted)" aria-label="التفاصيل">
-                            <i class="fas fa-info-circle"></i>
-                        </button>
+                </div>`;
+        }
+
+        // معالجة تصفية البيانات الإجمالية وعرضها بالجريد المناسب للمستخدم
+        function renderData() {
+            const grids = {
+                clinic: { el: document.getElementById('clinicsGrid'), section: document.getElementById('clinics'), data: clinicsData },
+                center: { el: document.getElementById('centersGrid'), section: document.getElementById('centers'), data: centersData },
+                lab: { el: document.getElementById('labsGrid'), section: document.getElementById('labs'), data: labsData },
+                doctor: { el: document.getElementById('doctorsGrid'), section: document.getElementById('doctors'), data: doctorsData },
+                pharmacy: { el: document.getElementById('pharmaciesGrid'), section: document.getElementById('pharmacies'), data: pharmaciesData }
+            };
+
+            let total = 0;
+            for (const [type, g] of Object.entries(grids)) {
+                const filtered = g.data.filter(matchItem);
+                const show = filtered.length > 0 && (currentFilter === 'all' || currentFilter === type);
+                if(g.el) {
+                    g.el.innerHTML = filtered.map(createCard).join('');
+                    if(g.section) g.section.style.display = show ? '' : 'none';
+                    total += filtered.length;
+                }
+            }
+
+            const noResEl = document.getElementById('noResults');
+            if(noResEl) noResEl.style.display = total === 0 ? '' : 'none';
+
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach((el, i) => {
+                    setTimeout(() => el.classList.add('visible'), i * 40);
+                });
+            }, 50);
+        }
+
+        function matchItem(item) {
+            if (currentFilter !== 'all' && item.type !== currentFilter) return false;
+            if (!searchQuery) return true;
+            const q = searchQuery.toLowerCase();
+            return ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests']
+                .some(key => (item[key] || '').toLowerCase().includes(q));
+        }
+
+        // إعداد أزرار الفلترة العلوية
+        function setFilter(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active'); b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
+            });
+            btn.classList.add('active');
+            const colors = { all: 'var(--accent)', clinic: 'var(--clinic)', center: 'var(--center)', lab: 'var(--lab)', doctor: 'var(--doctor)', pharmacy: 'var(--pharmacy)' };
+            btn.style.background = colors[filter];
+            btn.style.color = 'white';
+            btn.style.borderColor = colors[filter];
+            renderData();
+        }
+
+        function handleSearch(value) {
+            searchQuery = value.trim();
+            const heroSearch = document.getElementById('heroSearch');
+            if(heroSearch) heroSearch.value = value;
+            renderData();
+        }
+
+        function resetSearch() {
+            searchQuery = ''; currentFilter = 'all';
+            const heroSearch = document.getElementById('heroSearch');
+            if(heroSearch) heroSearch.value = '';
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active'); b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
+            });
+            const allBtn = document.querySelector('[data-filter="all"]');
+            if(allBtn) {
+                allBtn.classList.add('active'); allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
+            }
+            renderData();
+        }
+
+        // فتح مودال التفاصيل وبناء استمارة الحجز الفوري للأطباء
+        function openModal(id) {
+            const item = allData.find(d => d.id === id);
+            if (!item) return;
+
+            selectedSlot = null; 
+
+            const typeMap = {
+                clinic: { label: 'عيادة تخصصية', badgeClass: 'badge-clinic', color: 'var(--clinic)', icon: 'fa-hospital' },
+                center: { label: 'مركز طبي متكامل', badgeClass: 'badge-center', color: 'var(--center)', icon: 'fa-clinic-medical' },
+                lab: { label: 'مخبر طبي', badgeClass: 'badge-lab', color: 'var(--lab)', icon: 'fa-flask' },
+                doctor: { label: 'طبيب مناوب', badgeClass: 'badge-doctor', color: 'var(--doctor)', icon: 'fa-user-md' },
+                pharmacy: { label: 'صيدلية', badgeClass: 'badge-pharmacy', color: 'var(--pharmacy)', icon: 'fa-pills' }
+            };
+            const t = typeMap[item.type] || typeMap.clinic;
+
+            let extraHTML = '';
+            let bookingFormHTML = '';
+
+            if (item.type === 'doctor') {
+                const slots = generateTimeSlots(item);
+                const doctorBookings = appointments.filter(app => app.doctorId === item.id);
+                
+                const slotsHTML = slots.map(slot => {
+                    const isBooked = doctorBookings.some(b => b.timeSlot === slot);
+                    if(isBooked) {
+                        return `<button type="button" class="slot-btn p-2 border rounded-xl text-[10px] font-bold text-center bg-slate-200 text-slate-400 cursor-not-allowed" disabled>${slot} (محجوز)</button>`;
+                    } else {
+                        return `<button type="button" onclick="selectTimeSlot(this, '${slot}')" class="slot-btn p-2 border border-blue-100 rounded-xl text-[10px] font-bold text-center text-blue-600 bg-blue-50/60 hover:bg-blue-100 transition-all">${slot}</button>`;
+                    }
+                }).join('');
+
+                extraHTML = `
+                    <div class="mt-4 border-t pt-4">
+                        <h4 class="text-xs font-bold text-slate-500 mb-2"><i class="fas fa-calendar-alt ml-1 text-blue-500"></i>الفترات المتاحة للحجز اليوم في العيادة (من 4 م إلى 10 م):</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${slotsHTML}</div>
+                    </div>`;
+
+                bookingFormHTML = `
+                    <form onsubmit="handleBookingSubmit(event, ${item.id})" class="mt-5 bg-slate-50 p-4 rounded-2xl border border-dashed border-slate-200">
+                        <h4 class="text-xs font-bold text-slate-700 mb-3" style="font-family:'Noto Kufi Arabic'"><i class="fas fa-id-card ml-1 text-slate-500"></i> بيانات المريض وتأكيد الموعد</h4>
+                        <div class="mb-2">
+                            <input type="text" id="bookName" placeholder="اسم المريض الكامل ثلاثي" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        </div>
+                        <div class="mb-3">
+                            <input type="tel" id="bookPhone" placeholder="رقم هاتف المريض المباشر (09xxxxxxxx)" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl text-xs hover:bg-blue-700 transition-all shadow-md"><i class="fas fa-check ml-1"></i>تأكيد حجز الفترة المحددة</button>
+                    </form>`;
+            }
+
+            document.getElementById('modalContent').innerHTML = `
+                <div class="relative h-48 overflow-hidden rounded-t-2xl">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent)"></div>
+                    <button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-all"><i class="fas fa-times text-sm"></i></button>
+                    <div class="absolute bottom-4 right-5 left-5">
+                        <span class="badge ${t.badgeClass} mb-2 inline-block">${t.label}</span>
+                        <h3 class="text-white font-bold text-sm sm:text-base" style="font-family: 'Noto Kufi Arabic'">${item.name}</h3>
                     </div>
                 </div>
-            </div>`;
-    }
+                <div class="p-6">
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">${item.description || 'تقديم خدمات الرعاية بكفاءة وجودة عالية لأهالي مدينة الرحيبة.'}</p>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50">
+                            <i class="fas ${t.icon}" style="color: ${t.color}"></i>
+                            <div><div class="text-[10px] text-slate-400 font-bold">التصنيف الطبي / الاختصاص</div><div class="text-xs font-bold text-slate-800">${item.specialty}</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50">
+                            <i class="fas fa-clock" style="color: ${t.color}"></i>
+                            <div><div class="text-[10px] text-slate-400 font-bold">أوقات عمل واستقبال العيادة</div><div class="text-xs font-bold text-green-700">${item.hours}</div></div>
+                        </div>
+                    </div>
+                    ${extraHTML}
+                    ${bookingFormHTML}
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100">
+                        <a href="tel:${item.phone}" class="flex-1 py-3 rounded-xl text-white text-xs font-bold text-center flex items-center justify-center gap-2 transition-all opacity-90 hover:opacity-100" style="background: ${t.color}">
+                            <i class="fas fa-phone-alt"></i> اتصال هاتفي مباشر بالمنشأة
+                        </a>
+                    </div>
+                </div>`;
 
-    // تصفية وعرض كروت الواجهة الرئيسية
-    function renderData() {
-        const grids = {
-            clinic: { el: document.getElementById('clinicsGrid'), section: document.getElementById('clinics'), data: clinicsData },
-            center: { el: document.getElementById('centersGrid'), section: document.getElementById('centers'), data: centersData },
-            lab: { el: document.getElementById('labsGrid'), section: document.getElementById('labs'), data: labsData },
-            doctor: { el: document.getElementById('doctorsGrid'), section: document.getElementById('doctors'), data: doctorsData },
-            pharmacy: { el: document.getElementById('pharmaciesGrid'), section: document.getElementById('pharmacies'), data: pharmaciesData }
-        };
+            const overlay = document.getElementById('modalOverlay');
+            if(overlay) overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-        let total = 0;
-        for (const [type, g] of Object.entries(grids)) {
-            const filtered = g.data.filter(matchItem);
-            const show = filtered.length > 0 && (currentFilter === 'all' || currentFilter === type);
-            if(g.el) {
-                g.el.innerHTML = filtered.map(createCard).join('');
-                g.section.style.display = show ? '' : 'none';
-                total += filtered.length;
+        function closeModal(event) {
+            if (event && event.target !== document.getElementById('modalOverlay')) return;
+            const overlay = document.getElementById('modalOverlay');
+            if(overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            if(!toast) return;
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const icon = document.getElementById('menuIcon');
+            if(!menu || !overlay || !icon) return;
+            const isOpen = menu.classList.contains('open');
+            if (isOpen) {
+                menu.classList.remove('open'); menu.classList.add('translate-x-full'); overlay.classList.add('hidden');
+                icon.className = 'fas fa-bars'; document.body.style.overflow = '';
+            } else {
+                menu.classList.remove('translate-x-full'); menu.classList.add('open'); overlay.classList.remove('hidden');
+                icon.className = 'fas fa-times'; document.body.style.overflow = 'hidden';
             }
         }
 
-        document.getElementById('noResults').style.display = total === 0 ? '' : 'none';
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if(navbar) navbar.classList.toggle('nav-scrolled', window.scrollY > 40);
+            const btt = document.getElementById('backToTop');
+            if(btt) {
+                if(window.scrollY > 400) { btt.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none'); }
+                else { btt.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); }
+            }
+        });
 
-        setTimeout(() => {
-            document.querySelectorAll('.reveal').forEach((el, i) => {
-                setTimeout(() => el.classList.add('visible'), i * 40);
+        function animateCounters() {
+            document.querySelectorAll('.count-up').forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                const duration = 1000;
+                const step = target / (duration / 16);
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { counter.textContent = target; clearInterval(timer); }
+                    else { counter.textContent = Math.floor(current); }
+                }, 16);
             });
-        }, 50);
-    }
-
-    function matchItem(item) {
-        if (currentFilter !== 'all' && item.type !== currentFilter) return false;
-        if (!searchQuery) return true;
-        const q = searchQuery.toLowerCase();
-        return ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests']
-            .some(key => (item[key] || '').toLowerCase().includes(q));
-    }
-
-    function setFilter(filter, btn) {
-        currentFilter = filter;
-        document.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('active'); b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
-        });
-        btn.classList.add('active');
-        const colors = { all: 'var(--accent)', clinic: 'var(--clinic)', center: 'var(--center)', lab: 'var(--lab)', doctor: 'var(--doctor)', pharmacy: 'var(--pharmacy)' };
-        btn.style.background = colors[filter];
-        btn.style.color = 'white';
-        btn.style.borderColor = colors[filter];
-        renderData();
-    }
-
-    function handleSearch(value) {
-        searchQuery = value.trim();
-        document.getElementById('heroSearch').value = value;
-        const inline = document.getElementById('inlineSearch');
-        if(inline) inline.value = value;
-        renderData();
-    }
-
-    function resetSearch() {
-        searchQuery = ''; currentFilter = 'all';
-        document.getElementById('heroSearch').value = '';
-        document.getElementById('inlineSearch').value = '';
-        document.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('active'); b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
-        });
-        const allBtn = document.querySelector('[data-filter="all"]');
-        allBtn.classList.add('active'); allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
-        renderData();
-    }
-
-    // فتح مودال التفاصيل مع دمج ميزة اختيار المواعيد الحية وحجزها فورا للأطباء
-    function openModal(id) {
-        const item = allData.find(d => d.id === id);
-        if (!item) return;
-
-        selectedSlot = null; // إعادة تعيين الوقت المختار
-
-        const typeMap = {
-            clinic: { label: 'عيادة', badgeClass: 'badge-clinic', color: 'var(--clinic)', icon: 'fa-hospital' },
-            center: { label: 'مركز طبي', badgeClass: 'badge-center', color: 'var(--center)', icon: 'fa-clinic-medical' },
-            lab: { label: 'مخبر', badgeClass: 'badge-lab', color: 'var(--lab)', icon: 'fa-flask' },
-            doctor: { label: 'طبيب', badgeClass: 'badge-doctor', color: 'var(--doctor)', icon: 'fa-user-md' },
-            pharmacy: { label: 'صيدلية', badgeClass: 'badge-pharmacy', color: 'var(--pharmacy)', icon: 'fa-pills' }
-        };
-        const t = typeMap[item.type] || typeMap.clinic;
-
-        let extraHTML = '';
-        let bookingFormHTML = '';
-
-        if (item.type === 'doctor') {
-            const slots = generateTimeSlots(item);
-            const doctorBookings = appointments.filter(app => app.doctorId === item.id);
-            
-            const slotsHTML = slots.map(slot => {
-                const isBooked = doctorBookings.some(b => b.timeSlot === slot);
-                if(isBooked) {
-                    return `<button type="button" class="slot-btn disabled p-2 border rounded-xl text-xs font-bold text-center bg-gray-200" disabled>${slot}</button>`;
-                } else {
-                    return `<button type="button" onclick="selectTimeSlot(this, '${slot}')" class="slot-btn p-2 border border-blue-200 rounded-xl text-xs font-bold text-center text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all">${slot}</button>`;
-                }
-            }).join('');
-
-            extraHTML = `
-                <div class="mt-4 border-t pt-4">
-                    <h4 class="text-xs font-bold text-gray-500 mb-2"><i class="fas fa-calendar-alt ml-1 text-blue-500"></i>جدول فترات الحجز اليوم المتاحة للعيادة (4:00 م - 10:00 م):</h4>
-                    <div class="grid grid-cols-3 gap-2">${slotsHTML}</div>
-                </div>`;
-
-            bookingFormHTML = `
-                <form onsubmit="handleBookingSubmit(event, ${item.id})" class="mt-5 bg-gray-50 p-4 rounded-2xl border border-dashed border-gray-200">
-                    <h4 class="text-sm font-bold text-gray-700 mb-3" style="font-family:'Noto Kufi Arabic'">تثبيت استمارة الحجز الفوري</h4>
-                    <div class="mb-2">
-                        <input type="text" id="bookName" placeholder="اسم المريض الكامل ثلاثي" required class="w-full px-3 py-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="mb-3">
-                        <input type="tel" id="bookPhone" placeholder="رقم هاتف المريض للتأكيد (09xxxxxxxx)" required class="w-full px-3 py-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl text-xs hover:bg-blue-700 transition-all shadow-md"><i class="fas fa-check ml-1"></i>تأكيد حجز الموعد المختار</button>
-                </form>`;
         }
-
-        document.getElementById('modalContent').innerHTML = `
-            <div class="relative h-48 overflow-hidden rounded-t-2xl">
-                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
-                <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.6), transparent)"></div>
-                <button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-all" aria-label="إغلاق"><i class="fas fa-times text-sm"></i></button>
-                <div class="absolute bottom-4 right-5 left-5">
-                    <span class="badge ${t.badgeClass} mb-2 inline-block">${t.label}</span>
-                    <h3 class="text-white font-bold text-lg" style="font-family: 'Noto Kufi Arabic'">${item.name}</h3>
-                </div>
-            </div>
-            <div class="p-6">
-                <p class="text-sm leading-relaxed mb-4" style="color: var(--fg-light)">${item.description || 'تقديم خدمات الرعاية بكفاءة وجودة عالية.'}</p>
-                <div class="flex flex-col gap-2">
-                    <div class="flex items-center gap-3 p-2.5 rounded-xl" style="background: var(--bg)">
-                        <i class="fas ${t.icon}" style="color: ${t.color}"></i>
-                        <div><div class="text-[10px]" style="color: var(--muted)">التخصص</div><div class="text-xs font-bold">${item.specialty}</div></div>
-                    </div>
-                    <div class="flex items-center gap-3 p-2.5 rounded-xl" style="background: var(--bg)">
-                        <i class="fas fa-clock" style="color: ${t.color}"></i>
-                        <div><div class="text-[10px]" style="color: var(--muted)">أوقات الدوام الرسمي</div><div class="text-xs font-bold text-green-700">${item.hours}</div></div>
-                    </div>
-                </div>
-                ${extraHTML}
-                ${bookingFormHTML}
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t">
-                    <a href="tel:${item.phone}" class="call-btn flex-1 py-3 rounded-xl text-white text-xs font-bold text-center no-underline flex items-center justify-center gap-2" style="background: ${t.color}">
-                        <i class="fas fa-phone-alt"></i> اتصال هاتفي مباشر
-                    </a>
-                </div>
-            </div>`;
-
-        document.getElementById('modalOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(event) {
-        if (event && event.target !== document.getElementById('modalOverlay')) return;
-        document.getElementById('modalOverlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3500);
-    }
-
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        const overlay = document.getElementById('menuOverlay');
-        const icon = document.getElementById('menuIcon');
-        const isOpen = menu.classList.contains('open');
-        if (isOpen) {
-            menu.classList.remove('open'); overlay.classList.add('hidden');
-            icon.className = 'fas fa-bars'; document.body.style.overflow = '';
-        } else {
-            menu.classList.add('open'); overlay.classList.remove('hidden');
-            icon.className = 'fas fa-times'; document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function handleContactSubmit(e) {
-        e.preventDefault();
-        showToast('شكراً لك! تم استلام رسالتك وتحديثاتك المقترحة بنجاح.');
-        e.target.reset();
-    }
-
-    window.addEventListener('scroll', () => {
-        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
-        document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500);
-    });
-
-    function animateCounters() {
-        document.querySelectorAll('.count-up').forEach(counter => {
-            const target = parseInt(counter.dataset.target);
-            const duration = 1200;
-            const step = target / (duration / 16);
-            let current = 0;
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) { counter.textContent = target; clearInterval(timer); }
-                else { counter.textContent = Math.floor(current); }
-            }, 16);
-        });
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            const overlay = document.getElementById('modalOverlay');
-            if (overlay.classList.contains('active')) { overlay.classList.remove('active'); document.body.style.overflow = ''; }
-            if (document.getElementById('mobileMenu').classList.contains('open')) toggleMobileMenu();
-        }
-    });
-</script>
+    </script>
 </body>
 </html>
