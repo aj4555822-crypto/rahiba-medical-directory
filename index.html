@@ -3,180 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دليل الرحيبة الطبي | لوحة تحكم ديناميكية</title>
+    <title>دليل الرحيبة الطبي الذكي</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #FAF8F4; --bg-deep: #F0EDE6; --fg: #1B2A1B; --fg-light: #3D4F3D; --muted: #7A8B7A;
-            --accent: #0E7C5F; --accent-dark: #095E47; --accent-light: #D6F0E5; --gold: #C4962C; --gold-light: #F5ECD0;
-            --card: #FFFFFF; --border: #DDE3DD; --clinic: #0E7C5F; --doctor: #2563EB; --pharmacy: #C4962C;
-            --center: #9333EA; --lab: #DC2626; --hospital: #EF4444;
+        body { font-family: 'Cairo', sans-serif; background-color: #F4F7F6; color: #1F2937; }
+        h1, h2, h3 { font-family: 'Noto Kufi Arabic', sans-serif; }
+        .glass-header { background: linear-gradient(135deg, #0A5C46 0%, #148062 100%); }
+        .hero-gradient { background: radial-gradient(circle at top right, #148062 0%, #084232 100%); }
+        
+        /* تأثيرات البطاقات الحيوية */
+        .medical-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.02);
         }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
-        h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
-        .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
-        .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s ease; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 0; transition: height 0.4s ease; border-radius: 0 0 4px 0; }
-        .card:hover::before { height: 100%; }
-        .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: transparent; }
-        .card.hospital-card::before { background: var(--hospital); }
-        .card.clinic-card::before { background: var(--clinic); }
-        .card.doctor-card::before { background: var(--doctor); }
-        .card.pharmacy-card::before { background: var(--pharmacy); }
-        .card.center-card::before { background: var(--center); }
-        .card.lab-card::before { background: var(--lab); }
-        .badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
-        .badge-hospital { background: #FEE2E2; color: #991B1B; }
-        .badge-clinic { background: var(--accent-light); color: var(--accent-dark); }
-        .badge-doctor { background: #DBEAFE; color: #1E40AF; }
-        .badge-pharmacy { background: var(--gold-light); color: #92610A; }
-        .badge-center { background: #F3E8FF; color: #6B21A8; }
-        .badge-lab { background: #FEE2E2; color: #991B1B; }
-        .cat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
-        .cat-icon-hospital { background: #FEE2E2; color: var(--hospital); }
-        .cat-icon-clinic { background: var(--accent-light); color: var(--accent); }
-        .cat-icon-doctor { background: #DBEAFE; color: #2563EB; }
-        .cat-icon-pharmacy { background: var(--gold-light); color: var(--gold); }
-        .cat-icon-center { background: #F3E8FF; color: #9333EA; }
-        .cat-icon-lab { background: #FEE2E2; color: #DC2626; }
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: white; padding: 14px 28px; border-radius: 12px; font-size: 0.9rem; z-index: 9999; opacity: 0; transition: all 0.4s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .medical-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(20, 128, 98, 0.15);
+            border-color: rgba(20, 128, 98, 0.2);
+        }
+        
+        /* إخفاء السكرول بار لقائمة الفلاتر */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* التنبيهات */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1F2937; color: white; padding: 14px 28px; border-radius: 16px; z-index: 9999; opacity: 0; transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
-        .filters-scroll::-webkit-scrollbar { display: none; }
-        .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
-        .detail-row i { width: 16px; text-align: center; font-size: 0.75rem; }
     </style>
 </head>
-<body>
+<body class="bg-[#F8FAFC]">
 
-    <nav class="navbar fixed top-0 right-0 left-0 z-40 bg-[#073D2E] shadow-md" id="navbar">
+    <nav class="glass-header text-white sticky top-0 z-40 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-20">
-                <a href="#" class="flex items-center gap-3 text-white no-underline">
-                    <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center border border-white/20">
-                        <i class="fas fa-heartbeat text-lg" style="color: var(--gold)"></i>
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 animate-pulse">
+                        <i class="fas fa-heartbeat text-2xl text-amber-400"></i>
                     </div>
                     <div>
-                        <div class="text-base sm:text-lg font-bold leading-tight">دليل الرحيبة الطبي</div>
-                        <div class="text-[10px] opacity-60">لوحة تحكم تفاعلية ذكية</div>
+                        <span class="text-xl font-black block tracking-wide">رِعَايَة الرَّحَيْبَة</span>
+                        <span class="text-[11px] text-emerald-200 block -mt-1 font-bold">الدليل الطبي التفاعلي الأول</span>
                     </div>
-                </a>
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleAdminPanel()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all flex items-center gap-2">
-                        <i class="fas fa-sliders-h"></i> لوحة التحكم
-                    </button>
                 </div>
+                
+                <button onclick="accessAdminPanel()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg shadow-orange-600/20 transition-all duration-300 flex items-center gap-2 border border-white/10">
+                    <i class="fas fa-user-shield text-base"></i> لوحة التحكم (خاص)
+                </button>
             </div>
         </div>
     </nav>
 
-    <section id="home" class="hero-bg pt-32 pb-20 relative">
-        <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
-            <h1 class="text-3xl sm:text-5xl font-black text-white mb-4">دليلك الطبي المرن في الرحيبة</h1>
-            <p class="text-white/70 text-sm sm:text-base mb-8 max-w-xl mx-auto">أضف، عدّل، وتحكّم بجميع العيادات والمستشفيات والصيدليات فوراً وبدون لمس الكود.</p>
-            <div class="search-container rounded-2xl p-2 max-w-2xl mx-auto flex items-center gap-2">
+    <section class="hero-gradient text-white py-16 px-4 relative overflow-hidden shadow-inner">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <span class="bg-white/10 text-amber-300 text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-md inline-block mb-4 border border-white/10">مدينة الرحيبة - ريف دمشق</span>
+            <h1 class="text-3xl sm:text-5xl font-black mb-4 leading-tight">ابحث عن الرعاية الطبية بلمحة عين</h1>
+            <p class="text-emerald-100/80 text-sm sm:text-base max-w-xl mx-auto mb-8 font-light">تصفح المستشفيات، المراكز، الأطباء، والمخابر المتاحة في الخدمة الآن بكل سهولة وديناميكية.</p>
+            
+            <div class="bg-white rounded-3xl p-2 shadow-2xl max-w-2xl mx-auto flex items-center gap-2 border border-emerald-700/50">
                 <div class="flex-1 flex items-center gap-3 px-4">
-                    <i class="fas fa-search text-white/40"></i>
-                    <input type="text" id="heroSearch" class="bg-transparent text-white outline-none w-full py-3 text-sm" placeholder="ابحث عن أي شيء..." oninput="handleSearch(this.value)">
+                    <i class="fas fa-search text-emerald-600 text-lg"></i>
+                    <input type="text" id="liveSearch" class="bg-transparent text-gray-800 outline-none w-full py-3 text-sm font-semibold placeholder-gray-400" placeholder="ابحث باسم الدكتور، الاختصاص، أو الصيدلية..." oninput="searchLive(this.value)">
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="py-4 sticky top-16 sm:top-20 z-30 bg-white border-b border-gray-200 shadow-sm overflow-x-auto filters-scroll">
-        <div class="max-w-7xl mx-auto px-4 flex gap-2">
-            <button class="filter-btn active bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold" onclick="setFilter('all', this)">الكل</button>
-            <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold" onclick="setFilter('hospital', this)">المستشفيات</button>
-            <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold" onclick="setFilter('center', this)">المراكز الطبية</button>
-            <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold" onclick="setFilter('lab', this)">المخابر</button>
-            <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold" onclick="setFilter('doctor', this)">الأطباء</button>
-            <button class="filter-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-semibold" onclick="setFilter('pharmacy', this)">الصيدليات</button>
+    <section class="py-6 bg-white border-b border-gray-100 sticky top-20 z-30 shadow-sm overflow-x-auto no-scrollbar">
+        <div class="max-w-7xl mx-auto px-4 flex gap-3 justify-start sm:justify-center min-w-max">
+            <button class="filter-badge active bg-emerald-600 text-white px-5 py-2.5 rounded-2xl text-xs font-bold transition-all shadow-md shadow-emerald-600/10" onclick="filterCategory('all', this)"><i class="fas fa-th-large ml-1.5"></i> الكل</button>
+            <button class="filter-badge bg-gray-50 text-gray-600 border border-gray-200 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all hover:bg-gray-100" onclick="filterCategory('hospital', this)"><i class="fas fa-hospital ml-1.5 text-red-500"></i> المستشفيات</button>
+            <button class="filter-badge bg-gray-50 text-gray-600 border border-gray-200 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all hover:bg-gray-100" onclick="filterCategory('center', this)"><i class="fas fa-clinic-medical ml-1.5 text-purple-500"></i> المراكز الطبية</button>
+            <button class="filter-badge bg-gray-50 text-gray-600 border border-gray-200 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all hover:bg-gray-100" onclick="filterCategory('lab', this)"><i class="fas fa-vial ml-1.5 text-blue-500"></i> المخابر</button>
+            <button class="filter-badge bg-gray-50 text-gray-600 border border-gray-200 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all hover:bg-gray-100" onclick="filterCategory('doctor', this)"><i class="fas fa-user-md ml-1.5 text-teal-500"></i> الأطباء المختصين</button>
+            <button class="filter-badge bg-gray-50 text-gray-600 border border-gray-200 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all hover:bg-gray-100" onclick="filterCategory('pharmacy', this)"><i class="fas fa-pills ml-1.5 text-amber-500"></i> الصيدليات</button>
         </div>
     </section>
 
-    <main class="max-w-7xl mx-auto px-4 py-10">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="dataGrid">
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="cardsGrid">
             </div>
-        <div id="noResults" class="hidden text-center py-20">
-            <i class="fas fa-folder-open text-5xl text-gray-300 mb-3"></i>
-            <p class="text-gray-500">لا يوجد بيانات مضافة في هذا القسم حالياً.</p>
+        <div id="emptyState" class="hidden text-center py-24">
+            <div class="w-20 h-20 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fas fa-folder-open"></i></div>
+            <p class="text-gray-500 font-bold">لم نجد أي نتائج تطابق بحثك الحالي بالرحيبة.</p>
         </div>
     </main>
 
-    <div id="adminPanel" class="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
-            <button onclick="toggleAdminPanel()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-xl"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold border-b pb-3 mb-4 text-emerald-800"><i class="fas fa-tools ml-2"></i>لوحة إدارة محتوى الدليل الطبية</h2>
+    <div id="secureAdminModal" class="fixed inset-0 bg-black/70 z-50 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative border border-gray-100">
+            <button onclick="closeAdminPanel()" class="absolute top-5 left-5 text-gray-400 hover:text-gray-600 text-xl transition-all"><i class="fas fa-times-circle"></i></button>
+            <h2 class="text-xl font-black border-b pb-4 mb-6 text-emerald-800 flex items-center gap-2"><i class="fas fa-user-gear"></i> إدارة محتوى دليل الرحيبة الطبي</h2>
             
-            <form id="itemForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <input type="hidden" id="editId">
+            <form id="dataForm" onsubmit="saveEntry(event)" class="space-y-4">
+                <input type="hidden" id="entryIndex">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold mb-1">النوع</label>
-                        <select id="itemType" required class="w-full border p-2.5 rounded-xl text-sm bg-gray-50">
-                            <option value="hospital">مستشفى (قيد التطوير / جاهز)</option>
+                        <label class="block text-xs font-bold mb-1.5 text-gray-600">التصنيف الطبي</label>
+                        <select id="formType" required class="w-full border border-gray-200 p-3 rounded-2xl text-sm bg-gray-50 font-semibold focus:border-emerald-500 outline-none">
+                            <option value="hospital">مستشفى</option>
                             <option value="center">مركز طبي</option>
-                            <option value="lab">مخبر تحاليل</option>
+                            <option value="lab">مخبار تحاليل وطاقة</option>
                             <option value="doctor">طبيب مختص</option>
                             <option value="pharmacy">صيدلية</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1">الاسم</label>
-                        <input type="text" id="itemName" required class="w-full border p-2.5 rounded-xl text-sm" placeholder="مثال: مخبر ظاهر، د. أحمد...">
+                        <label class="block text-xs font-bold mb-1.5 text-gray-600">الاسم الكامل للمنشأة / الطبيب</label>
+                        <input type="text" id="formName" required class="w-full border border-gray-200 p-3 rounded-2xl text-sm focus:border-emerald-500 outline-none" placeholder="مثال: مخبر الشفاء، د. باسل الحسين...">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold mb-1">الاختصاص / الحالة</label>
-                        <input type="text" id="itemSpecialty" required class="w-full border p-2.5 rounded-xl text-sm" placeholder="مثال: قيد التطوير، جراحة عظام، صيدلية مناوبة...">
+                        <label class="block text-xs font-bold mb-1.5 text-gray-600">الاختصاص أو الحالة الحالية</label>
+                        <input type="text" id="formSpecialty" required class="w-full border border-gray-200 p-3 rounded-2xl text-sm focus:border-emerald-500 outline-none" placeholder="مثال: جراحة عامة، قيد الإنشاء والتطوير...">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1">رقم الهاتف أو الجوال</label>
-                        <input type="text" id="itemPhone" required class="w-full border p-2.5 rounded-xl text-sm text-left" dir="ltr" placeholder="09XXXXXXXX">
+                        <label class="block text-xs font-bold mb-1.5 text-gray-600">رقم الهاتف للتواصل السريع</label>
+                        <input type="text" id="formPhone" required class="w-full border border-gray-200 p-3 rounded-2xl text-sm text-left focus:border-emerald-500 outline-none" dir="ltr" placeholder="09xxxxxxxx أو رقم أرضي">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold mb-1">العنوان أو موقع العيادة</label>
-                        <input type="text" id="itemAddress" required class="w-full border p-2.5 rounded-xl text-sm" placeholder="مثال: الشارع العام، بجانب صيدلية الشفاء...">
+                        <label class="block text-xs font-bold mb-1.5 text-gray-600">العنوان الدقيق في الرحيبة</label>
+                        <input type="text" id="formAddress" required class="w-full border border-gray-200 p-3 rounded-2xl text-sm focus:border-emerald-500 outline-none" placeholder="بجانب البلدية، الشارع العام...">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1">أوقات أو ساعات الدوام</label>
-                        <input type="text" id="itemHours" required class="w-full border p-2.5 rounded-xl text-sm" placeholder="مثال: 24 ساعة، من 4م لـ 9م...">
+                        <label class="block text-xs font-bold mb-1.5 text-gray-600">ساعات العمل والدوام</label>
+                        <input type="text" id="formHours" required class="w-full border border-gray-200 p-3 rounded-2xl text-sm focus:border-emerald-500 outline-none" placeholder="من 4 مساءً حتى 9 مساءً، 24 ساعة...">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold mb-1">وصف قصير أو معلومات إضافية</label>
-                    <textarea id="itemDesc" rows="2" class="w-full border p-2.5 rounded-xl text-sm resize-none" placeholder="اكتب ميزات إضافية، الخدمات المتاحة..."></textarea>
+                    <label class="block text-xs font-bold mb-1.5 text-gray-600">نبذة تعريفية أو تفاصيل إضافية</label>
+                    <textarea id="formDesc" rows="2" class="w-full border border-gray-200 p-3 rounded-2xl text-sm focus:border-emerald-500 outline-none resize-none" placeholder="اكتب هنا الخدمات المتوفرة أو ميزات إضافية للمريض..."></textarea>
                 </div>
 
-                <div class="flex items-center justify-end gap-2 pt-2 border-t">
-                    <button type="button" onclick="resetForm()" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-sm font-semibold">إلغاء التعديل</button>
-                    <button type="submit" class="bg-emerald-600 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-700">حفظ البيانات</button>
+                <div class="flex items-center justify-end gap-2 pt-3 border-t">
+                    <button type="button" onclick="clearForm()" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-2xl text-sm font-semibold">إعادة تعيين</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-2xl text-sm font-bold shadow-md">حفظ وتحديث البيانات</button>
                 </div>
             </form>
 
-            <div class="mt-8">
-                <h3 class="font-bold text-sm text-gray-700 mb-3 border-b pb-1">العناصر المضافة حالياً في قاعدة البيانات</h3>
-                <div class="overflow-x-auto max-h-60 border rounded-xl">
+            <div class="mt-8 border-t pt-6">
+                <h3 class="font-black text-sm text-gray-700 mb-4 flex items-center gap-2"><i class="fas fa-list-check text-emerald-600"></i> التحكم في البيانات الحالية</h3>
+                <div class="overflow-x-auto border border-gray-100 rounded-2xl">
                     <table class="w-full text-sm text-right">
-                        <thead class="bg-gray-50 text-xs font-bold text-gray-500 border-b">
+                        <thead class="bg-gray-50 text-xs font-bold text-gray-500 border-b border-gray-100">
                             <tr>
-                                <th class="p-3">الاسم</th>
-                                <th class="p-3">النوع</th>
-                                <th class="p-3">الإجراءات</th>
+                                <th class="p-4">الاسم</th>
+                                <th class="p-4">النوع</th>
+                                <th class="p-4 text-center">الإجراءات</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTableBody" class="divide-y">
+                        <tbody id="adminTableRows" class="divide-y divide-gray-50">
                             </tbody>
                     </table>
                 </div>
@@ -184,186 +170,131 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal-content p-6 max-w-md mx-auto relative bg-white rounded-2xl shadow-xl" id="modalContent" onclick="event.stopPropagation()"></div>
+    <div class="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm hidden items-center justify-center p-4 transition-all duration-300" id="detailModal" onclick="closeDetails()">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full relative shadow-2xl border border-gray-100" onclick="event.stopPropagation()">
+            <button onclick="closeDetails()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times-circle text-xl"></i></button>
+            <div id="detailModalBody"></div>
+        </div>
     </div>
-    <div class="toast" id="toast"></div>
+
+    <div class="toast font-semibold text-sm flex items-center gap-2 shadow-xl" id="toastMessage"></div>
 
 <script>
-    // ===== داتا تجريبية مبدئية لتبدأ بها فوراً بحسب الأعداد الجديدة =====
-    const defaultData = [
-        { id: 1, type: "hospital", name: "مستشفى الرحيبة العام", specialty: "قيد التطوير والإنشاء والتجهيز", address: "مدخل مدينة الرحيبة الشرقي", phone: "غير متوفر حالياً", hours: "خلال الفترة القادمة", description: "المشروع الطبي الأكبر لخدمة أهالي المنطقة بكافة التخصصات الطبية الجراحية والإسعافية.", rating: 5 },
-        { id: 2, type: "lab", name: "مخبر الشفاء للتحاليل الطبية", specialty: "تحاليل دم شاملة وكيمياء", address: "الشارع الرئيسي - وسط المدينة", phone: "011-5550041", hours: "7:30 ص - 8:00 م", description: "أحدث الأجهزة المخبرية لنتائج دقيقة وسريعة.", rating: 4.8 },
-        { id: 3, type: "lab", name: "مخبر ظاهر للتحاليل", specialty: "هرمونات ومناعة وباثولوجيا", address: "شارع المستشفى - فوق صيدلية الأمل", phone: "011-5550042", hours: "8:00 ص - 7:00 م", description: "فحوصات دورية شاملة وسحب عينات منزلي.", rating: 4.7 },
-        { id: 4, type: "pharmacy", name: "صيدلية الشفاء الأولى", specialty: "خدمة ليلية متوفرة", address: "ساحة المدينة الرئيسية", phone: "0933111222", hours: "24 ساعة على مدار الأسبوع", description: "تأمين كافة أنواع الأدوية المزمنة وحليب الأطفال.", rating: 4.6 }
+    // ===== داتا تجريبية مؤقتة وضخمة لملء الواجهة بالجمالية والحيوية الممتلئة =====
+    const sampleMedicalDatabase = [
+        { type: "hospital", name: "مستشفى الرحيبة العام الجديد", specialty: "قيد التطوير والإنشاء والتجهيز", phone: "قيد الإنشاء", address: "المدخل الرئيسي لمدينة الرحيبة", hours: "قريباً في الخدمة", desc: "المستشفى المركزي الأكبر والأول بالمنطقة لتقديم خدمات العمليات والعيادات الخارجية والطوارئ المتكاملة.", rate: "5.0" },
+        { type: "lab", name: "مخبر الشفاء الطبي", specialty: "تحاليل عامة، هرمونات، وكيمياء دم", phone: "011-5911002", address: "ساحة البلدية القديمة - بناء الصيدلية المركزية", hours: "من 8:00 صباحاً حتى 9:00 مساءً", desc: "أحدث الأجهزة الأوتوماتيكية لضمان أدق النتائج وبسرعة فائقة للأخوة المواطنين بالرحيبة.", rate: "4.9" },
+        { type: "lab", name: "مخبر ظاهر للتحاليل المخبرية", specialty: "باثولوجيا، مناعة، وفحوصات زواج", phone: "011-5911403", address: "الشارع العام - جانب المسجد الكبير", hours: "من 7:30 صباحاً حتى 8:30 مساءً", desc: "دقة متناهية بإشراف اختصاصيين وسحب عينات منزلي للحالات الخاصة مجاناً.", rate: "4.8" },
+        { type: "doctor", name: "د. راتب الكردي", specialty: "اختصاصي جراحة العظام والمفاصل", phone: "0944112233", address: "شارع المحطة - فوق صيدلية السلام", hours: "من السبت للأربعاء: 4م - 8م", desc: "علاج كسور، تنظير مفاصل، ومتابعة هشاشة العظام بأحدث التقنيات الطبية.", rate: "4.9" },
+        { type: "doctor", name: "د. منى الحسين", specialty: "أمراض النسائية والتوليد والعقم", phone: "0933556677", address: "الشارع الرئيسي - بناء عيادات النور", hours: "كل يوم ما عدا الجمعة: 10ص - 2ظ", desc: "توليد طبيعي وقيصري، متابعة حمل وإيكو رباعي الأبعاد متطور.", rate: "4.7" },
+        { type: "doctor", name: "د. أحمد الرحيباني", specialty: "طب وجراحة الفم والأسنان", phone: "0955998811", address: "شمال ساحة المدينة - بجانب المركز الثقافي", hours: "من 2 ظهراً حتى 9 مساءً", desc: "زراعة أسنان، تقويم، تجميل هوليوود سمايل، وسحب عصب بدون ألم.", rate: "4.6" },
+        { type: "pharmacy", name: "صيدلية الرحيبة المركزية", specialty: "مناوبة نهارية وليلية", phone: "011-5911100", address: "الشارع العام - مقابل المركز الصحي الأول", hours: "24 ساعة متواصلة", desc: "تأمين كامل الأدوية المحلية والمستوردة وحليب الأطفال والمكملات الغذائية.", rate: "4.8" },
+        { type: "pharmacy", name: "صيدلية أمل الغد", specialty: "أدوية مزمنة ومستحضرات تجميل", phone: "0944000333", address: "طريق النبك القديم - الشارع الفرعي الأول", hours: "من 9:00 صباحاً حتى 11:00 ليلاً", desc: "خدمة صيدلانية مميزة واستشارات دوائية مجانية لكافة المرضى.", rate: "4.5" },
+        { type: "center", name: "المركز الصحي الحكومي بالرحيبة", specialty: "لقاحات، إسعاف أولي، عيادة سكري", phone: "011-5911001", address: "الحي الغربي - بجانب المدرسة الثانوية", hours: "من 8:00 صباحاً حتى 2:00 ظهراً", desc: "تقديم اللقاحات الدورية للأطفال مجاناً، ورعاية الأمومة والطفولة ومتابعة الأمراض المزمنة.", rate: "4.4" }
     ];
 
-    // استدعاء البيانات المخزنة بمتصفح المستخدم أو جلب الافتراضية إذا كانت فارغة
-    let medicalData = JSON.parse(localStorage.getItem('rahiba_medical_db')) || defaultData;
-    let currentFilter = 'all';
-    let searchQuery = '';
+    // جلب البيانات المخزنة محلياً أو استخدام البيانات الضخمة أعلاه
+    let currentDatabase = JSON.parse(localStorage.getItem('v2_rahiba_data')) || sampleMedicalDatabase;
+    let selectedCategory = 'all';
+    let filterSearchText = '';
 
-    // ===== دالة الحفظ التلقائي في المتصفح لمنع ضياع البيانات عند التحديث =====
-    function saveToStorage() {
-        localStorage.setItem('rahiba_medical_db', JSON.stringify(medicalData));
+    // حفظ البيانات في الكاش الفوري للمتصفح
+    function syncDataCache() {
+        localStorage.setItem('v2_rahiba_data', JSON.stringify(currentDatabase));
     }
 
-    // ===== بناء البطاقات الطبية تلقائياً =====
-    function renderApp() {
-        const grid = document.getElementById('dataGrid');
-        const filtered = medicalData.filter(item => {
-            if (currentFilter !== 'all' && item.type !== currentFilter) return false;
-            if (!searchQuery) return true;
-            const q = searchQuery.toLowerCase();
-            return item.name.toLowerCase().includes(q) || item.specialty.toLowerCase().includes(q) || (item.description && item.description.toLowerCase().includes(q));
+    // بناء الكروت الطبية والواجهة الحيوية الفخمة
+    function buildDashboard() {
+        const grid = document.getElementById('cardsGrid');
+        const emptyState = document.getElementById('emptyState');
+        
+        const filteredList = currentDatabase.filter(item => {
+            if (selectedCategory !== 'all' && item.type !== selectedCategory) return false;
+            if (!filterSearchText) return true;
+            const text = filterSearchText.toLowerCase();
+            return item.name.toLowerCase().includes(text) || item.specialty.toLowerCase().includes(text) || (item.desc && item.desc.toLowerCase().includes(text));
         });
 
-        if(filtered.length === 0) {
+        if (filteredList.length === 0) {
             grid.innerHTML = '';
-            document.getElementById('noResults').classList.remove('hidden');
+            emptyState.classList.remove('hidden');
             return;
         }
-        document.getElementById('noResults').classList.add('hidden');
+        emptyState.classList.add('hidden');
 
-        const typeMap = {
-            hospital: { card: 'hospital-card', badge: 'badge-hospital', icon: 'fa-hospital-user', color: 'var(--hospital)', label: 'مستشفى' },
-            center: { card: 'center-card', badge: 'badge-center', icon: 'fa-clinic-medical', color: 'var(--center)', label: 'مركز طبي' },
-            lab: { card: 'lab-card', badge: 'badge-lab', icon: 'fa-flask', color: 'var(--lab)', label: 'مخبر' },
-            doctor: { card: 'doctor-card', badge: 'badge-doctor', icon: 'fa-user-md', color: 'var(--doctor)', label: 'طبيب مختص' },
-            pharmacy: { card: 'pharmacy-card', badge: 'badge-pharmacy', icon: 'fa-pills', color: 'var(--pharmacy)', label: 'صيدلية' }
+        const badgeConfigs = {
+            hospital: { name: 'مستشفى', icon: 'fa-hospital', color: '#EF4444', bgLight: '#FEE2E2' },
+            center: { name: 'مركز طبي', icon: 'fa-clinic-medical', color: '#A855F7', bgLight: '#F3E8FF' },
+            lab: { name: 'مخبر تحاليل', icon: 'fa-vial', color: '#3B82F6', bgLight: '#DBEAFE' },
+            doctor: { name: 'طبيب مختص', icon: 'fa-user-md', color: '#148062', bgLight: '#D1FAE5' },
+            pharmacy: { name: 'صيدلية', icon: 'fa-pills', color: '#F59E0B', bgLight: '#FEF3C7' }
         };
 
-        grid.innerHTML = filtered.map(item => {
-            const t = typeMap[item.type] || typeMap.clinic;
+        grid.innerHTML = filteredList.map((item, index) => {
+            const config = badgeConfigs[item.type] || badgeConfigs.doctor;
             return `
-                <div class="card ${t.card} p-5 cursor-pointer" onclick="openModal(${item.id})">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="badge ${t.badge}">${t.label}</span>
-                        <span class="text-xs font-bold text-amber-500"><i class="fas fa-star ml-1"></i>${item.rating || '4.5'}</span>
+                <div class="medical-card p-6 cursor-pointer" onclick="viewDetails(${index})">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[11px] font-extrabold px-3 py-1.5 rounded-full flex items-center gap-1.5" style="background: ${config.bgLight}; color: ${config.color}">
+                            <i class="fas ${config.icon}"></i> ${config.name}
+                        </span>
+                        <span class="text-xs font-black text-amber-500 bg-amber-50 px-2.5 py-1 rounded-xl flex items-center gap-1 border border-amber-100">
+                            <i class="fas fa-star text-[10px]"></i> ${item.rate || '4.6'}
+                        </span>
                     </div>
-                    <div class="flex items-start gap-3 mb-4">
-                        <div class="cat-icon" style="background-color: ${t.color}20; color: ${t.color}"><i class="fas ${t.icon}"></i></div>
-                        <div>
-                            <h3 class="font-bold text-sm text-gray-800">${item.name}</h3>
-                            <p class="text-xs font-semibold" style="color: ${t.color}">${item.specialty}</p>
-                        </div>
+                    
+                    <h3 class="text-base font-black text-gray-800 mb-1">${item.name}</h3>
+                    <p class="text-xs font-bold mb-4" style="color: ${config.color}">${item.specialty}</p>
+                    
+                    <div class="space-y-2 border-t border-gray-50 pt-3 text-xs text-gray-500 font-medium">
+                        <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt w-4 text-center opacity-70"></i> <span class="truncate">${item.address}</span></div>
+                        <div class="flex items-center gap-2"><i class="fas fa-clock w-4 text-center opacity-70"></i> <span class="truncate">${item.hours}</span></div>
                     </div>
-                    <div class="space-y-1.5 mb-4 text-xs text-gray-500">
-                        <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
-                        <div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>
+                    
+                    <div class="mt-5 pt-1">
+                        <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="w-full py-3 rounded-2xl text-center text-xs font-black text-white shadow-lg transition-all flex items-center justify-center gap-2" style="background: linear-gradient(135deg, ${config.color}dd, ${config.color}); shadow-color: ${config.color}20">
+                            <i class="fas fa-phone-alt text-[11px]"></i> اتصل الآن بقسم الخدمة
+                        </a>
                     </div>
-                    <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="w-full block py-2 rounded-xl text-center text-xs font-bold text-white transition-all shadow-sm" style="background-color: ${t.color}">
-                        <i class="fas fa-phone-alt ml-1"></i> اتصال ${item.phone}
-                    </a>
                 </div>
             `;
         }).join('');
 
-        renderAdminTable();
+        buildAdminTable();
     }
 
-    // ===== تحديث جدول لوحة التحكم الخاص بالمسؤول =====
-    function renderAdminTable() {
-        const tbody = document.getElementById('adminTableBody');
-        tbody.innerHTML = medicalData.map(item => `
-            <tr class="hover:bg-gray-50">
-                <td class="p-3 font-semibold text-xs">${item.name}</td>
-                <td class="p-3 text-xs text-gray-500">${item.type}</td>
-                <td class="p-3 space-x-2 space-x-reverse">
-                    <button onclick="editItem(${item.id})" class="text-blue-600 hover:text-blue-800 font-bold text-xs"><i class="fas fa-edit"></i> تعديل</button>
-                    <button onclick="deleteItem(${item.id})" class="text-red-600 hover:text-red-800 font-bold text-xs"><i class="fas fa-trash"></i> حذف</button>
+    // وظيفة الدخول الآمن وباسورد لوحة التحكم للعميل المختار
+    function accessAdminPanel() {
+        const password = prompt("يرجى إدخال الرمز السري لفتح لوحة تعديل البيانات (الباسورد التجريبي: 1234):");
+        if (password === "1234") {
+            document.getElementById('secureAdminModal').classList.remove('hidden');
+            document.getElementById('secureAdminModal').classList.add('flex');
+            popToast("مرحباً بك! تم التحقق من الرمز بنجاح.");
+        } else if (password !== null) {
+            alert("الرمز السري غير صحيح! لا تملك صلاحية تعديل بيانات دليل الرحيبة.");
+        }
+    }
+
+    function closeAdminPanel() {
+        document.getElementById('secureAdminModal').classList.add('hidden');
+        document.getElementById('secureAdminModal').classList.remove('flex');
+    }
+
+    // تحديث وإدارة عناصر جدول لوحة التحكم
+    function buildAdminTable() {
+        const tableBody = document.getElementById('adminTableRows');
+        tableBody.innerHTML = currentDatabase.map((item, index) => `
+            <tr class="hover:bg-gray-50/80 transition-all">
+                <td class="p-4 font-bold text-xs text-gray-800">${item.name}</td>
+                <td class="p-4 text-xs font-semibold text-gray-400">${item.type}</td>
+                <td class="p-4 text-center space-x-2 space-x-reverse">
+                    <button onclick="triggerEdit(${index})" class="text-emerald-600 hover:text-emerald-800 font-extrabold text-xs"><i class="fas fa-edit"></i> تعديل</button>
+                    <button onclick="triggerDelete(${index})" class="text-red-500 hover:text-red-700 font-extrabold text-xs"><i class="fas fa-trash-can"></i> حذف</button>
                 </td>
             </tr>
         `).join('');
     }
 
-    // ===== معالجة إضافة وتعديل البيانات التلقائي =====
-    function handleFormSubmit(e) {
+    // حفظ البيانات المضافة أو المعدلة
+    function saveEntry(e) {
         e.preventDefault();
-        const id = document.getElementById('editId').value;
-        const newItem = {
-            id: id ? parseInt(id) : Date.now(),
-            type: document.getElementById('itemType').value,
-            name: document.getElementById('itemName').value,
-            specialty: document.getElementById('itemSpecialty').value,
-            phone: document.getElementById('itemPhone').value,
-            address: document.getElementById('itemAddress').value,
-            hours: document.getElementById('itemHours').value,
-            description: document.getElementById('itemDesc').value,
-            rating: id ? medicalData.find(x => x.id === parseInt(id)).rating : (Math.random() * (5 - 4) + 4).toFixed(1)
-        };
-
-        if (id) {
-            // كود التعديل الفوري
-            const index = medicalData.findIndex(x => x.id === parseInt(id));
-            medicalData[index] = newItem;
-            showToast("تم تحديث البيانات بنجاح!");
-        } else {
-            // كود الإضافة الجديدة
-            medicalData.push(newItem);
-            showToast("تم إضافة المنشأة الطبية الجديدة للدليل!");
-        }
-
-        saveToStorage();
-        resetForm();
-        renderApp();
-    }
-
-    // ===== تفعيل وضع تعديل منشأة قائمة =====
-    function editItem(id) {
-        const item = medicalData.find(x => x.id === id);
-        if (!item) return;
-        document.getElementById('editId').value = item.id;
-        document.getElementById('itemType').value = item.type;
-        document.getElementById('itemName').value = item.name;
-        document.getElementById('itemSpecialty').value = item.specialty;
-        document.getElementById('itemPhone').value = item.phone;
-        document.getElementById('itemAddress').value = item.address;
-        document.getElementById('itemHours').value = item.hours;
-        document.getElementById('itemDesc').value = item.description || '';
-        showToast("أنت الآن في وضع تعديل: " + item.name);
-    }
-
-    // ===== حذف عنصر نهائياً من الدليل =====
-    function deleteItem(id) {
-        if(confirm("هل أنت متأكد تماماً من حذف هذا العنصر النهائي من دليل الرحيبة؟")) {
-            medicalData = medicalData.filter(x => x.id !== id);
-            saveToStorage();
-            renderApp();
-            showToast("تم الحذف بنجاح.");
-        }
-    }
-
-    // ===== دوال مساعدة للتحكم بالواجهة والبحث والـ Modals =====
-    function resetForm() { document.getElementById('itemForm').reset(); document.getElementById('editId').value = ''; }
-    function toggleAdminPanel() { document.getElementById('adminPanel').classList.toggle('hidden'); document.getElementById('adminPanel').classList.toggle('flex'); }
-    function handleSearch(val) { searchQuery = val.trim(); renderApp(); }
-    function setFilter(filter, btn) {
-        currentFilter = filter;
-        document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('bg-emerald-700', 'text-white'); b.classList.add('bg-gray-100', 'text-gray-700'); });
-        btn.classList.add('bg-emerald-700', 'text-white'); btn.classList.remove('bg-gray-100', 'text-gray-700');
-        renderApp();
-    }
-    function openModal(id) {
-        const item = medicalData.find(x => x.id === id); if(!item) return;
-        document.getElementById('modalContent').innerHTML = `
-            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
-            <h3 class="font-bold text-lg text-emerald-800 mb-2">${item.name}</h3>
-            <p class="text-xs font-bold text-gray-500 mb-4">${item.specialty}</p>
-            <p class="text-sm text-gray-700 leading-relaxed mb-5">${item.description || 'لا يوجد تفاصيل تفصيلية مضافة حالياً.'}</p>
-            <div class="space-y-2 text-xs border-t pt-4">
-                <div><strong>الموقع والعنوان:</strong> ${item.address}</div>
-                <div><strong>أوقات التواجد:</strong> ${item.hours}</div>
-                <div><strong>رقم التواصل السريع:</strong> ${item.phone}</div>
-            </div>
-        `;
-        document.getElementById('modalOverlay').classList.add('active');
-    }
-    function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
-
-    // تشغيل التطبيق وجلب الداتا عند أول تحميل للموقع
-    document.addEventListener('DOMContentLoaded', renderApp);
-</script>
-</body>
-</html>
