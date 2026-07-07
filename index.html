@@ -1043,7 +1043,6 @@
                 </div>
             </div>`;
     }
-
     // ===== عرض وتوزيع البيانات في السكاشن =====
     function renderData() {
         const grids = {
@@ -1057,10 +1056,12 @@
         let total = 0;
         for (const [type, g] of Object.entries(grids)) {
             const filtered = g.data.filter(matchItem);
+            // تم إصلاح شرط العرض هنا ليعتمد مباشرة على الفلتر المختار وقائمة النتائج
             const show = filtered.length > 0 && (currentFilter === 'all' || currentFilter === type);
+            
             g.el.innerHTML = filtered.map(createCard).join('');
             g.section.style.display = show ? '' : 'none';
-            total += filtered.length;
+            total += show ? filtered.length : 0;
         }
 
         document.getElementById('noResults').style.display = total === 0 ? '' : 'none';
@@ -1076,9 +1077,13 @@
         if (currentFilter !== 'all' && item.type !== currentFilter) return false;
         if (!searchQuery) return true;
         const q = searchQuery.toLowerCase();
+        
+        // تم إصلاح طريقة الفحص البرمجي هنا لضمان عدم حدوث خطأ عند غياب أي حقل
         return ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests']
-            .some(key => (item[key] || '').toLowerCase().includes(q));
-    }
+            .some(key => {
+                const value = item[key];
+                return value ? String(value).toLowerCase().includes(q) : false;
+            });
 
     // ===== نظام الفلاتر والتصنيفات =====
     function setFilter(filter, btn) {
