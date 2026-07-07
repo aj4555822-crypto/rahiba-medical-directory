@@ -1,1 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الرحيبة الطبي | عيادات، أطباء، صيدليات، مراكز طبية، مخابر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg: #FAF8F4;
+            --bg-deep: #F0EDE6;
+            --fg: #1B2A1B;
+            --fg-light: #3D4F3D;
+            --muted: #7A8B7A;
+            --accent: #0E7C5F;
+            --accent-dark: #095E47;
+            --accent-light: #D6F0E5;
+            --gold: #C4962C;
+            --gold-light: #F5ECD0;
+            --card: #FFFFFF;
+            --border: #DDE3DD;
+            --danger: #D94F4F;
+            --clinic: #0E7C5F;
+            --doctor: #2563EB;
+            --pharmacy: #C4962C;
+            --center: #9333EA;
+            --lab: #DC2626;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
+        h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
+        /* باقي الـ CSS الأصلي (كامل) موجود في ملفك القديم - انسخه هنا */
+    </style>
+</head>
+<body>
 
+    <!-- شريط التنقل المحدث -->
+    <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <a href="#" class="flex items-center gap-3 text-white no-underline">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-sm border border-white/20">
+                        <i class="fas fa-heartbeat text-lg sm:text-xl" style="color: var(--gold)"></i>
+                    </div>
+                    <div>
+                        <div class="text-base sm:text-lg font-bold leading-tight" style="font-family: 'Noto Kufi Arabic'">دليل الرحيبة</div>
+                        <div class="text-[10px] sm:text-xs opacity-60">للخدمات الطبية</div>
+                    </div>
+                </a>
+                
+                <div class="flex items-center gap-4">
+                    <button onclick="showAdminLogin()" class="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-2xl text-sm flex items-center gap-2 transition-all">
+                        <i class="fas fa-cogs"></i> <span class="hidden sm:inline">لوحة الإدارة</span>
+                    </button>
+                    <button onclick="showDoctorLogin()" class="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-2xl text-sm flex items-center gap-2 transition-all">
+                        <i class="fas fa-user-md"></i> <span class="hidden sm:inline">دخول الدكتور</span>
+                    </button>
+                    <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- ==================== لوحة الإدارة ==================== -->
+<div id="adminOverlay" class="hidden fixed inset-0 bg-black/70 z-[2000] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h2 class="text-2xl font-bold text-gray-800">لوحة التحكم الإدارية</h2>
+            <button onclick="closeAdminPanel()" class="text-3xl text-gray-500 hover:text-red-600">×</button>
+        </div>
+        <div id="adminContent" class="p-6 overflow-auto" style="max-height: calc(95vh - 80px);"></div>
+    </div>
+</div>
+
+<!-- ==================== لوحة الدكتور ==================== -->
+<div id="doctorOverlay" class="hidden fixed inset-0 bg-black/70 z-[2000] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[95vh] overflow-hidden shadow-2xl">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h2 id="doctorTitle" class="text-2xl font-bold"></h2>
+            <button onclick="closeDoctorPanel()" class="text-3xl text-gray-500 hover:text-red-600">×</button>
+        </div>
+        <div id="doctorContent" class="p-6 overflow-auto" style="max-height: calc(95vh - 80px);"></div>
+    </div>
+</div>
+
+<script>
+// ==================== المتغيرات والداتا ====================
+let clinicsData = [ /* انسخ هنا كل بيانات clinicsData الأصلية من ملفك */ ];
+let centersData = [ /* انسخ centersData */ ];
+let labsData = [ /* انسخ labsData */ ];
+let doctorsData = [ /* انسخ doctorsData */ ];
+let pharmaciesData = [ /* انسخ pharmaciesData */ ];
+
+// كلمات المرور
+const ADMIN_PASSWORD = "RahebaAdmin2026";
+
+const doctorPasswords = {
+    "د. أحمد الخطيب": "ahmed2026",
+    "د. محمد العبد الله": "mohammed2026",
+    "د. فاطمة الحسن": "fatima2026",
+    "د. عمر النحاس": "omar2026",
+    "د. سارة الخضر": "sara2026",
+    "د. خالد الريس": "khaled2026",
+    "د. ياسمين عباس": "yasmin2026",
+    "د. حسام الدين شحادة": "hussam2026",
+    "د. لينا المصري": "lina2026",
+    "د. مأمون دوبا": "mamoun2026",
+    "د. ريم الشماع": "reem2026",
+    "د. نديم الحداد": "nadeem2026"
+};
+
+// تحميل وحفظ البيانات
+function loadFromStorage() {
+    if (localStorage.getItem('rahebaMedicalData')) {
+        const saved = JSON.parse(localStorage.getItem('rahebaMedicalData'));
+        clinicsData = saved.clinics || clinicsData;
+        centersData = saved.centers || centersData;
+        labsData = saved.labs || labsData;
+        doctorsData = saved.doctors || doctorsData;
+        pharmaciesData = saved.pharmacies || pharmaciesData;
+    }
+}
+
+function saveToStorage() {
+    localStorage.setItem('rahebaMedicalData', JSON.stringify({
+        clinics: clinicsData,
+        centers: centersData,
+        labs: labsData,
+        doctors: doctorsData,
+        pharmacies: pharmaciesData
+    }));
+}
+
+// ==================== لوحة الإدارة ====================
+function showAdminLogin() {
+    const pass = prompt("🔑 أدخل كلمة مرور الإدارة:");
+    if (pass === ADMIN_PASSWORD) {
+        document.getElementById('adminOverlay').classList.remove('hidden');
+        renderAdminDashboard();
+    } else {
+        alert("❌ كلمة مرور خاطئة");
+    }
+}
+
+function closeAdminPanel() {
+    document.getElementById('adminOverlay').classList.add('hidden');
+}
+
+function renderAdminDashboard() {
+    let html = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="font-bold text-lg mb-3">الأطباء (${doctorsData.length})</h3>
+                <button onclick="addDoctorForm()" class="mb-4 bg-green-600 text-white px-5 py-3 rounded-2xl w-full">+ إضافة طبيب جديد</button>
+                <div class="space-y-2 max-h-96 overflow-auto" id="doctorsList"></div>
+            </div>
+            <!-- يمكن إضافة أقسام أخرى (عيادات، مخابر...) -->
+        </div>
+    `;
+    document.getElementById('adminContent').innerHTML = html;
+    renderDoctorsList();
+}
+
+function renderDoctorsList() {
+    let listHTML = '';
+    doctorsData.forEach((doc, index) => {
+        listHTML += `
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
+                <div>
+                    <div class="font-semibold">${doc.name}</div>
+                    <div class="text-sm text-gray-500">${doc.specialty}</div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="editDoctor(${index})" class="px-4 py-2 text-blue-600 hover:bg-blue-100 rounded-xl">تعديل</button>
+                    <button onclick="deleteDoctor(${index})" class="px-4 py-2 text-red-600 hover:bg-red-100 rounded-xl">حذف</button>
+                </div>
+            </div>`;
+    });
+    document.getElementById('doctorsList').innerHTML = listHTML || '<p class="text-gray-400">لا يوجد أطباء بعد</p>';
+}
+
+// ==================== لوحة الدكتور ====================
+function showDoctorLogin() {
+    const name = prompt("👤 أدخل اسمك الكامل (مثال: د. أحمد الخطيب)");
+    const pass = prompt("🔑 أدخل كلمة المرور الخاصة بك");
+
+    if (doctorPasswords[name] && doctorPasswords[name] === pass) {
+        document.getElementById('doctorOverlay').classList.remove('hidden');
+        document.getElementById('doctorTitle').textContent = `مرحباً ${name}`;
+        renderDoctorDashboard(name);
+    } else {
+        alert("❌ اسم أو كلمة مرور غير صحيحة");
+    }
+}
+
+function closeDoctorPanel() {
+    document.getElementById('doctorOverlay').classList.add('hidden');
+}
+
+function renderDoctorDashboard(doctorName) {
+    document.getElementById('doctorContent').innerHTML = `
+        <div class="space-y-8">
+            <div class="bg-blue-50 p-6 rounded-3xl">
+                <h3 class="font-bold mb-4">مواعيد اليوم</h3>
+                <p class="text-gray-500">لا توجد مواعيد اليوم</p>
+            </div>
+            <button onclick="alert('سيتم إضافة نظام الحجز الكامل قريباً')" 
+                    class="w-full py-4 bg-blue-600 text-white rounded-3xl font-semibold">
+                إدارة المواعيد
+            </button>
+        </div>
+    `;
+}
+
+// باقي الدوال (addDoctorForm, editDoctor, etc.) ستأتي في الدفعة القادمة
+
+loadFromStorage();
+<script>
+// ==================== دوال إدارة الأطباء ====================
+function addDoctorForm() {
+    const name = prompt("اسم الدكتور الكامل:");
+    if (!name) return;
+    
+    const specialty = prompt("التخصص:");
+    const phone = prompt("رقم الهاتف:");
+    
+    const newDoctor = {
+        id: Date.now(),
+        name: name,
+        type: "doctor",
+        specialty: specialty || "غير محدد",
+        clinic: "عيادة غير محددة",
+        phone: phone || "011-555-XXXX",
+        hours: "غير محدد",
+        experience: "جديد",
+        description: "طبيب جديد",
+        rating: 4.0,
+        image: "https://picsum.photos/seed/doctor" + Date.now() + "/400/250"
+    };
+    
+    doctorsData.push(newDoctor);
+    saveToStorage();
+    alert("✅ تم إضافة الدكتور بنجاح");
+    renderAdminDashboard();
+}
+
+function editDoctor(index) {
+    const doc = doctorsData[index];
+    const newName = prompt("اسم الدكتور الجديد:", doc.name);
+    if (newName) {
+        doc.name = newName;
+        saveToStorage();
+        renderAdminDashboard();
+    }
+}
+
+function deleteDoctor(index) {
+    if (confirm("هل أنت متأكد من حذف هذا الدكتور؟")) {
+        doctorsData.splice(index, 1);
+        saveToStorage();
+        renderAdminDashboard();
+    }
+}
+
+// ==================== renderData الأصلي (محدث) ====================
+function renderData() {
+    // (انسخ هنا كود renderData الأصلي كامل من ملفك)
+    // فقط أضف saveToStorage() في نهايته
+    console.log("تم تحديث البيانات");
+}
+
+// ==================== باقي الدوال الأصلية ====================
+// (انسخ كل الدوال الأصلية: createCard, setFilter, handleSearch, openModal, showToast, toggleMobileMenu, etc.)
+
+// ==================== تهيئة الموقع ====================
+document.addEventListener('DOMContentLoaded', () => {
+    loadFromStorage();
+    
+    // تفعيل الأزرار الأصلية
+    const allBtn = document.querySelector('[data-filter="all"]');
+    if (allBtn) {
+        allBtn.style.background = 'var(--accent)';
+        allBtn.style.color = 'white';
+        allBtn.style.borderColor = 'var(--accent)';
+    }
+    
+    renderData();
+    // animateCounters(); observeElements(); (الأصلية)
+    
+    console.log("%c✅ لوحة التحكم جاهزة!", "color: #0E7C5F; font-size: 16px;");
+});
+</script>
+
+</body>
+</html>
