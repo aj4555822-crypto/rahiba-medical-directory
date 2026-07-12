@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل الرحيبة الطبي | مشافي، عيادات، أطباء، صيدليات، مراكز طبية، مخابر</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#073D2E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -20,10 +18,6 @@
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
         
-        #globalLoader { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s; }
-        .spinner { width: 50px; height: 50px; border: 5px solid var(--accent-light); border-bottom-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
         .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
         .hero-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(196,150,44,0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(14,124,95,0.3) 0%, transparent 40%), radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 40%); animation: heroFloat 20s ease-in-out infinite; }
         @keyframes heroFloat { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 33% { transform: translate(-2%, 1%) rotate(1deg); } 66% { transform: translate(1%, -1%) rotate(-0.5deg); } }
@@ -103,16 +97,11 @@
         .slot-btn.active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; }
         .day-btn { transition: all 0.2s; border: 2px solid var(--border); }
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
+
         .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
-        .notif-badge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div id="globalLoader">
-        <div class="spinner"></div>
-        <p class="mt-4 text-lg font-bold" style="color: var(--accent)">جاري تحميل الدليل الطبي...</p>
-    </div>
 
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,10 +122,6 @@
                     <div class="flex items-center gap-2 border-r border-white/20 pr-4">
                         <button onclick="openDoctorLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-user-md" style="color:var(--gold)"></i> الطبيب</button>
                         <button onclick="openAdminLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-cogs text-gray-300"></i> الإدارة</button>
-                        <button class="relative px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all" id="notifBtn">
-                            <i class="fas fa-bell"></i>
-                            <span class="notif-badge hidden" id="notifCount">0</span>
-                        </button>
                     </div>
                 </div>
                 <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()" aria-label="فتح القائمة"><i class="fas fa-bars" id="menuIcon"></i></button>
@@ -152,13 +137,13 @@
             </div>
             <div class="flex flex-col gap-1">
                 <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
-                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
-                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
-                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
-                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
-                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
-                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
-                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ والأرقام الهامة</a>
+                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
+                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
+                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
+                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
+                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
+                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
+                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ والأرقام الهامة</a>
                 <div class="border-t border-white/10 my-4 pt-4 flex flex-col gap-2">
                     <button onclick="toggleMobileMenu(); openDoctorLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-user-md w-5" style="color:var(--gold)"></i> لوحة الطبيب</button>
                     <button onclick="toggleMobileMenu(); openAdminLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-cogs w-5 text-gray-300"></i> لوحة الإدارة</button>
@@ -187,7 +172,7 @@
                 <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" style="font-family: 'Noto Kufi Arabic'">دليلك الطبي الشامل<br><span style="color: var(--gold)">في الرحيبة</span></h1>
                 <p class="text-white/65 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">اعثر على أقرب مشفى، عيادة، مركز طبي، مخبر، طبيب أو صيدلية في مدينة الرحيبة. دليلك الموثوق للرعاية الصحية.</p>
                 <div class="search-container rounded-2xl p-2 max-w-2xl mx-auto flex items-center gap-2">
-                    <div class="flex-1 flex items-center gap-3 px-4"><i class="fas fa-search text-white/40"></i><input type="text" id="heroSearch" class="search-input w-full py-3 text-sm sm:text-base" placeholder="ابحث عن اسم، تخصص، عنوان..." oninput="handleSearch(this.value)"></div>
+                    <div class="flex-1 flex items-center gap-3 px-4"><i class="fas fa-search text-white/40"></i><input type="text" id="heroSearch" class="search-input w-full py-3 text-sm sm:text-base" placeholder="ابحث عن أي خدمة طبية..." oninput="handleSearch(this.value)"></div>
                     <button onclick="handleSearch(document.getElementById('heroSearch').value)" class="px-6 sm:px-8 py-3 rounded-xl text-white font-semibold text-sm sm:text-base transition-all hover:opacity-90 flex-shrink-0" style="background: var(--gold)">بحث</button>
                 </div>
                 <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 mt-12 max-w-3xl mx-auto">
@@ -331,14 +316,13 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAHQhRHtRb-MN5HkEd_MwJqMIbDbfKwuX0",
         authDomain: "raheba-med.firebaseapp.com",
         projectId: "raheba-med",
-        storageBucket: "raheba-med.appspot.com", 
+        storageBucket: "raheba-med.firebasestorage.app",
         messagingSenderId: "480762213801",
         appId: "1:480762213801:web:ef8b48253995a077b940b8",
         measurementId: "G-7ZMMYD9NL9"
@@ -346,18 +330,12 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    enableIndexedDbPersistence(db).catch((err) => {
-        if (err.code == 'failed-precondition') console.warn('Multiple tabs open');
-        else if (err.code == 'unimplemented') console.warn('No offline support');
-    });
 
     const seedData = [
-        { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110", mapCoords: "33.5570,36.8450" },
-        { type: "clinic", name: "عيادة الرحيبة الطبية الشاملة", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "0115550001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250", workingDays: ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"], workingHours: ["09:00 ص", "10:00 ص", "11:00 ص", "12:00 م", "05:00 م", "06:00 م"], mapCoords: "33.5575,36.8455" },
+        { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110" },
+        { type: "clinic", name: "عيادة الرحيبة الطبية الشاملة", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "0115550001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250", workingDays: ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"], workingHours: ["09:00 ص", "10:00 ص", "11:00 ص", "12:00 م", "05:00 م", "06:00 م"] },
         { type: "doctor", name: "د. أحمد الخطيب", specialty: "طب عام وباطنية", clinic: "عيادة الرحيبة الطبية", phone: "0991000010", hours: "8:00 ص - 2:00 م / 5:00 م - 10:00 م", experience: "15 سنة", description: "استشاري باطنية وطب أسرة، خريج جامعة دمشق", rating: 4.8, image: "https://picsum.photos/seed/doc1/400/250", workingDays: ["السبت","الاثنين","الأربعاء"], workingHours: ["10:00 ص", "11:00 ص", "12:00 م", "05:00 م", "06:00 م"] },
-        { type: "pharmacy", name: "صيدلية الرحيبة الرئيسية", address: "الساحة الرئيسية، وسط المدينة", phone: "0115550022", hours: "24 ساعة", description: "أكبر صيدلية في المدينة، توفر جميع الأدوية والمستلزمات الطبية", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250", mapCoords: "33.5580,36.8460" }
+        { type: "pharmacy", name: "صيدلية الرحيبة الرئيسية", address: "الساحة الرئيسية، وسط المدينة", phone: "0115550022", hours: "24 ساعة", description: "أكبر صيدلية في المدينة، توفر جميع الأدوية والمستلزمات الطبية", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250" }
     ];
 
     const ADMIN_PASSWORD = "RahebaAdmin2026";
@@ -368,43 +346,19 @@
     let allData = [];
     let bookings = []; 
     let tempBooking = {}; 
-    let isInitialLoad = true;
 
-    function generateUniqueId() { return Math.random().toString(36).substring(2, 8).toUpperCase(); }
-    
-    function normalizeArabic(text) {
-        if (!text) return '';
-        return text.toString().toLowerCase()
-            .replace(/[أإآ]/g, 'ا')
-            .replace(/ى/g, 'ي')
-            .replace(/ة/g, 'ه')
-            .replace(/[\u064B-\u065F]/g, '');
+    function generateUniqueId() {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            const loader = document.getElementById('globalLoader');
-            if (loader && loader.style.display !== 'none') {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-                if (allData.length === 0) {
-                    showToast('تعذر الاتصال بقاعدة البيانات. تأكد من اتصالك بالإنترنت أو من إعداد قواعد Firebase.');
-                }
-            }
-        }, 5000);
-
         onSnapshot(collection(db, 'listings'), (snapshot) => {
             allData = [];
-            snapshot.forEach(doc => { allData.push({ id: doc.id, ...doc.data() }); });
+            snapshot.forEach(doc => {
+                allData.push({ id: doc.id, ...doc.data() });
+            });
             renderData();
             updateStats();
-            updateNotifications();
-            
-            if (isInitialLoad) {
-                document.getElementById('globalLoader').style.opacity = '0';
-                setTimeout(() => document.getElementById('globalLoader').style.display = 'none', 500);
-                isInitialLoad = false;
-            }
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
             if (ctrlTitle.includes('لوحة التحكم:')) {
@@ -412,17 +366,13 @@
                 const docData = allData.find(d => d.name === docName);
                 if (docData) renderDoctorDashboard(docData);
             }
-        }, (error) => {
-            console.error("Firebase Error:", error);
-            document.getElementById('globalLoader').style.opacity = '0';
-            setTimeout(() => document.getElementById('globalLoader').style.display = 'none', 500);
-            showToast('خطأ في الاتصال بقاعدة البيانات. تأكد من إعداد Firebase Rules بشكل صحيح.');
         });
 
         onSnapshot(collection(db, 'bookings'), (snapshot) => {
             bookings = [];
-            snapshot.forEach(doc => { bookings.push({ id: doc.id, ...doc.data() }); });
-            updateNotifications();
+            snapshot.forEach(doc => {
+                bookings.push({ id: doc.id, ...doc.data() });
+            });
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
             if (ctrlTitle.includes('لوحة التحكم:')) {
@@ -431,10 +381,6 @@
                 if (docData) renderDoctorDashboard(docData);
             }
         });
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed: ', err));
-        }
     });
 
     function updateStats() {
@@ -445,23 +391,6 @@
         document.getElementById('stat-doctor').textContent = allData.filter(d => d.type === 'doctor').length;
         document.getElementById('stat-pharmacy').textContent = allData.filter(d => d.type === 'pharmacy').length;
     }
-
-    function updateNotifications() {
-        const pendingBookings = bookings.filter(b => b.status === 'pending');
-        const notifCount = document.getElementById('notifCount');
-        if (pendingBookings.length > 0) {
-            notifCount.textContent = pendingBookings.length;
-            notifCount.classList.remove('hidden');
-        } else {
-            notifCount.classList.add('hidden');
-        }
-    }
-
-    document.getElementById('notifBtn')?.addEventListener('click', () => {
-        const pending = bookings.filter(b => b.status === 'pending');
-        if(pending.length === 0) { showToast('لا توجد إشعارات جديدة'); return; }
-        showToast(`لديك ${pending.length} حجز قيد الانتظار. يرجى مراجعة لوحة التحكم.`);
-    });
 
     function createCard(item) {
         const typeMap = {
@@ -538,10 +467,8 @@
     function matchItem(item) {
         if (currentFilter !== 'all' && item.type !== currentFilter) return false;
         if (!searchQuery) return true;
-        
-        const q = normalizeArabic(searchQuery);
-        const fields = ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests', 'departments'];
-        return fields.some(key => normalizeArabic(item[key]).includes(q));
+        const q = searchQuery.toLowerCase();
+        return ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests', 'departments'].some(key => (item[key] || '').toLowerCase().includes(q));
     }
 
     window.setFilter = (filter, btn) => {
@@ -578,11 +505,6 @@
 
         const canBook = item.type === 'doctor' || item.type === 'clinic';
         const bookingBtnModal = canBook ? `<button onclick="openBookingModal('${item.id}')" class="flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center flex items-center justify-center gap-2" style="background: var(--accent)"><i class="fas fa-calendar-check"></i> حجز موعد</button>` : '';
-        
-        const mapSrc = item.mapCoords 
-            ? `https://maps.google.com/maps?q=${item.mapCoords}&z=15&output=embed`
-            : `https://www.google.com/maps?q=${encodeURIComponent(item.address + ' الرحيبة سوريا')}&output=embed`;
-        const mapHTML = (item.address || item.mapCoords) ? `<iframe class="w-full h-48 rounded-xl mt-4 border-0" loading="lazy" allowfullscreen src="${mapSrc}"></iframe>` : '';
 
         document.getElementById('modalContent').innerHTML = `
             <div class="relative h-48 overflow-hidden rounded-t-2xl"><img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.6), transparent)"></div><button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-all" aria-label="إغلاق"><i class="fas fa-times text-sm"></i></button><div class="absolute bottom-4 right-5 left-5"><span class="badge ${t.badgeClass} mb-2 inline-block">${t.label}</span><h3 class="text-white font-bold text-lg" style="font-family: 'Noto Kufi Arabic'">${item.name}</h3></div></div>
@@ -590,9 +512,7 @@
             <p class="text-sm leading-relaxed mb-5" style="color: var(--fg-light)">${item.description || ''}</p>
             <div class="flex flex-col gap-2 mb-5"><div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas ${t.icon}" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">التخصص / النوع</div><div class="text-sm font-bold">${item.specialty || 'غير محدد'}</div></div></div>${item.address ? `<div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas fa-map-marker-alt" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">العنوان</div><div class="text-sm font-bold">${item.address}</div></div></div>` : ''}<div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas fa-clock" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">أوقات العمل</div><div class="text-sm font-bold">${item.hours || ''}</div></div></div>${extraHTML}</div>
             <div class="flex items-center gap-3"><a href="tel:${item.phone}" class="call-btn flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center no-underline flex items-center justify-center gap-2" style="background: ${t.color}"><i class="fas fa-phone-alt"></i> اتصال ${item.phone}</a><button onclick="copyNumber('${item.phone}')" class="w-12 h-12 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50 flex-shrink-0" style="border-color: var(--border)" aria-label="نسخ"><i class="fas fa-copy" style="color: var(--muted)"></i></button></div>
-            ${canBook ? `<div class="mt-3">${bookingBtnModal}</div>` : ''}
-            ${mapHTML}
-            </div>`;
+            ${canBook ? `<div class="mt-3">${bookingBtnModal}</div>` : ''}</div>`;
         document.getElementById('modalOverlay').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -797,17 +717,6 @@
                         <input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل (مثال: 8ص - 10م)" required>
                         <input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="أقسام المشفى / خدمات المركز / تحاليل المخبر">
                         <input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي فقط)">
-                        
-                        <div class="col-span-1 sm:col-span-2 bg-blue-50 p-3 rounded-xl border border-blue-200 text-xs text-blue-800">
-                            <i class="fas fa-map-marker-alt"></i> لتحديد الموقع بالضبط: <a href="https://www.google.com/maps" target="_blank" class="font-bold underline">افتح خرائط جوجل</a>، اضغط يميناً على المكان، اختر "إحداثيات"، انسخها والصقها هنا.
-                            <input type="text" id="new_mapCoords" class="ctrl-input mt-2" placeholder="مثال: 33.5570,36.8450">
-                        </div>
-
-                        <div class="col-span-1 sm:col-span-2">
-                            <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">صورة المنشأة</label>
-                            <input type="file" id="new_image" accept="image/*" class="ctrl-input text-sm p-1.5" onchange="previewImage(event)">
-                            <img id="imagePreview" class="hidden mt-2 w-full h-32 object-cover rounded-xl" src="" alt="Preview">
-                        </div>
                         <textarea id="new_desc" class="ctrl-input text-sm col-span-2" placeholder="وصف مختصر" rows="2" required></textarea>
                         <button type="submit" class="col-span-1 sm:col-span-2 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90" style="background: var(--accent)"><i class="fas fa-save ml-1"></i> حفظ</button>
                     </form>
@@ -818,118 +727,6 @@
                 </div>
                 <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm transition-all hover:bg-gray-50" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية إلى Firebase (بدون تكرار)</button>
             </div>`, '#073D2E');
-    }
-    
-    window.previewImage = (event) => {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = document.getElementById('imagePreview');
-            img.src = e.target.result;
-            img.classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
-    };
-
-    async function compressImage(file, maxWidth = 800, quality = 0.7) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    canvas.toBlob((blob) => {
-                        resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-                    }, 'image/jpeg', quality);
-                };
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    window.saveFacility = async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('edit_id').value;
-        const type = document.getElementById('new_type').value;
-        const name = document.getElementById('new_name').value;
-        const specialty = document.getElementById('new_specialty').value;
-        const address = document.getElementById('new_address').value;
-        const phone = document.getElementById('new_phone').value;
-        const hours = document.getElementById('new_hours').value;
-        const desc = document.getElementById('new_desc').value;
-        const extra = document.getElementById('new_extra').value;
-        const emergency = document.getElementById('new_emergency').value;
-        const mapCoords = document.getElementById('new_mapCoords').value;
-        
-        let imageFile = document.getElementById('new_image').files[0];
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-
-        let data = { type, name, phone, hours, description: desc, rating: 4.0, mapCoords };
-        
-        if (!id && (type === 'doctor' || type === 'clinic')) {
-            data.bookingPass = generateUniqueId();
-        }
-
-        if (type === 'hospital') { data.specialty = specialty; data.address = address; data.departments = extra; data.emergencyPhone = emergency; }
-        else if (type === 'doctor') { data.specialty = specialty; data.clinic = address; }
-        else if (type === 'pharmacy') { data.address = address; data.night = false; }
-        else if (type === 'clinic') { data.specialty = specialty; data.address = address; }
-        else if (type === 'center') { data.specialty = specialty; data.address = address; data.services = extra; }
-        else if (type === 'lab') { data.specialty = specialty; data.address = address; data.tests = extra; }
-
-        try {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin ml-1"></i> جاري المعالجة والرفع...';
-
-            if (imageFile) {
-                showToast('جاري ضغط الصورة...');
-                const compressedFile = await compressImage(imageFile);
-                
-                showToast('جاري رفع الصورة...');
-                const storageRef = sRef(storage, `images/${Date.now()}_${compressedFile.name}`);
-                await uploadBytes(storageRef, compressedFile);
-                data.image = await getDownloadURL(storageRef);
-            }
-
-            if (id) {
-                await updateDoc(doc(db, 'listings', id), data);
-                showToast('تم تعديل البيانات بنجاح!');
-            } else {
-                if(!data.image) data.image = `https://picsum.photos/seed/new${Date.now()}/400/250`;
-                await addDoc(collection(db, 'listings'), data);
-                let successMsg = 'تمت إضافة المنشأة بنجاح!';
-                if (data.bookingPass) {
-                    successMsg += ` كلمة مرور الطبيب: ${data.bookingPass}`;
-                }
-                showToast(successMsg);
-            }
-            
-            document.querySelector('form').reset();
-            document.getElementById('edit_id').value = '';
-            document.getElementById('formTitle').textContent = 'إضافة منشأة طبية جديدة';
-            document.getElementById('imagePreview').classList.add('hidden');
-            renderAdminDashboard(); 
-            
-        } catch (err) {
-            showToast('حدث خطأ أثناء الحفظ في Firebase. تأكد من إعداد قواعد Storage');
-            console.error(err);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-save ml-1"></i> حفظ';
-        }
     }
 
     window.seedDatabase = async () => {
@@ -961,7 +758,6 @@
         document.getElementById('new_desc').value = item.description;
         document.getElementById('new_extra').value = item.departments || item.services || item.tests || '';
         document.getElementById('new_emergency').value = item.emergencyPhone || '';
-        document.getElementById('new_mapCoords').value = item.mapCoords || '';
         document.getElementById('formTitle').textContent = `تعديل: ${item.name}`;
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -974,6 +770,54 @@
             renderAdminDashboard();
         } catch (e) {
             showToast('حدث خطأ أثناء الحذف');
+        }
+    }
+
+    window.saveFacility = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('edit_id').value;
+        const type = document.getElementById('new_type').value;
+        const name = document.getElementById('new_name').value;
+        const specialty = document.getElementById('new_specialty').value;
+        const address = document.getElementById('new_address').value;
+        const phone = document.getElementById('new_phone').value;
+        const hours = document.getElementById('new_hours').value;
+        const desc = document.getElementById('new_desc').value;
+        const extra = document.getElementById('new_extra').value;
+        const emergency = document.getElementById('new_emergency').value;
+
+        let data = { type, name, phone, hours, description: desc, rating: 4.0 };
+        
+        if (!id && (type === 'doctor' || type === 'clinic')) {
+            data.bookingPass = generateUniqueId();
+        }
+
+        if (type === 'hospital') { data.specialty = specialty; data.address = address; data.departments = extra; data.emergencyPhone = emergency; }
+        else if (type === 'doctor') { data.specialty = specialty; data.clinic = address; }
+        else if (type === 'pharmacy') { data.address = address; data.night = false; }
+        else if (type === 'clinic') { data.specialty = specialty; data.address = address; }
+        else if (type === 'center') { data.specialty = specialty; data.address = address; data.services = extra; }
+        else if (type === 'lab') { data.specialty = specialty; data.address = address; data.tests = extra; }
+
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'listings', id), data);
+                showToast('تم تعديل البيانات بنجاح!');
+            } else {
+                data.image = `https://picsum.photos/seed/new${Date.now()}/400/250`;
+                await addDoc(collection(db, 'listings'), data);
+                let successMsg = 'تمت إضافة المنشأة بنجاح!';
+                if (data.bookingPass) {
+                    successMsg += ` كلمة مرور الطبيب: ${data.bookingPass}`;
+                }
+                showToast(successMsg);
+            }
+            document.querySelector('form').reset();
+            document.getElementById('edit_id').value = '';
+            document.getElementById('formTitle').textContent = 'إضافة منشأة طبية جديدة';
+            renderAdminDashboard(); 
+        } catch (err) {
+            showToast('حدث خطأ أثناء الحفظ في Firebase');
         }
     }
 
