@@ -1,7 +1,8 @@
-const CACHE_NAME = 'raheba-med-cache-v1';
+const CACHE_NAME = 'raheba-med-cache-v2';
 const urlsToCache = [
   '/',
-  '/index.html'
+  '/index.html',
+  '/manifest.json'
 ];
 
 self.addEventListener('install', event => {
