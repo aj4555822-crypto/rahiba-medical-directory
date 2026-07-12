@@ -131,19 +131,9 @@
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
 
         .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
-
-        /* Loader Styles */
-        #globalLoader { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; transition: opacity 0.5s; }
-        .spinner { width: 60px; height: 60px; border: 6px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-
-    <div id="globalLoader">
-        <div class="spinner"></div>
-        <p style="color: var(--muted); font-weight: 600;">جاري تحميل الدليل الطبي...</p>
-    </div>
 
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -382,8 +372,8 @@
     </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAHQhRHtRb-MN5HkEd_MwJqMIbDbfKwuX0",
@@ -400,9 +390,13 @@
 
     // Increase Visit Counter
     try {
-        await updateDoc(doc(db, 'stats', 'visits'), { count: increment(1) }, { merge: true });
+        await updateDoc(doc(db, 'stats', 'visits'), { count: increment(1) });
     } catch (e) {
-        await setDoc(doc(db, 'stats', 'visits'), { count: 1 });
+        try {
+            await setDoc(doc(db, 'stats', 'visits'), { count: 1 });
+        } catch (err) {
+            console.error("Stats error: ", err);
+        }
     }
 
     const seedData = [
@@ -450,7 +444,6 @@
             });
             renderData();
             updateStats();
-            hideLoader();
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
             if (ctrlTitle.includes('لوحة التحكم:')) {
@@ -458,6 +451,9 @@
                 const docData = allData.find(d => d.name === docName);
                 if (docData) renderDoctorDashboard(docData);
             }
+        }, (error) => {
+            console.error("Firebase read error (listings): ", error);
+            showToast("تعذر تحميل البيانات. تأكد من إعداد قواعد Firebase للسماح بالقراءة.");
         });
 
         onSnapshot(collection(db, 'bookings'), (snapshot) => {
@@ -472,6 +468,8 @@
                 const docData = allData.find(d => d.name === docName);
                 if (docData) renderDoctorDashboard(docData);
             }
+        }, (error) => {
+            console.error("Firebase read error (bookings): ", error);
         });
 
         // Dark Mode Init
@@ -481,12 +479,6 @@
             updateDarkModeIcon();
         }
     });
-
-    function hideLoader() {
-        const loader = document.getElementById('globalLoader');
-        loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 500);
-    }
 
     function updateStats() {
         document.getElementById('stat-hospital').textContent = allData.filter(d => d.type === 'hospital').length;
@@ -605,7 +597,6 @@
         searchQuery = value.trim(); 
         document.getElementById('heroSearch').value = value; 
         if (document.getElementById('inlineSearch')) document.getElementById('inlineSearch').value = value; 
-        // Reset pagination on new search
         Object.keys(pageState).forEach(k => pageState[k] = 1);
         renderData(); 
     }
@@ -906,7 +897,7 @@
             }
             showToast('تم ترحيل البيانات بنجاح (تم تجاهل المكرر إن وجد)!');
         } catch (e) {
-            showToast('خطأ في الترحيل: تأكد من إعداد قواعد Firebase');
+            showToast('خطأ في الترحيل: تأكد من إعداد قواعد Firebase للسماح بالكتابة');
         }
     }
 
@@ -1171,7 +1162,7 @@
         document.getElementById('darkModeIconMobile').className = iconClass;
     }
 
-    // Language Toggle (Basic UI Translation)
+    // Language Toggle
     window.toggleLanguage = () => {
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
         document.documentElement.lang = currentLang;
