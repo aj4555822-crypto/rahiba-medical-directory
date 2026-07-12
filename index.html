@@ -7,6 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- مكتبات الأنيميشن 3D الاحترافية -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
     <style>
         :root {
             --bg: #FAF8F4; --bg-deep: #F0EDE6; --fg: #1B2A1B; --fg-light: #3D4F3D;
@@ -15,13 +19,13 @@
             --clinic: #0E7C5F; --doctor: #2563EB; --pharmacy: #C4962C; --center: #9333EA; --lab: #DC2626; --hospital: #0D9488;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; perspective: 1500px; }
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
         
         .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
         .hero-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(196,150,44,0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(14,124,95,0.3) 0%, transparent 40%), radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 40%); animation: heroFloat 20s ease-in-out infinite; }
         @keyframes heroFloat { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 33% { transform: translate(-2%, 1%) rotate(1deg); } 66% { transform: translate(1%, -1%) rotate(-0.5deg); } }
-        .pulse-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(196,150,44,0.3); animation: pulseRing 3s ease-out infinite; }
+        .pulse-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(196,150,44,0.3); animation: pulseRing 3s ease-out infinite; will-change: transform; }
         @keyframes pulseRing { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(2); opacity: 0; } }
         
         .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
@@ -29,15 +33,15 @@
         .search-input { background: transparent; color: white; outline: none; font-family: 'IBM Plex Sans Arabic', sans-serif; }
         .search-input::placeholder { color: rgba(255,255,255,0.5); }
         
-        .filter-btn { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+        .filter-btn { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; transform: translateZ(0); }
         .filter-btn::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; border-radius: 3px; transition: width 0.3s ease; }
         .filter-btn:hover::after, .filter-btn.active::after { width: 100%; }
-        .filter-btn.active { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.15); }
+        .filter-btn.active { transform: translateY(-2px) translateZ(30px) scale(1.05); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.15); }
         
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: transform 0.2s ease-out, box-shadow 0.4s ease, border-color 0.4s ease; position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform; }
         .card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 0; transition: height 0.4s ease; border-radius: 0 0 4px 0; }
         .card:hover::before { height: 100%; }
-        .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: transparent; }
+        .card:hover { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border-color: transparent; }
         .card.clinic-card::before { background: var(--clinic); } .card.doctor-card::before { background: var(--doctor); }
         .card.pharmacy-card::before { background: var(--pharmacy); } .card.center-card::before { background: var(--center); } 
         .card.lab-card::before { background: var(--lab); } .card.hospital-card::before { background: var(--hospital); }
@@ -47,17 +51,17 @@
         .badge-pharmacy { background: var(--gold-light); color: #92610A; } .badge-center { background: #F3E8FF; color: #6B21A8; } 
         .badge-lab { background: #FEE2E2; color: #991B1B; } .badge-hospital { background: #CCFBF1; color: #115E59; }
         
-        .cat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        .cat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; transform: translateZ(20px); }
         .cat-icon-clinic { background: var(--accent-light); color: var(--accent); } .cat-icon-doctor { background: #DBEAFE; color: #2563EB; }
         .cat-icon-pharmacy { background: var(--gold-light); color: var(--gold); } .cat-icon-center { background: #F3E8FF; color: #9333EA; } 
         .cat-icon-lab { background: #FEE2E2; color: #DC2626; } .cat-icon-hospital { background: #CCFBF1; color: var(--hospital); }
         
-        .call-btn { transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .call-btn { transition: all 0.3s ease; position: relative; overflow: hidden; transform: translateZ(10px); }
         .call-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: rgba(255,255,255,0.2); border-radius: 50%; transition: all 0.5s ease; transform: translate(-50%, -50%); }
-        .call-btn:hover::before { width: 200%; height: 200%; } .call-btn:hover { transform: scale(1.05); }
+        .call-btn:hover::before { width: 200%; height: 200%; } .call-btn:hover { transform: scale(1.05) translateZ(20px); }
         
-        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; }
-        .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-3px); }
+        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; transform: translateZ(0); }
+        .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-5px) translateZ(50px) scale(1.05); }
         .ornament-line { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ornament-line::before, .ornament-line::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
         html { scroll-behavior: smooth; }
@@ -66,24 +70,29 @@
         
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: white; padding: 14px 28px; border-radius: 12px; font-size: 0.9rem; z-index: 9999; opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 100; border: none; }
-        .back-to-top.visible { opacity: 1; transform: translateY(0); }
+        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px) scale(0.5); transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 100; border: none; }
+        .back-to-top.visible { opacity: 1; transform: translateY(0) scale(1); }
+        .back-to-top:hover { transform: translateY(-5px) scale(1.1) rotateZ(10deg); }
         .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
         .mobile-menu.open { transform: translateX(0); }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.4,0,0.2,1); }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        
+        /* === تعديل أنيميشن الظهور ليكون 3D === */
+        .reveal { opacity: 0; transform: translateY(50px) scale(0.95) rotateX(15deg); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: top center; transform-style: preserve-3d; }
+        .reveal.visible { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
+
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-        .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
+        .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); transform: translateZ(15px); }
         .detail-row i { width: 16px; text-align: center; font-size: 0.75rem; }
         
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
-        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
+        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.8) rotateX(45deg) translateZ(-100px); opacity: 0; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform-style: preserve-3d; }
+        .modal-overlay.active .modal-content { transform: scale(1) rotateX(0) translateZ(0); opacity: 1; }
         
         .ctrl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
         .ctrl-overlay.active { display: flex; }
-        .ctrl-content { background: var(--bg); border-radius: 24px; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .ctrl-content { background: var(--bg); border-radius: 24px; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); transform: scale(0.8) rotateX(20deg) translateZ(-100px); opacity: 0; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform-style: preserve-3d; }
+        .ctrl-overlay.active .ctrl-content { transform: scale(1) rotateX(0) translateZ(0); opacity: 1; }
         .ctrl-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: white; font-family: 'IBM Plex Sans Arabic'; outline: none; transition: all 0.3s; }
         .ctrl-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
         .dot-pattern { background-image: radial-gradient(circle, var(--border) 1px, transparent 1px); background-size: 30px 30px; }
@@ -97,8 +106,12 @@
         .slot-btn.active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; }
         .day-btn { transition: all 0.2s; border: 2px solid var(--border); }
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
-
         .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
+
+        /* تفعيل التمرير السلس */
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-stopped { overflow: hidden; }
     </style>
 </head>
 <body>
@@ -138,12 +151,12 @@
             <div class="flex flex-col gap-1">
                 <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
                 <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
-                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
-                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
-                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
-                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
-                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
-                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ والأرقام الهامة</a>
+                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
+                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
+                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
+                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
+                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
+                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ والأرقام الهامة</a>
                 <div class="border-t border-white/10 my-4 pt-4 flex flex-col gap-2">
                     <button onclick="toggleMobileMenu(); openDoctorLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-user-md w-5" style="color:var(--gold)"></i> لوحة الطبيب</button>
                     <button onclick="toggleMobileMenu(); openAdminLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-cogs w-5 text-gray-300"></i> لوحة الإدارة</button>
@@ -690,7 +703,7 @@
                     ${item.bookingPass ? `<span class="text-[11px] text-gray-500 mt-1">رمز دخول الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}
                 </div>
                 <div class="flex gap-1">
-                    <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all"><i class="fas fa-edit"></i></button>
+                    <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50 transition-all"><i class="fas fa-edit"></i></button>
                     <button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50 transition-all"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
@@ -966,6 +979,56 @@
     const allBtn = document.querySelector('[data-filter="all"]');
     allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
     observeElements();
+
+    // =========================================================
+    // === أكواد الأنيميشن ثلاثية الأبعاد (GSAP & Lenis) ===
+    // =========================================================
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. تفعيل التمرير السلس (Smooth Scroll)
+    const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // 2. تأثير 3D Tilt للبطاقات (يتتبع حركة الماوس)
+    document.body.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.card');
+        if (card && !card.hasAttribute('data-no-tilt')) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 15;
+            const rotateY = (centerX - x) / 15;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
+        }
+    });
+    document.body.addEventListener('mouseout', (e) => {
+        const card = e.target.closest('.card');
+        if (card) {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+        }
+    });
+
+    // 3. تأثير العمق للواجهة الرئيسية (Hero Parallax)
+    const hero = document.getElementById('home');
+    if (hero) {
+        hero.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.clientX) / 50;
+            const y = (window.innerHeight / 2 - e.clientY) / 50;
+            gsap.to('.pulse-ring', { x: x, y: y, duration: 1.5, ease: "power2.out" });
+        });
+    }
+
+    // 4. تأثير ظهور ثلاثي الأبعاد للإحصائيات
+    gsap.utils.toArray(".stat-card").forEach(card => {
+        gsap.from(card, { 
+            y: 30, opacity: 0, z: -100, duration: 1, ease: "power3.out",
+            scrollTrigger: { trigger: card, start: "top 90%" }
+        });
+    });
 </script>
 </body>
 </html>
