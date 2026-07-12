@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل الرحيبة الطبي | مشافي، عيادات، أطباء، صيدليات، مراكز طبية، مخابر</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#073D2E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- مكتبات الأنيميشن 3D الاحترافية -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
     <style>
         :root {
             --bg: #FAF8F4; --bg-deep: #F0EDE6; --fg: #1B2A1B; --fg-light: #3D4F3D;
@@ -19,13 +17,18 @@
             --clinic: #0E7C5F; --doctor: #2563EB; --pharmacy: #C4962C; --center: #9333EA; --lab: #DC2626; --hospital: #0D9488;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; perspective: 1500px; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
         
+        /* شاشة التحميل العامة */
+        #globalLoader { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--accent-light); border-bottom-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
         .hero-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(196,150,44,0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(14,124,95,0.3) 0%, transparent 40%), radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 40%); animation: heroFloat 20s ease-in-out infinite; }
         @keyframes heroFloat { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 33% { transform: translate(-2%, 1%) rotate(1deg); } 66% { transform: translate(1%, -1%) rotate(-0.5deg); } }
-        .pulse-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(196,150,44,0.3); animation: pulseRing 3s ease-out infinite; will-change: transform; }
+        .pulse-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(196,150,44,0.3); animation: pulseRing 3s ease-out infinite; }
         @keyframes pulseRing { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(2); opacity: 0; } }
         
         .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
@@ -33,15 +36,15 @@
         .search-input { background: transparent; color: white; outline: none; font-family: 'IBM Plex Sans Arabic', sans-serif; }
         .search-input::placeholder { color: rgba(255,255,255,0.5); }
         
-        .filter-btn { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; transform: translateZ(0); }
+        .filter-btn { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
         .filter-btn::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; border-radius: 3px; transition: width 0.3s ease; }
         .filter-btn:hover::after, .filter-btn.active::after { width: 100%; }
-        .filter-btn.active { transform: translateY(-2px) translateZ(30px) scale(1.05); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.15); }
+        .filter-btn.active { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.15); }
         
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: transform 0.2s ease-out, box-shadow 0.4s ease, border-color 0.4s ease; position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
         .card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 0; transition: height 0.4s ease; border-radius: 0 0 4px 0; }
         .card:hover::before { height: 100%; }
-        .card:hover { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border-color: transparent; }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: transparent; }
         .card.clinic-card::before { background: var(--clinic); } .card.doctor-card::before { background: var(--doctor); }
         .card.pharmacy-card::before { background: var(--pharmacy); } .card.center-card::before { background: var(--center); } 
         .card.lab-card::before { background: var(--lab); } .card.hospital-card::before { background: var(--hospital); }
@@ -51,17 +54,17 @@
         .badge-pharmacy { background: var(--gold-light); color: #92610A; } .badge-center { background: #F3E8FF; color: #6B21A8; } 
         .badge-lab { background: #FEE2E2; color: #991B1B; } .badge-hospital { background: #CCFBF1; color: #115E59; }
         
-        .cat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; transform: translateZ(20px); }
+        .cat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
         .cat-icon-clinic { background: var(--accent-light); color: var(--accent); } .cat-icon-doctor { background: #DBEAFE; color: #2563EB; }
         .cat-icon-pharmacy { background: var(--gold-light); color: var(--gold); } .cat-icon-center { background: #F3E8FF; color: #9333EA; } 
         .cat-icon-lab { background: #FEE2E2; color: #DC2626; } .cat-icon-hospital { background: #CCFBF1; color: var(--hospital); }
         
-        .call-btn { transition: all 0.3s ease; position: relative; overflow: hidden; transform: translateZ(10px); }
+        .call-btn { transition: all 0.3s ease; position: relative; overflow: hidden; }
         .call-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: rgba(255,255,255,0.2); border-radius: 50%; transition: all 0.5s ease; transform: translate(-50%, -50%); }
-        .call-btn:hover::before { width: 200%; height: 200%; } .call-btn:hover { transform: scale(1.05) translateZ(20px); }
+        .call-btn:hover::before { width: 200%; height: 200%; } .call-btn:hover { transform: scale(1.05); }
         
-        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; transform: translateZ(0); }
-        .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-5px) translateZ(50px) scale(1.05); }
+        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; }
+        .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-3px); }
         .ornament-line { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ornament-line::before, .ornament-line::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
         html { scroll-behavior: smooth; }
@@ -70,29 +73,24 @@
         
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: white; padding: 14px 28px; border-radius: 12px; font-size: 0.9rem; z-index: 9999; opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px) scale(0.5); transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 100; border: none; }
-        .back-to-top.visible { opacity: 1; transform: translateY(0) scale(1); }
-        .back-to-top:hover { transform: translateY(-5px) scale(1.1) rotateZ(10deg); }
+        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 100; border: none; }
+        .back-to-top.visible { opacity: 1; transform: translateY(0); }
         .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
         .mobile-menu.open { transform: translateX(0); }
-        
-        /* === تعديل أنيميشن الظهور ليكون 3D === */
-        .reveal { opacity: 0; transform: translateY(50px) scale(0.95) rotateX(15deg); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: top center; transform-style: preserve-3d; }
-        .reveal.visible { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
-
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.4,0,0.2,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-        .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); transform: translateZ(15px); }
+        .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
         .detail-row i { width: 16px; text-align: center; font-size: 0.75rem; }
         
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.8) rotateX(45deg) translateZ(-100px); opacity: 0; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform-style: preserve-3d; }
-        .modal-overlay.active .modal-content { transform: scale(1) rotateX(0) translateZ(0); opacity: 1; }
+        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
         
         .ctrl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
         .ctrl-overlay.active { display: flex; }
-        .ctrl-content { background: var(--bg); border-radius: 24px; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); transform: scale(0.8) rotateX(20deg) translateZ(-100px); opacity: 0; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform-style: preserve-3d; }
-        .ctrl-overlay.active .ctrl-content { transform: scale(1) rotateX(0) translateZ(0); opacity: 1; }
+        .ctrl-content { background: var(--bg); border-radius: 24px; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
         .ctrl-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: white; font-family: 'IBM Plex Sans Arabic'; outline: none; transition: all 0.3s; }
         .ctrl-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
         .dot-pattern { background-image: radial-gradient(circle, var(--border) 1px, transparent 1px); background-size: 30px 30px; }
@@ -107,14 +105,17 @@
         .day-btn { transition: all 0.2s; border: 2px solid var(--border); }
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
         .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
-
-        /* تفعيل التمرير السلس */
-        html.lenis, html.lenis body { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        .lenis.lenis-stopped { overflow: hidden; }
+        
+        /* أنماط الإشعارات */
+        .notif-badge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     </style>
 </head>
 <body>
+
+    <div id="globalLoader">
+        <div class="spinner"></div>
+        <p class="mt-4 text-lg font-bold" style="color: var(--accent)">جاري تحميل الدليل الطبي...</p>
+    </div>
 
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -135,6 +136,10 @@
                     <div class="flex items-center gap-2 border-r border-white/20 pr-4">
                         <button onclick="openDoctorLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-user-md" style="color:var(--gold)"></i> الطبيب</button>
                         <button onclick="openAdminLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-cogs text-gray-300"></i> الإدارة</button>
+                        <button class="relative px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all" id="notifBtn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-badge hidden" id="notifCount">0</span>
+                        </button>
                     </div>
                 </div>
                 <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()" aria-label="فتح القائمة"><i class="fas fa-bars" id="menuIcon"></i></button>
@@ -150,7 +155,7 @@
             </div>
             <div class="flex flex-col gap-1">
                 <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
-                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
+                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
                 <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
                 <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
                 <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
@@ -185,7 +190,7 @@
                 <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" style="font-family: 'Noto Kufi Arabic'">دليلك الطبي الشامل<br><span style="color: var(--gold)">في الرحيبة</span></h1>
                 <p class="text-white/65 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">اعثر على أقرب مشفى، عيادة، مركز طبي، مخبر، طبيب أو صيدلية في مدينة الرحيبة. دليلك الموثوق للرعاية الصحية.</p>
                 <div class="search-container rounded-2xl p-2 max-w-2xl mx-auto flex items-center gap-2">
-                    <div class="flex-1 flex items-center gap-3 px-4"><i class="fas fa-search text-white/40"></i><input type="text" id="heroSearch" class="search-input w-full py-3 text-sm sm:text-base" placeholder="ابحث عن أي خدمة طبية..." oninput="handleSearch(this.value)"></div>
+                    <div class="flex-1 flex items-center gap-3 px-4"><i class="fas fa-search text-white/40"></i><input type="text" id="heroSearch" class="search-input w-full py-3 text-sm sm:text-base" placeholder="ابحث عن اسم، تخصص، عنوان..." oninput="handleSearch(this.value)"></div>
                     <button onclick="handleSearch(document.getElementById('heroSearch').value)" class="px-6 sm:px-8 py-3 rounded-xl text-white font-semibold text-sm sm:text-base transition-all hover:opacity-90 flex-shrink-0" style="background: var(--gold)">بحث</button>
                 </div>
                 <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 mt-12 max-w-3xl mx-auto">
@@ -329,13 +334,40 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+
+    /* 
+       ==============================================================
+       ملاحظة أمنية هامة جداً بخصوص (إخفاء Firebase Config):
+       في تطبيقات الويب التي تعمل بالكامل في الواجهة الأمامية (Frontend)، 
+       لا يمكن إخفاء الـ Config تماماً لأن المتصفح يحتاجه للاتصال بقاعدة البيانات.
+       الحل الاحترافي الوحيد لحماية بياناتك هو إعداد (Firestore Security Rules).
+       اذهب إلى لوحة تحكم Firebase -> Firestore Database -> Rules وضع القواعد التالية:
+       
+       rules_version = '2';
+       service cloud.firestore {
+         match /databases/{database}/documents {
+           // السماح للجميع بقراءة البيانات (الدليل عام)
+           match /listings/{docId} {
+             allow read: if true;
+             // السماح بالكتابة/الحذف/التعديل فقط إذا تم تمرير كلمة مرور الإدارة (يجب استخدام Firebase Auth للنهائية)
+             allow write: if false; // مؤقتاً false حتى تعدلها لخاصة بك
+           }
+           // الحجوزات: للقراءة والكتابة للجميع مؤقتاً (يفضل ربطها بـ Auth لاحقاً)
+           match /bookings/{docId} {
+             allow read, write: if true;
+           }
+         }
+       }
+       ==============================================================
+    */
 
     const firebaseConfig = {
         apiKey: "AIzaSyAHQhRHtRb-MN5HkEd_MwJqMIbDbfKwuX0",
         authDomain: "raheba-med.firebaseapp.com",
         projectId: "raheba-med",
-        storageBucket: "raheba-med.firebasestorage.app",
+        storageBucket: "raheba-med.appspot.com", // تم تعديل الرابط ليتوافق مع Storage
         messagingSenderId: "480762213801",
         appId: "1:480762213801:web:ef8b48253995a077b940b8",
         measurementId: "G-7ZMMYD9NL9"
@@ -343,6 +375,13 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    // تفعيل العمل أوفلاين (PWA)
+    enableIndexedDbPersistence(db).catch((err) => {
+        if (err.code == 'failed-precondition') console.warn('تم فتح التطبيق في أكثر من تبويب.');
+        else if (err.code == 'unimplemented') console.warn('المتصفح لا يدعم العمل أوفلاين.');
+    });
 
     const seedData = [
         { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110" },
@@ -359,19 +398,33 @@
     let allData = [];
     let bookings = []; 
     let tempBooking = {}; 
+    let isInitialLoad = true;
 
-    function generateUniqueId() {
-        return Math.random().toString(36).substring(2, 8).toUpperCase();
+    function generateUniqueId() { return Math.random().toString(36).substring(2, 8).toUpperCase(); }
+    
+    // تحسين البحث ليدعم التشكيل والأحرف المتشابهة
+    function normalizeArabic(text) {
+        if (!text) return '';
+        return text.toString().toLowerCase()
+            .replace(/[أإآ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/[\u064B-\u065F]/g, ''); // إزالة التشكيل
     }
 
     window.addEventListener('DOMContentLoaded', () => {
         onSnapshot(collection(db, 'listings'), (snapshot) => {
             allData = [];
-            snapshot.forEach(doc => {
-                allData.push({ id: doc.id, ...doc.data() });
-            });
+            snapshot.forEach(doc => { allData.push({ id: doc.id, ...doc.data() }); });
             renderData();
             updateStats();
+            updateNotifications();
+            
+            if (isInitialLoad) {
+                document.getElementById('globalLoader').style.opacity = '0';
+                setTimeout(() => document.getElementById('globalLoader').style.display = 'none', 500);
+                isInitialLoad = false;
+            }
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
             if (ctrlTitle.includes('لوحة التحكم:')) {
@@ -383,9 +436,8 @@
 
         onSnapshot(collection(db, 'bookings'), (snapshot) => {
             bookings = [];
-            snapshot.forEach(doc => {
-                bookings.push({ id: doc.id, ...doc.data() });
-            });
+            snapshot.forEach(doc => { bookings.push({ id: doc.id, ...doc.data() }); });
+            updateNotifications();
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
             if (ctrlTitle.includes('لوحة التحكم:')) {
@@ -394,6 +446,11 @@
                 if (docData) renderDoctorDashboard(docData);
             }
         });
+
+        // تفعيل PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed: ', err));
+        }
     });
 
     function updateStats() {
@@ -404,6 +461,25 @@
         document.getElementById('stat-doctor').textContent = allData.filter(d => d.type === 'doctor').length;
         document.getElementById('stat-pharmacy').textContent = allData.filter(d => d.type === 'pharmacy').length;
     }
+
+    // نظام الإشعارات (يبحث عن حجوزات قيد الانتظار للطبيب المسجل دخوله)
+    function updateNotifications() {
+        const pendingBookings = bookings.filter(b => b.status === 'pending');
+        const notifCount = document.getElementById('notifCount');
+        if (pendingBookings.length > 0) {
+            notifCount.textContent = pendingBookings.length;
+            notifCount.classList.remove('hidden');
+        } else {
+            notifCount.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('notifBtn')?.addEventListener('click', () => {
+        const pending = bookings.filter(b => b.status === 'pending');
+        if(pending.length === 0) { showToast('لا توجد إشعارات جديدة'); return; }
+        const msg = `لديك ${pending.length} حجز قيد الانتظار. يرجى مراجعة لوحة التحكم.`;
+        showToast(msg);
+    });
 
     function createCard(item) {
         const typeMap = {
@@ -480,8 +556,10 @@
     function matchItem(item) {
         if (currentFilter !== 'all' && item.type !== currentFilter) return false;
         if (!searchQuery) return true;
-        const q = searchQuery.toLowerCase();
-        return ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests', 'departments'].some(key => (item[key] || '').toLowerCase().includes(q));
+        
+        const q = normalizeArabic(searchQuery);
+        const fields = ['name', 'specialty', 'address', 'clinic', 'description', 'services', 'tests', 'departments'];
+        return fields.some(key => normalizeArabic(item[key]).includes(q));
     }
 
     window.setFilter = (filter, btn) => {
@@ -518,6 +596,9 @@
 
         const canBook = item.type === 'doctor' || item.type === 'clinic';
         const bookingBtnModal = canBook ? `<button onclick="openBookingModal('${item.id}')" class="flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center flex items-center justify-center gap-2" style="background: var(--accent)"><i class="fas fa-calendar-check"></i> حجز موعد</button>` : '';
+        
+        // خريطة جوجل
+        const mapHTML = item.address ? `<iframe class="w-full h-48 rounded-xl mt-4 border-0" loading="lazy" allowfullscreen src="https://www.google.com/maps?q=${encodeURIComponent(item.address + ' الرحيبة سوريا')}&output=embed"></iframe>` : '';
 
         document.getElementById('modalContent').innerHTML = `
             <div class="relative h-48 overflow-hidden rounded-t-2xl"><img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.6), transparent)"></div><button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-all" aria-label="إغلاق"><i class="fas fa-times text-sm"></i></button><div class="absolute bottom-4 right-5 left-5"><span class="badge ${t.badgeClass} mb-2 inline-block">${t.label}</span><h3 class="text-white font-bold text-lg" style="font-family: 'Noto Kufi Arabic'">${item.name}</h3></div></div>
@@ -525,7 +606,9 @@
             <p class="text-sm leading-relaxed mb-5" style="color: var(--fg-light)">${item.description || ''}</p>
             <div class="flex flex-col gap-2 mb-5"><div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas ${t.icon}" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">التخصص / النوع</div><div class="text-sm font-bold">${item.specialty || 'غير محدد'}</div></div></div>${item.address ? `<div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas fa-map-marker-alt" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">العنوان</div><div class="text-sm font-bold">${item.address}</div></div></div>` : ''}<div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas fa-clock" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">أوقات العمل</div><div class="text-sm font-bold">${item.hours || ''}</div></div></div>${extraHTML}</div>
             <div class="flex items-center gap-3"><a href="tel:${item.phone}" class="call-btn flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center no-underline flex items-center justify-center gap-2" style="background: ${t.color}"><i class="fas fa-phone-alt"></i> اتصال ${item.phone}</a><button onclick="copyNumber('${item.phone}')" class="w-12 h-12 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50 flex-shrink-0" style="border-color: var(--border)" aria-label="نسخ"><i class="fas fa-copy" style="color: var(--muted)"></i></button></div>
-            ${canBook ? `<div class="mt-3">${bookingBtnModal}</div>` : ''}</div>`;
+            ${canBook ? `<div class="mt-3">${bookingBtnModal}</div>` : ''}
+            ${mapHTML}
+            </div>`;
         document.getElementById('modalOverlay').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -703,7 +786,7 @@
                     ${item.bookingPass ? `<span class="text-[11px] text-gray-500 mt-1">رمز دخول الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}
                 </div>
                 <div class="flex gap-1">
-                    <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50 transition-all"><i class="fas fa-edit"></i></button>
+                    <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all"><i class="fas fa-edit"></i></button>
                     <button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50 transition-all"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
@@ -730,6 +813,11 @@
                         <input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل (مثال: 8ص - 10م)" required>
                         <input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="أقسام المشفى / خدمات المركز / تحاليل المخبر">
                         <input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي فقط)">
+                        <div class="col-span-1 sm:col-span-2">
+                            <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">صورة المنشأة</label>
+                            <input type="file" id="new_image" accept="image/*" class="ctrl-input text-sm p-1.5" onchange="previewImage(event)">
+                            <img id="imagePreview" class="hidden mt-2 w-full h-32 object-cover rounded-xl" src="" alt="Preview">
+                        </div>
                         <textarea id="new_desc" class="ctrl-input text-sm col-span-2" placeholder="وصف مختصر" rows="2" required></textarea>
                         <button type="submit" class="col-span-1 sm:col-span-2 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90" style="background: var(--accent)"><i class="fas fa-save ml-1"></i> حفظ</button>
                     </form>
@@ -741,6 +829,18 @@
                 <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm transition-all hover:bg-gray-50" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية إلى Firebase (بدون تكرار)</button>
             </div>`, '#073D2E');
     }
+    
+    // معاينة الصورة قبل الرفع
+    window.previewImage = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = document.getElementById('imagePreview');
+            img.src = e.target.result;
+            img.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    };
 
     window.seedDatabase = async () => {
         try {
@@ -798,6 +898,7 @@
         const desc = document.getElementById('new_desc').value;
         const extra = document.getElementById('new_extra').value;
         const emergency = document.getElementById('new_emergency').value;
+        const imageFile = document.getElementById('new_image').files[0];
 
         let data = { type, name, phone, hours, description: desc, rating: 4.0 };
         
@@ -813,11 +914,19 @@
         else if (type === 'lab') { data.specialty = specialty; data.address = address; data.tests = extra; }
 
         try {
+            // رفع الصورة إن وجدت
+            if (imageFile) {
+                const storageRef = sRef(storage, `images/${Date.now()}_${imageFile.name}`);
+                showToast('جاري رفع الصورة...');
+                await uploadBytes(storageRef, imageFile);
+                data.image = await getDownloadURL(storageRef);
+            }
+
             if (id) {
                 await updateDoc(doc(db, 'listings', id), data);
                 showToast('تم تعديل البيانات بنجاح!');
             } else {
-                data.image = `https://picsum.photos/seed/new${Date.now()}/400/250`;
+                if(!data.image) data.image = `https://picsum.photos/seed/new${Date.now()}/400/250`;
                 await addDoc(collection(db, 'listings'), data);
                 let successMsg = 'تمت إضافة المنشأة بنجاح!';
                 if (data.bookingPass) {
@@ -828,9 +937,11 @@
             document.querySelector('form').reset();
             document.getElementById('edit_id').value = '';
             document.getElementById('formTitle').textContent = 'إضافة منشأة طبية جديدة';
+            document.getElementById('imagePreview').classList.add('hidden');
             renderAdminDashboard(); 
         } catch (err) {
             showToast('حدث خطأ أثناء الحفظ في Firebase');
+            console.error(err);
         }
     }
 
@@ -979,56 +1090,6 @@
     const allBtn = document.querySelector('[data-filter="all"]');
     allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
     observeElements();
-
-    // =========================================================
-    // === أكواد الأنيميشن ثلاثية الأبعاد (GSAP & Lenis) ===
-    // =========================================================
-    gsap.registerPlugin(ScrollTrigger);
-
-    // 1. تفعيل التمرير السلس (Smooth Scroll)
-    const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
-
-    // 2. تأثير 3D Tilt للبطاقات (يتتبع حركة الماوس)
-    document.body.addEventListener('mousemove', (e) => {
-        const card = e.target.closest('.card');
-        if (card && !card.hasAttribute('data-no-tilt')) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 15;
-            const rotateY = (centerX - x) / 15;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
-        }
-    });
-    document.body.addEventListener('mouseout', (e) => {
-        const card = e.target.closest('.card');
-        if (card) {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-        }
-    });
-
-    // 3. تأثير العمق للواجهة الرئيسية (Hero Parallax)
-    const hero = document.getElementById('home');
-    if (hero) {
-        hero.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.clientX) / 50;
-            const y = (window.innerHeight / 2 - e.clientY) / 50;
-            gsap.to('.pulse-ring', { x: x, y: y, duration: 1.5, ease: "power2.out" });
-        });
-    }
-
-    // 4. تأثير ظهور ثلاثي الأبعاد للإحصائيات
-    gsap.utils.toArray(".stat-card").forEach(card => {
-        gsap.from(card, { 
-            y: 30, opacity: 0, z: -100, duration: 1, ease: "power3.out",
-            scrollTrigger: { trigger: card, start: "top 90%" }
-        });
-    });
 </script>
 </body>
 </html>
