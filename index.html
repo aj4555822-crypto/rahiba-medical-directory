@@ -7,10 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- مكتبات الأنيميشن الاحترافية GSAP & Lenis -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
     <style>
         :root {
             --bg: #FAF8F4; --bg-deep: #F0EDE6; --fg: #1B2A1B; --fg-light: #3D4F3D;
@@ -21,29 +17,25 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
-
-        /* تفعيل التمرير السلس */
-        html.lenis { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        .lenis.lenis-stopped { overflow: hidden; }
-
-        #scroll-progress {
-            position: fixed; top: 0; right: 0; height: 4px; width: 0%;
-            background: linear-gradient(90deg, var(--gold), var(--accent));
-            z-index: 9999; box-shadow: 0 0 10px rgba(196,150,44,0.5);
-        }
-
+        
         .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
-        .hero-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(196,150,44,0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(14,124,95,0.3) 0%, transparent 40%); animation: heroFloat 20s ease-in-out infinite; }
+        .hero-bg::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(196,150,44,0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 20%, rgba(14,124,95,0.3) 0%, transparent 40%), radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 40%); animation: heroFloat 20s ease-in-out infinite; }
         @keyframes heroFloat { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 33% { transform: translate(-2%, 1%) rotate(1deg); } 66% { transform: translate(1%, -1%) rotate(-0.5deg); } }
-
-        .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s; }
+        .pulse-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(196,150,44,0.3); animation: pulseRing 3s ease-out infinite; }
+        @keyframes pulseRing { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(2); opacity: 0; } }
+        
+        .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
         .search-container:focus-within { background: rgba(255,255,255,0.2); border-color: rgba(196,150,44,0.5); box-shadow: 0 0 40px rgba(196,150,44,0.15); }
         .search-input { background: transparent; color: white; outline: none; font-family: 'IBM Plex Sans Arabic', sans-serif; }
         .search-input::placeholder { color: rgba(255,255,255,0.5); }
         
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.3s; position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 0; transition: height 0.3s ease; border-radius: 0 0 4px 0; }
+        .filter-btn { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+        .filter-btn::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; border-radius: 3px; transition: width 0.3s ease; }
+        .filter-btn:hover::after, .filter-btn.active::after { width: 100%; }
+        .filter-btn.active { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.15); }
+        
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 0; transition: height 0.4s ease; border-radius: 0 0 4px 0; }
         .card:hover::before { height: 100%; }
         .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); border-color: transparent; }
         .card.clinic-card::before { background: var(--clinic); } .card.doctor-card::before { background: var(--doctor); }
@@ -64,64 +56,52 @@
         .call-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: rgba(255,255,255,0.2); border-radius: 50%; transition: all 0.5s ease; transform: translate(-50%, -50%); }
         .call-btn:hover::before { width: 200%; height: 200%; } .call-btn:hover { transform: scale(1.05); }
         
-        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; }
+        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; }
+        .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-3px); }
         .ornament-line { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ornament-line::before, .ornament-line::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-        
+        html { scroll-behavior: smooth; }
         .navbar { backdrop-filter: blur(20px); transition: all 0.4s ease; }
         .navbar.scrolled { background: rgba(7,61,46,0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
         
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: white; padding: 14px 28px; border-radius: 12px; font-size: 0.9rem; z-index: 9999; opacity: 0; transition: all 0.4s; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: white; padding: 14px 28px; border-radius: 12px; font-size: 0.9rem; z-index: 9999; opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.4s; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 100; border: none; }
+        .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 100; border: none; }
         .back-to-top.visible { opacity: 1; transform: translateY(0); }
-        .mobile-menu { transform: translateX(100%); transition: transform 0.4s; }
+        .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
         .mobile-menu.open { transform: translateX(0); }
-
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.4,0,0.2,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
         .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
         .detail-row i { width: 16px; text-align: center; font-size: 0.75rem; }
         
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
         
         .ctrl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
         .ctrl-overlay.active { display: flex; }
         .ctrl-content { background: var(--bg); border-radius: 24px; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
         .ctrl-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: white; font-family: 'IBM Plex Sans Arabic'; outline: none; transition: all 0.3s; }
+        .ctrl-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
         .dot-pattern { background-image: radial-gradient(circle, var(--border) 1px, transparent 1px); background-size: 30px 30px; }
+        .filters-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .filters-scroll::-webkit-scrollbar { display: none; }
 
         .booking-step { display: none; }
-        .booking-step.active { display: block; }
+        .booking-step.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .slot-btn { transition: all 0.2s; }
         .slot-btn.active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; }
         .day-btn { transition: all 0.2s; border: 2px solid var(--border); }
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
-        .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
 
-        /* المشاهد السينمائية (GSAP Pinned Sections) */
-        .cinema-section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .cinema-content { z-index: 10; padding: 0 20px; }
-        .cinema-title { font-size: clamp(2rem, 6vw, 5rem); line-height: 1.3; margin-bottom: 1.5rem; font-weight: 900; }
-        .cinema-sub { font-size: clamp(1rem, 2.5vw, 1.5rem); max-width: 800px; margin: 0 auto; line-height: 1.8; opacity: 0.8; }
-        .cinema-bg-text { position: absolute; font-size: 20rem; font-weight: 900; color: rgba(255,255,255,0.03); white-space: nowrap; pointer-events: none; z-index: 1; }
-        .scroll-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .scroll-hint i { animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+        .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div id="scroll-progress"></div>
 
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -157,13 +137,13 @@
             </div>
             <div class="flex flex-col gap-1">
                 <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
-                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
-                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
-                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
-                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
-                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
-                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
-                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ والأرقام الهامة</a>
+                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
+                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
+                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
+                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
+                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
+                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
+                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ والأرقام الهامة</a>
                 <div class="border-t border-white/10 my-4 pt-4 flex flex-col gap-2">
                     <button onclick="toggleMobileMenu(); openDoctorLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-user-md w-5" style="color:var(--gold)"></i> لوحة الطبيب</button>
                     <button onclick="toggleMobileMenu(); openAdminLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-cogs w-5 text-gray-300"></i> لوحة الإدارة</button>
@@ -183,20 +163,19 @@
         </div>
     </div>
 
-    <!-- المشهد الأول: الواجهة الرئيسية -->
-    <section id="home" class="hero-bg min-h-screen flex items-center relative cinema-section">
-        <div class="cinema-bg-text" id="bgText1" style="top: 20%; left: -5%;">RAHEBA</div>
+    <section id="home" class="hero-bg min-h-screen flex items-center relative">
+        <div class="pulse-ring" style="width:200px;height:200px;top:10%;left:10%"></div>
+        <div class="pulse-ring" style="width:150px;height:150px;bottom:15%;right:15%;animation-delay:1s"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full relative z-10">
             <div class="text-center max-w-3xl mx-auto">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 mb-6 text-white/80 text-sm hero-element"><i class="fas fa-map-marker-alt" style="color: var(--gold)"></i><span>مدينة الرحيبة - ريف دمشق</span></div>
-                
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-tight mb-6 hero-element" style="font-family: 'Noto Kufi Arabic'">نبضٌ في قلب القلمون.<br><span style="color: var(--gold)" class="text-2xl sm:text-4xl lg:text-5xl">الرحيبة.. حيث الرعاية الطبية تلتقي بالموثوقية.</span></h1>
-                
-                <div class="search-container rounded-2xl p-2 max-w-2xl mx-auto flex items-center gap-2 hero-element mt-10">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 mb-6 text-white/80 text-sm"><i class="fas fa-map-marker-alt" style="color: var(--gold)"></i><span>مدينة الرحيبة - ريف دمشق</span></div>
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" style="font-family: 'Noto Kufi Arabic'">دليلك الطبي الشامل<br><span style="color: var(--gold)">في الرحيبة</span></h1>
+                <p class="text-white/65 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">اعثر على أقرب مشفى، عيادة، مركز طبي، مخبر، طبيب أو صيدلية في مدينة الرحيبة. دليلك الموثوق للرعاية الصحية.</p>
+                <div class="search-container rounded-2xl p-2 max-w-2xl mx-auto flex items-center gap-2">
                     <div class="flex-1 flex items-center gap-3 px-4"><i class="fas fa-search text-white/40"></i><input type="text" id="heroSearch" class="search-input w-full py-3 text-sm sm:text-base" placeholder="ابحث عن أي خدمة طبية..." oninput="handleSearch(this.value)"></div>
                     <button onclick="handleSearch(document.getElementById('heroSearch').value)" class="px-6 sm:px-8 py-3 rounded-xl text-white font-semibold text-sm sm:text-base transition-all hover:opacity-90 flex-shrink-0" style="background: var(--gold)">بحث</button>
                 </div>
-                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 mt-12 max-w-3xl mx-auto hero-element">
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 mt-12 max-w-3xl mx-auto">
                     <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-hospital">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مشفى</div></div>
                     <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-clinic">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">عيادة</div></div>
                     <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-center">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مركز طبي</div></div>
@@ -206,26 +185,13 @@
                 </div>
             </div>
         </div>
-        <div class="scroll-hint"><span>اكتشف القصة</span><i class="fas fa-chevron-down"></i></div>
         <div class="absolute bottom-0 left-0 right-0"><svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H0Z" fill="var(--bg)"/></svg></div>
-    </section>
-
-    <!-- المشهد الثاني: مصفوفة الرعاية -->
-    <section class="cinema-section" style="background: var(--bg);" id="scene2">
-        <div class="cinema-bg-text" id="bgText2" style="color: rgba(14,124,95,0.05); top: 30%; right: -10%;">HEALTHCARE</div>
-        <div class="cinema-content">
-            <div class="cinema-text-wrap">
-                <div class="ornament-line mb-4"><i class="fas fa-layer-group text-sm" style="color: var(--accent)"></i></div>
-                <h2 class="cinema-title" style="color: var(--fg);">الرعاية الصحية.. مصفوفةٌ بدقة لأجلك.</h2>
-                <p class="cinema-sub" style="color: var(--muted);">من العيادة التخصصية.. إلى الطوارئ الفورية، كل الدليل بين يديك.</p>
-            </div>
-        </div>
     </section>
 
     <section class="py-6 sticky top-16 sm:top-20 z-30" style="background: var(--bg); border-bottom: 1px solid var(--border)">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2 sm:gap-3 flex-1 overflow-x-auto">
+                <div class="filters-scroll flex items-center gap-2 sm:gap-3 flex-1">
                     <button class="filter-btn active px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="all" onclick="setFilter('all', this)"><i class="fas fa-th-large ml-1 sm:ml-2"></i>الكل</button>
                     <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="hospital" onclick="setFilter('hospital', this)"><i class="fas fa-hospital-symbol ml-1 sm:ml-2" style="color:var(--hospital)"></i>المشافي</button>
                     <button class="filter-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white border border-gray-200 shadow-sm whitespace-nowrap" data-filter="clinic" onclick="setFilter('clinic', this)"><i class="fas fa-hospital ml-1 sm:ml-2" style="color:var(--clinic)"></i>العيادات</button>
@@ -239,58 +205,31 @@
         </div>
     </section>
 
-    <section id="hospitals" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-hospital-symbol text-sm" style="color: var(--hospital)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">المشافي والمرافق الكبرى</h2><p class="text-sm" style="color: var(--muted)">المشافي الوطنية والخاصة في منطقة الرحيبة وريف دمشق</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="hospitalsGrid"></div></div></section>
-    <section id="clinics" class="py-12 sm:py-16" style="background: var(--bg-deep)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-hospital text-sm" style="color: var(--clinic)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">العيادات الطبية</h2><p class="text-sm" style="color: var(--muted)">أبرز العيادات التخصصية في مدينة الرحيبة</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="clinicsGrid"></div></div></section>
-    <section id="centers" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-clinic-medical text-sm" style="color: var(--center)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">المراكز الطبية</h2><p class="text-sm" style="color: var(--muted)">مراكز طبية متكاملة تقدم خدمات صحية شاملة</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="centersGrid"></div></div></section>
-    <section id="labs" class="py-12 sm:py-16" style="background: var(--bg-deep)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-flask text-sm" style="color: var(--lab)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">مخابر التحاليل الطبية</h2><p class="text-sm" style="color: var(--muted)">مخابر مجهزة بأحدث الأجهزة لجميع أنواع التحاليل</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="labsGrid"></div></div></section>
-
-    <!-- المشهد الثالث: نخبة تداوي -->
-    <section class="cinema-section" style="background: var(--bg-deep);" id="scene3">
-        <div class="cinema-bg-text" id="bgText3" style="color: rgba(37,99,235,0.05); top: 20%; left: -5%;">DOCTORS</div>
-        <div class="cinema-content">
-            <div class="cinema-text-wrap">
-                <div class="ornament-line mb-4"><i class="fas fa-user-md text-sm" style="color: var(--doctor)"></i></div>
-                <h2 class="cinema-title" style="color: var(--fg);">نُخبة تداوي بتفانٍ.</h2>
-                <p class="cinema-sub" style="color: var(--muted);">أطباؤنا ومرافِقنا.. مجهّزون على مدار الساعة لخدمة المدينة.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="doctors" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-user-md text-sm" style="color: var(--doctor)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">الأطباء المختصون</h2><p class="text-sm" style="color: var(--muted)">نخبة من الأطباء في مختلف التخصصات الطبية</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="doctorsGrid"></div></div></section>
-    
-    <!-- المشهد الرابع: ساهرون لأجلك -->
-    <section class="cinema-section" style="background: #052E22; color: white;" id="scene4">
-        <div class="cinema-bg-text" id="bgText4" style="color: rgba(196,150,44,0.05); top: 30%; right: -10%;">PHARMACY</div>
-        <div class="cinema-content">
-            <div class="cinema-text-wrap">
-                <div class="ornament-line mb-4"><i class="fas fa-moon text-sm" style="color: var(--gold)"></i></div>
-                <h2 class="cinema-title" style="color: white;">ساهرون لأجل سلامتك.</h2>
-                <p class="cinema-sub" style="color: rgba(255,255,255,0.7);">حتى في عتمة الليل.. الدواء والبلسم دائماً في المتناول.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="pharmacies" class="py-12 sm:py-16" style="background: var(--bg-deep)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-pills text-sm" style="color: var(--pharmacy)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">الصيدليات</h2><p class="text-sm" style="color: var(--muted)">صيدليات مدينة الرحيبة المتوفرة على مدار الساعة</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="pharmaciesGrid"></div></div></section>
+    <section id="hospitals" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-hospital-symbol text-sm" style="color: var(--hospital)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">المشافي والمرافق الكبرى</h2><p class="text-sm" style="color: var(--muted)">المشافي الوطنية والخاصة في منطقة الرحيبة وريف دمشق</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="hospitalsGrid"></div></div></section>
+    <section id="clinics" class="py-12 sm:py-16" style="background: var(--bg-deep)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-hospital text-sm" style="color: var(--clinic)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">العيادات الطبية</h2><p class="text-sm" style="color: var(--muted)">أبرز العيادات التخصصية في مدينة الرحيبة</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="clinicsGrid"></div></div></section>
+    <section id="centers" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-clinic-medical text-sm" style="color: var(--center)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">المراكز الطبية</h2><p class="text-sm" style="color: var(--muted)">مراكز طبية متكاملة تقدم خدمات صحية شاملة</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="centersGrid"></div></div></section>
+    <section id="labs" class="py-12 sm:py-16" style="background: var(--bg-deep)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-flask text-sm" style="color: var(--lab)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">مخابر التحاليل الطبية</h2><p class="text-sm" style="color: var(--muted)">مخابر مجهزة بأحدث الأجهزة لجميع أنواع التحاليل</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="labsGrid"></div></div></section>
+    <section id="doctors" class="py-12 sm:py-16 dot-pattern" style="background: var(--bg)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-user-md text-sm" style="color: var(--doctor)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">الأطباء المختصون</h2><p class="text-sm" style="color: var(--muted)">نخبة من الأطباء في مختلف التخصصات الطبية</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="doctorsGrid"></div></div></section>
+    <section id="pharmacies" class="py-12 sm:py-16" style="background: var(--bg-deep)"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-pills text-sm" style="color: var(--pharmacy)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">الصيدليات</h2><p class="text-sm" style="color: var(--muted)">صيدليات مدينة الرحيبة المتوفرة على مدار الساعة</p></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="pharmaciesGrid"></div></div></section>
 
     <div id="noResults" class="hidden py-20 text-center" style="background: var(--bg)"><div class="max-w-md mx-auto"><div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-5"><i class="fas fa-search text-3xl text-gray-300"></i></div><h3 class="text-xl font-bold mb-2" style="font-family: 'Noto Kufi Arabic'">لم يتم العثور على نتائج</h3><p class="text-sm mb-6" style="color: var(--muted)">جرّب البحث بكلمات مختلفة أو تصفّح الأقسام</p><button onclick="resetSearch()" class="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90" style="background: var(--accent)">عرض الكل</button></div></div>
 
-    <!-- المشهد الخامس: الأمان الطبي -->
     <section id="emergencies" class="py-12 sm:py-16" style="background: #073D2E; color: white;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10">
+            <div class="text-center mb-10 reveal">
                 <div class="ornament-line mb-3"><i class="fas fa-shield-heart text-sm" style="color: var(--gold)"></i></div>
-                <h2 class="text-3xl sm:text-5xl font-black mb-3" style="font-family: 'Noto Kufi Arabic';">الأمان الطبي.. بلمسة واحدة.</h2>
-                <p class="text-lg text-white/70">انقر، اتصل.. واحصل على الرعاية فوراً.</p>
+                <h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic';">أرقام الطوارئ والجهات الرسمية</h2>
+                <p class="text-sm text-white/60">جهات اتصال مهمة للطوارئ، الشكاوى، والمراجع الرسمية</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4 emergency-card">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center text-2xl text-red-400 flex-shrink-0"><i class="fas fa-star-of-life"></i></div>
                         <h3 class="font-bold text-lg">وزارة الصحة السورية</h3>
                     </div>
                     <a href="https://www.moh.gov.sy/" target="_blank" class="mt-auto bg-white/5 hover:bg-white/10 transition-all text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 text-white"><i class="fas fa-globe"></i> الموقع الرسمي الإلكتروني</a>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4 emergency-card">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center text-2xl text-red-400 flex-shrink-0"><i class="fas fa-ambulance"></i></div>
                         <h3 class="font-bold text-lg">أرقام الطوارئ</h3>
@@ -300,14 +239,14 @@
                         <a href="tel:133" class="flex justify-between items-center bg-white/5 p-2.5 rounded-lg hover:bg-white/10 transition-all"><span class="text-white/80">خط الهلال الأحمر الساخن</span><span class="font-bold text-red-400 text-lg">133</span></a>
                     </div>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4 emergency-card">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center text-2xl text-yellow-400 flex-shrink-0"><i class="fas fa-balance-scale"></i></div>
                         <h3 class="font-bold text-lg">شكاوى ومخالفات</h3>
                     </div>
                     <a href="tel:094799932" class="mt-auto flex justify-between items-center bg-white/5 p-2.5 rounded-lg hover:bg-white/10 transition-all text-sm"><span class="text-white/80">شكاوى التموين والصيدليات</span><span class="font-bold text-yellow-400" dir="ltr">094799932</span></a>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4 emergency-card">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-2xl text-blue-300 flex-shrink-0"><i class="fas fa-hospital-user"></i></div>
                         <h3 class="font-bold text-lg">مشفى القطيفة</h3>
@@ -317,14 +256,14 @@
                         <a href="tel:0117827100" class="flex justify-between items-center bg-white/5 p-2.5 rounded-lg hover:bg-white/10 transition-all"><span class="text-white/80">رقم المشفى الثاني</span><span class="font-bold text-blue-300" dir="ltr">0117827100</span></a>
                     </div>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4 emergency-card">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center text-2xl text-red-400 flex-shrink-0"><i class="fab fa-facebook-f"></i></div>
                         <h3 class="font-bold text-lg">الهلال الأحمر السوري</h3>
                     </div>
                     <a href="https://www.facebook.com/share/1CiGccsS9E/" target="_blank" class="mt-auto bg-white/5 hover:bg-white/10 transition-all text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 text-white"><i class="fas fa-external-link-alt"></i> صفحة ريف دمشق على فيسبوك</a>
                 </div>
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4 emergency-card">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10 hover:bg-white/15 transition-all flex flex-col gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center text-2xl text-green-400 flex-shrink-0"><i class="fas fa-phone-volume"></i></div>
                         <h3 class="font-bold text-lg">مقسم المديرية العامة</h3>
@@ -342,7 +281,7 @@
 
     <section id="contact" class="py-12 sm:py-16" style="background: var(--bg-deep)">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10"><div class="ornament-line mb-3"><i class="fas fa-envelope text-sm" style="color: var(--gold)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">تواصل معنا</h2><p class="text-sm" style="color: var(--muted)">ساعدنا في تحديث الدليل أو أضف عيادتك، مركزك، أو مخبرك</p></div>
+            <div class="text-center mb-10 reveal"><div class="ornament-line mb-3"><i class="fas fa-envelope text-sm" style="color: var(--gold)"></i></div><h2 class="text-2xl sm:text-3xl font-black mb-3" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">تواصل معنا</h2><p class="text-sm" style="color: var(--muted)">ساعدنا في تحديث الدليل أو أضف عيادتك، مركزك، أو مخبرك</p></div>
             <div class="max-w-2xl mx-auto">
                 <div class="card p-6 sm:p-8 border-0 shadow-lg">
                     <form onsubmit="handleContactSubmit(event)">
@@ -371,7 +310,7 @@
         </div>
     </footer>
 
-    <button class="back-to-top" id="backToTop" onclick="lenis.scrollTo(0)" aria-label="الأعلى"><i class="fas fa-chevron-up"></i></button>
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="الأعلى"><i class="fas fa-chevron-up"></i></button>
     <div class="toast" id="toast"></div>
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)"><div class="modal-content" id="modalContent" onclick="event.stopPropagation()"></div></div>
 
@@ -486,7 +425,7 @@
         const canBook = item.type === 'doctor' || item.type === 'clinic';
         const bookingBtn = canBook ? `<button onclick="event.stopPropagation(); openBookingModal('${item.id}')" class="w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50" style="border-color: var(--border); color: var(--accent)" aria-label="حجز"><i class="fas fa-calendar-plus"></i></button>` : '';
 
-        return `<div class="card ${t.cardClass} cursor-pointer" onclick="openModal('${item.id}')" data-type="${item.type}">
+        return `<div class="card ${t.cardClass} cursor-pointer reveal" onclick="openModal('${item.id}')" data-type="${item.type}">
             <div class="relative h-40 overflow-hidden rounded-t-2xl">
                 <img src="${item.image || 'https://picsum.photos/seed/default/400/250'}" alt="${item.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">
                 <div class="absolute top-3 right-3"><span class="badge ${t.badgeClass}">${t.label}</span></div>
@@ -522,9 +461,7 @@
             total += filtered.length;
         }
         document.getElementById('noResults').style.display = total === 0 ? '' : 'none';
-        
-        // إعادة حساب مواقع الأنيميشن بعد رسم البطاقات
-        ScrollTrigger.refresh();
+        setTimeout(() => { document.querySelectorAll('.reveal').forEach((el, i) => { setTimeout(() => el.classList.add('visible'), i * 40); }); }, 50);
     }
 
     function matchItem(item) {
@@ -1021,95 +958,14 @@
     window.showToast = showToast;
     window.toggleMobileMenu = () => { const menu = document.getElementById('mobileMenu'); const overlay = document.getElementById('menuOverlay'); const icon = document.getElementById('menuIcon'); const isOpen = menu.classList.contains('open'); if (isOpen) { menu.classList.remove('open'); overlay.classList.add('hidden'); icon.className = 'fas fa-bars'; document.body.style.overflow = ''; } else { menu.classList.add('open'); overlay.classList.remove('hidden'); icon.className = 'fas fa-times'; document.body.style.overflow = 'hidden'; } }
     window.handleContactSubmit = (e) => { e.preventDefault(); const name = document.getElementById('contactName').value; const phone = document.getElementById('contactPhone').value; const type = document.getElementById('contactType').value; const message = document.getElementById('contactMessage').value; const text = `*رسالة من دليل الرحيبة الطبي*%0A%0A*الاسم:* ${name}%0A*الهاتف:* ${phone}%0A*النوع:* ${type}%0A*الرسالة:* ${message}`; navigator.clipboard.writeText(text.replace(/%0A/g, '\n')).then(() => { showToast('تم نسخ الرسالة! سيتم تحويلك إلى واتساب.'); setTimeout(() => window.open('https://wa.me/qr/6MGULNXKTZD4L1', '_blank'), 1000); }); e.target.reset(); }
-
-    // ==========================================
-    // ===== أكواد GSAP و Lenis للأنيميشن =====
-    // ==========================================
-    gsap.registerPlugin(ScrollTrigger);
-
-    // 1. إعداد التمرير السلس (Lenis)
-    const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
-
-    // 2. أنيميشن الواجهة الرئيسية
-    gsap.timeline()
-       .from(".hero-element", { y: 60, opacity: 0, duration: 1.5, stagger: 0.2, ease: "power3.out" })
-       .from("#bgText1", { x: -200, opacity: 0, duration: 2, ease: "power2.out" }, 0);
-
-    // 3. أنيميشن المشاهد السينمائية (Pinned Text)
-    document.querySelectorAll('.cinema-section').forEach(section => {
-        const textWrap = section.querySelector('.cinema-text-wrap');
-        const bgText = section.querySelector('.cinema-bg-text');
-        
-        if(textWrap) {
-            gsap.timeline({
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top top",
-                    end: "+=150%", // مدة بقاء القسم مثبتاً
-                    pin: true,
-                    scrub: 1,
-                    anticipatePin: 1
-                }
-            })
-            .fromTo(textWrap, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" })
-            .to(textWrap, { y: -100, opacity: 0, duration: 0.4, ease: "power2.in", delay: 0.2 });
-        }
-
-        if(bgText) {
-            gsap.to(bgText, {
-                x: bgText.style.left.includes('-') ? '50%' : '-50%', // تحريك النص الخلفي
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        }
-    });
-
-    // 4. أنيميشن ظهور البطاقات والأقسام
-    gsap.utils.toArray(".card").forEach(card => {
-        gsap.from(card, {
-            y: 80, opacity: 0, duration: 1, ease: "power3.out",
-            scrollTrigger: { trigger: card, start: "top 90%", toggleActions: "play none none none" }
-        });
-    });
-
-    gsap.utils.toArray(".emergency-card").forEach(card => {
-        gsap.from(card, {
-            y: 50, opacity: 0, duration: 0.8, ease: "power2.out",
-            scrollTrigger: { trigger: card, start: "top 95%", toggleActions: "play none none none" }
-        });
-    });
-
-    // 5. شريط التنقل وشريط التقدم
-    const navbar = document.getElementById('navbar');
-    const backToTop = document.getElementById('backToTop');
-    const progressBar = document.getElementById('scroll-progress');
-
-    lenis.on('scroll', (e) => {
-        const scroll = e.scroll;
-        const limit = e.limit;
-        const progress = (scroll / limit) * 100;
-        
-        progressBar.style.width = progress + '%';
-        
-        if (scroll > 80) navbar.classList.add('scrolled');
-        else navbar.classList.remove('scrolled');
-
-        if (scroll > 500) backToTop.classList.add('visible');
-        else backToTop.classList.remove('visible');
-    });
-
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80); document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500); });
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
+    function observeElements() { document.querySelectorAll('.reveal').forEach(el => observer.observe(el)); }
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (document.getElementById('modalOverlay').classList.contains('active')) closeModal(); if (document.getElementById('ctrlOverlay').classList.contains('active')) closeCtrlPanel(); if (document.getElementById('mobileMenu').classList.contains('open')) toggleMobileMenu(); } });
     
     const allBtn = document.querySelector('[data-filter="all"]');
     allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
+    observeElements();
 </script>
 </body>
 </html>
