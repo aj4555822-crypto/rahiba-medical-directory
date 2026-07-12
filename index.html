@@ -341,9 +341,7 @@
         appId: "1:480762213801:web:ef8b48253995a077b940b8",
         measurementId: "G-7ZMMYD9NL9"
     };
-
-
-    const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
 
@@ -351,6 +349,7 @@
         if (err.code == 'failed-precondition') console.warn('Multiple tabs open');
         else if (err.code == 'unimplemented') console.warn('No offline support');
     });
+code == 'failed-precondition') console.warn('Multiple tabs open');
 
     const seedData = [
         { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110", mapCoords: "33.5570,36.8450" },
