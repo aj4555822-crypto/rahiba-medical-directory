@@ -20,7 +20,6 @@
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; }
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
         
-        /* شاشة التحميل العامة */
         #globalLoader { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s; }
         .spinner { width: 50px; height: 50px; border: 5px solid var(--accent-light); border-bottom-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -105,8 +104,6 @@
         .day-btn { transition: all 0.2s; border: 2px solid var(--border); }
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
         .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
-        
-        /* أنماط الإشعارات */
         .notif-badge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     </style>
 </head>
@@ -334,40 +331,14 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
-
-    /* 
-       ==============================================================
-       ملاحظة أمنية هامة جداً بخصوص (إخفاء Firebase Config):
-       في تطبيقات الويب التي تعمل بالكامل في الواجهة الأمامية (Frontend)، 
-       لا يمكن إخفاء الـ Config تماماً لأن المتصفح يحتاجه للاتصال بقاعدة البيانات.
-       الحل الاحترافي الوحيد لحماية بياناتك هو إعداد (Firestore Security Rules).
-       اذهب إلى لوحة تحكم Firebase -> Firestore Database -> Rules وضع القواعد التالية:
-       
-       rules_version = '2';
-       service cloud.firestore {
-         match /databases/{database}/documents {
-           // السماح للجميع بقراءة البيانات (الدليل عام)
-           match /listings/{docId} {
-             allow read: if true;
-             // السماح بالكتابة/الحذف/التعديل فقط إذا تم تمرير كلمة مرور الإدارة (يجب استخدام Firebase Auth للنهائية)
-             allow write: if false; // مؤقتاً false حتى تعدلها لخاصة بك
-           }
-           // الحجوزات: للقراءة والكتابة للجميع مؤقتاً (يفضل ربطها بـ Auth لاحقاً)
-           match /bookings/{docId} {
-             allow read, write: if true;
-           }
-         }
-       }
-       ==============================================================
-    */
 
     const firebaseConfig = {
         apiKey: "AIzaSyAHQhRHtRb-MN5HkEd_MwJqMIbDbfKwuX0",
         authDomain: "raheba-med.firebaseapp.com",
         projectId: "raheba-med",
-        storageBucket: "raheba-med.appspot.com", // تم تعديل الرابط ليتوافق مع Storage
+        storageBucket: "raheba-med.appspot.com", 
         messagingSenderId: "480762213801",
         appId: "1:480762213801:web:ef8b48253995a077b940b8",
         measurementId: "G-7ZMMYD9NL9"
@@ -377,17 +348,16 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // تفعيل العمل أوفلاين (PWA)
     enableIndexedDbPersistence(db).catch((err) => {
-        if (err.code == 'failed-precondition') console.warn('تم فتح التطبيق في أكثر من تبويب.');
-        else if (err.code == 'unimplemented') console.warn('المتصفح لا يدعم العمل أوفلاين.');
+        if (err.code == 'failed-precondition') console.warn('Multiple tabs open');
+        else if (err.code == 'unimplemented') console.warn('No offline support');
     });
 
     const seedData = [
-        { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110" },
-        { type: "clinic", name: "عيادة الرحيبة الطبية الشاملة", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "0115550001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250", workingDays: ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"], workingHours: ["09:00 ص", "10:00 ص", "11:00 ص", "12:00 م", "05:00 م", "06:00 م"] },
+        { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110", mapCoords: "33.5570,36.8450" },
+        { type: "clinic", name: "عيادة الرحيبة الطبية الشاملة", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "0115550001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250", workingDays: ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"], workingHours: ["09:00 ص", "10:00 ص", "11:00 ص", "12:00 م", "05:00 م", "06:00 م"], mapCoords: "33.5575,36.8455" },
         { type: "doctor", name: "د. أحمد الخطيب", specialty: "طب عام وباطنية", clinic: "عيادة الرحيبة الطبية", phone: "0991000010", hours: "8:00 ص - 2:00 م / 5:00 م - 10:00 م", experience: "15 سنة", description: "استشاري باطنية وطب أسرة، خريج جامعة دمشق", rating: 4.8, image: "https://picsum.photos/seed/doc1/400/250", workingDays: ["السبت","الاثنين","الأربعاء"], workingHours: ["10:00 ص", "11:00 ص", "12:00 م", "05:00 م", "06:00 م"] },
-        { type: "pharmacy", name: "صيدلية الرحيبة الرئيسية", address: "الساحة الرئيسية، وسط المدينة", phone: "0115550022", hours: "24 ساعة", description: "أكبر صيدلية في المدينة، توفر جميع الأدوية والمستلزمات الطبية", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250" }
+        { type: "pharmacy", name: "صيدلية الرحيبة الرئيسية", address: "الساحة الرئيسية، وسط المدينة", phone: "0115550022", hours: "24 ساعة", description: "أكبر صيدلية في المدينة، توفر جميع الأدوية والمستلزمات الطبية", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250", mapCoords: "33.5580,36.8460" }
     ];
 
     const ADMIN_PASSWORD = "RahebaAdmin2026";
@@ -402,14 +372,13 @@
 
     function generateUniqueId() { return Math.random().toString(36).substring(2, 8).toUpperCase(); }
     
-    // تحسين البحث ليدعم التشكيل والأحرف المتشابهة
     function normalizeArabic(text) {
         if (!text) return '';
         return text.toString().toLowerCase()
             .replace(/[أإآ]/g, 'ا')
             .replace(/ى/g, 'ي')
             .replace(/ة/g, 'ه')
-            .replace(/[\u064B-\u065F]/g, ''); // إزالة التشكيل
+            .replace(/[\u064B-\u065F]/g, '');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -447,7 +416,6 @@
             }
         });
 
-        // تفعيل PWA Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed: ', err));
         }
@@ -462,7 +430,6 @@
         document.getElementById('stat-pharmacy').textContent = allData.filter(d => d.type === 'pharmacy').length;
     }
 
-    // نظام الإشعارات (يبحث عن حجوزات قيد الانتظار للطبيب المسجل دخوله)
     function updateNotifications() {
         const pendingBookings = bookings.filter(b => b.status === 'pending');
         const notifCount = document.getElementById('notifCount');
@@ -477,8 +444,7 @@
     document.getElementById('notifBtn')?.addEventListener('click', () => {
         const pending = bookings.filter(b => b.status === 'pending');
         if(pending.length === 0) { showToast('لا توجد إشعارات جديدة'); return; }
-        const msg = `لديك ${pending.length} حجز قيد الانتظار. يرجى مراجعة لوحة التحكم.`;
-        showToast(msg);
+        showToast(`لديك ${pending.length} حجز قيد الانتظار. يرجى مراجعة لوحة التحكم.`);
     });
 
     function createCard(item) {
@@ -597,8 +563,11 @@
         const canBook = item.type === 'doctor' || item.type === 'clinic';
         const bookingBtnModal = canBook ? `<button onclick="openBookingModal('${item.id}')" class="flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center flex items-center justify-center gap-2" style="background: var(--accent)"><i class="fas fa-calendar-check"></i> حجز موعد</button>` : '';
         
-        // خريطة جوجل
-        const mapHTML = item.address ? `<iframe class="w-full h-48 rounded-xl mt-4 border-0" loading="lazy" allowfullscreen src="https://www.google.com/maps?q=${encodeURIComponent(item.address + ' الرحيبة سوريا')}&output=embed"></iframe>` : '';
+        // تحديد الخريطة: إذا وجد إحداثيات يستخدمها، وإلا يبحث بالعنوان
+        const mapSrc = item.mapCoords 
+            ? `https://maps.google.com/maps?q=${item.mapCoords}&z=15&output=embed`
+            : `https://www.google.com/maps?q=${encodeURIComponent(item.address + ' الرحيبة سوريا')}&output=embed`;
+        const mapHTML = (item.address || item.mapCoords) ? `<iframe class="w-full h-48 rounded-xl mt-4 border-0" loading="lazy" allowfullscreen src="${mapSrc}"></iframe>` : '';
 
         document.getElementById('modalContent').innerHTML = `
             <div class="relative h-48 overflow-hidden rounded-t-2xl"><img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.6), transparent)"></div><button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-all" aria-label="إغلاق"><i class="fas fa-times text-sm"></i></button><div class="absolute bottom-4 right-5 left-5"><span class="badge ${t.badgeClass} mb-2 inline-block">${t.label}</span><h3 class="text-white font-bold text-lg" style="font-family: 'Noto Kufi Arabic'">${item.name}</h3></div></div>
@@ -813,6 +782,12 @@
                         <input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل (مثال: 8ص - 10م)" required>
                         <input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="أقسام المشفى / خدمات المركز / تحاليل المخبر">
                         <input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي فقط)">
+                        
+                        <div class="col-span-1 sm:col-span-2 bg-blue-50 p-3 rounded-xl border border-blue-200 text-xs text-blue-800">
+                            <i class="fas fa-map-marker-alt"></i> لتحديد الموقع بالضبط: <a href="https://www.google.com/maps" target="_blank" class="font-bold underline">افتح خرائط جوجل</a>، اضغط يميناً على المكان، اختر "إحداثيات"، انسخها والصقها هنا.
+                            <input type="text" id="new_mapCoords" class="ctrl-input mt-2" placeholder="مثال: 33.5570,36.8450">
+                        </div>
+
                         <div class="col-span-1 sm:col-span-2">
                             <label class="block text-sm font-semibold mb-2" style="color: var(--fg-light)">صورة المنشأة</label>
                             <input type="file" id="new_image" accept="image/*" class="ctrl-input text-sm p-1.5" onchange="previewImage(event)">
@@ -830,7 +805,6 @@
             </div>`, '#073D2E');
     }
     
-    // معاينة الصورة قبل الرفع
     window.previewImage = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -871,6 +845,7 @@
         document.getElementById('new_desc').value = item.description;
         document.getElementById('new_extra').value = item.departments || item.services || item.tests || '';
         document.getElementById('new_emergency').value = item.emergencyPhone || '';
+        document.getElementById('new_mapCoords').value = item.mapCoords || '';
         document.getElementById('formTitle').textContent = `تعديل: ${item.name}`;
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -898,9 +873,10 @@
         const desc = document.getElementById('new_desc').value;
         const extra = document.getElementById('new_extra').value;
         const emergency = document.getElementById('new_emergency').value;
+        const mapCoords = document.getElementById('new_mapCoords').value;
         const imageFile = document.getElementById('new_image').files[0];
 
-        let data = { type, name, phone, hours, description: desc, rating: 4.0 };
+        let data = { type, name, phone, hours, description: desc, rating: 4.0, mapCoords };
         
         if (!id && (type === 'doctor' || type === 'clinic')) {
             data.bookingPass = generateUniqueId();
@@ -914,10 +890,9 @@
         else if (type === 'lab') { data.specialty = specialty; data.address = address; data.tests = extra; }
 
         try {
-            // رفع الصورة إن وجدت
             if (imageFile) {
+                showToast('جاري رفع الصورة... الرجاء الانتظار');
                 const storageRef = sRef(storage, `images/${Date.now()}_${imageFile.name}`);
-                showToast('جاري رفع الصورة...');
                 await uploadBytes(storageRef, imageFile);
                 data.image = await getDownloadURL(storageRef);
             }
@@ -940,7 +915,7 @@
             document.getElementById('imagePreview').classList.add('hidden');
             renderAdminDashboard(); 
         } catch (err) {
-            showToast('حدث خطأ أثناء الحفظ في Firebase');
+            showToast('حدث خطأ أثناء الحفظ في Firebase. تأكد من إعداد قواعد Storage');
             console.error(err);
         }
     }
