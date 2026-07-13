@@ -1162,33 +1162,8 @@
     const allBtn = document.querySelector('[data-filter="all"]');
     allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
     observeElements();
+gsap.to('.pulse-ring', { x: x, y: y, duration: 1.5, ease: "power2.out" });
 
-    // =========================================================
-    // === أكواد الأنيميشن ثلاثية الأبعاد (GSAP & Lenis) ===
-    // =========================================================
-    gsap.registerPlugin(ScrollTrigger);
-
-    // 1. تفعيل التمرير السلس (Smooth Scroll)
-    lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
-
-    // 2. تأثير 3D Tilt للبطاقات (يتتبع حركة الماوس)
-    document.body.addEventListener('mousemove', (e) => {
-        const card = e.target.closest('.card');
-        if (card && !card.hasAttribute('data-no-tilt')) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 15;
-            const rotateY = (centerX - x) / 15;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.03)`;
-        }
-    });gsap.to('.pulse-ring', { x: x, y: y, duration: 1.5, ease: "power2.out" });
-        });
 </script>
 </body>
 </html>
