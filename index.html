@@ -22,7 +22,7 @@
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
         
         .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
-        .search-container { backdrop-filter: blur(20px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s ease; }
+        .search-container { backdrop-filter: blur(10px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s ease; }
         .search-container:focus-within { background: rgba(255,255,255,0.2); border-color: rgba(196,150,44,0.5); box-shadow: 0 0 40px rgba(196,150,44,0.15); }
         .search-input { background: transparent; color: white; outline: none; font-family: 'IBM Plex Sans Arabic', sans-serif; }
         .search-input::placeholder { color: rgba(255,255,255,0.5); }
@@ -54,12 +54,12 @@
         .call-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: rgba(255,255,255,0.2); border-radius: 50%; transition: all 0.5s ease; transform: translate(-50%, -50%); }
         .call-btn:hover::before { width: 200%; height: 200%; } .call-btn:hover { transform: scale(1.05); }
         
-        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; }
+        .stat-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s ease; }
         .stat-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-5px); }
         .ornament-line { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ornament-line::before, .ornament-line::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
         html { scroll-behavior: smooth; }
-        .navbar { backdrop-filter: blur(20px); transition: all 0.4s ease; }
+        .navbar { backdrop-filter: blur(10px); transition: all 0.4s ease; }
         .navbar.scrolled { background: rgba(7,61,46,0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.2); }
         
         .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--fg); color: white; padding: 14px 28px; border-radius: 12px; font-size: 0.9rem; z-index: 10001; opacity: 0; transition: all 0.4s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 90vw; text-align: center; }
@@ -74,12 +74,12 @@
         .detail-row { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
         .detail-row i { width: 16px; text-align: center; font-size: 0.75rem; }
         
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: var(--card); border-radius: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; opacity: 0; transform: scale(0.9); transition: all 0.3s ease; }
         .modal-overlay.active .modal-content { opacity: 1; transform: scale(1); }
         
-        .ctrl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .ctrl-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
         .ctrl-overlay.active { display: flex; }
         .ctrl-content { background: var(--bg); border-radius: 24px; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); opacity: 0; transform: scale(0.9); transition: all 0.3s ease; }
         .ctrl-overlay.active .ctrl-content { opacity: 1; transform: scale(1); }
@@ -323,7 +323,6 @@
         </div>
     </section>
 
-    <!-- Disclaimer Section -->
     <section id="disclaimer" class="py-12 sm:py-16" style="background: #073D2E; color: white;">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="ornament-line mb-3"><i class="fas fa-shield-alt text-sm" style="color: var(--gold)"></i></div>
@@ -396,6 +395,7 @@
     let bookings = []; 
     let tempBooking = {}; 
     let scrollLockCount = 0;
+    let unsubscribeMedRequests = null; // متغير لإيقاف مستمع طلبات الأدوية
 
     function generateUniqueId() {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -439,11 +439,11 @@
             updateStats();
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
-            if (ctrlTitle.includes('لوحة التحكم:') || ctrlTitle.includes('Control Panel:')) {
-                const docName = ctrlTitle.replace('لوحة التحكم: ', '').replace('Control Panel: ', '').trim();
+            if (ctrlTitle.includes('لوحة تحكم:')) {
+                const docName = ctrlTitle.replace('لوحة تحكم: ', '').replace('Control Panel: ', '').trim();
                 const docData = allData.find(d => d.name === docName);
+                // تحديث لوحة الطبيب فقط (لأنها لا تنشئ مستمعاً جديداً) لتجنب إعادة استدعاء لوحة الصيدلية (لأن لها مستمعاً خاصاً)
                 if (docData && docData.type === 'doctor') renderDoctorDashboard(docData);
-                if (docData && docData.type === 'pharmacy') renderPharmacyDashboard(docData);
             }
         });
 
@@ -454,8 +454,8 @@
             });
             
             const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
-            if (ctrlTitle.includes('لوحة التحكم:') || ctrlTitle.includes('Control Panel:')) {
-                const docName = ctrlTitle.replace('لوحة التحكم: ', '').replace('Control Panel: ', '').trim();
+            if (ctrlTitle.includes('لوحة تحكم:')) {
+                const docName = ctrlTitle.replace('لوحة تحكم: ', '').replace('Control Panel: ', '').trim();
                 const docData = allData.find(d => d.name === docName);
                 if (docData && docData.type === 'doctor') renderDoctorDashboard(docData);
             }
@@ -572,7 +572,7 @@
             center: { el: document.getElementById('centersGrid'), section: document.getElementById('centers'), data: allData.filter(d => d.type === 'center') },
             lab: { el: document.getElementById('labsGrid'), section: document.getElementById('labs'), data: allData.filter(d => d.type === 'lab') },
             doctor: { el: document.getElementById('doctorsGrid'), section: document.getElementById('doctors'), data: allData.filter(d => d.type === 'doctor') },
-            pharmacy: { el: document.getElementById('pharmaciesGrid'), section: document.getElementById('pharmacies'), data: allData.filter(d => d.type === 'pharmacy').sort((a,b) => (b.night === true) - (a.night === true)) } // Sort pharmacies by night shift
+            pharmacy: { el: document.getElementById('pharmaciesGrid'), section: document.getElementById('pharmacies'), data: allData.filter(d => d.type === 'pharmacy').sort((a,b) => (b.night === true) - (a.night === true)) }
         };
         let total = 0;
         for (const [type, g] of Object.entries(grids)) {
@@ -798,8 +798,25 @@
             </div>`, '#0E7C5F');
 
         const q = query(collection(db, 'medicine_requests'), where('status', '==', 'active'));
-        onSnapshot(q, (snapshot) => {
+        
+        // إيقاف المستمع القديم إذا كان موجوداً لمنع تسرب الذاكرة
+        if (unsubscribeMedRequests) {
+            unsubscribeMedRequests();
+            unsubscribeMedRequests = null;
+        }
+
+        // تعيين المستمع الجديد وتخزين دالة إيقافه
+        unsubscribeMedRequests = onSnapshot(q, (snapshot) => {
             const container = document.getElementById('requestsContainer');
+            // التأكد من أن الحاوية لا تزال موجودة في الصفحة
+            if (!container) {
+                if (unsubscribeMedRequests) {
+                    unsubscribeMedRequests();
+                    unsubscribeMedRequests = null;
+                }
+                return;
+            }
+            
             if (snapshot.empty) {
                 container.innerHTML = '<p class="text-center py-10" style="color: var(--muted)">لا توجد طلبات أدوية حالياً.</p>';
                 return;
@@ -985,10 +1002,17 @@
         document.querySelector('#ctrlOverlay .p-5').style.background = headerColor;
         lockScroll();
     }
+    
     window.closeCtrlPanel = (event) => { 
         if (event && event.target.id !== 'ctrlOverlay') return; 
         document.getElementById('ctrlOverlay').classList.remove('active'); 
-        unlockScroll(); 
+        unlockScroll();
+        
+        // إيقاف مستمع طلبات الأدوية عند إغلاق لوحة التحكم لتوفير الموارد
+        if (unsubscribeMedRequests) {
+            unsubscribeMedRequests();
+            unsubscribeMedRequests = null;
+        }
     }
 
     window.openAdminLogin = () => {
@@ -1199,7 +1223,7 @@
                 actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'pending')" class="text-xs text-white px-2 py-1 rounded bg-gray-500 hover:bg-gray-600 transition-all">استعادة</button>`;
                 actionButtons += `<button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800 hover:bg-black transition-all mr-1">حذف نهائي</button>`;
             } else {
-                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>`;
+                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>';
                 actionButtons = `
                     <div class="flex flex-col gap-1 w-full">
                         <input type="text" id="time_${b.id}" placeholder="حدد الموعد (مثال: 5:00 م)" class="ctrl-input text-sm py-1">
@@ -1231,7 +1255,7 @@
             `;
         }).join('');
 
-        openCtrlPanel(`لوحة التحكم: ${doc.name}`, `
+        openCtrlPanel(`لوحة تحكم: ${doc.name}`, `
             <div class="flex flex-col gap-5">
                 <div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)">
                     <img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover" alt="${doc.name}">
