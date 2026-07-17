@@ -92,8 +92,6 @@
         .booking-step { display: none; }
         .booking-step.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .slot-btn { transition: all 0.2s; }
-        .slot-btn.active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; }
         .day-btn { transition: all 0.2s; border: 2px solid var(--border); }
         .day-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
         .day-checkbox { accent-color: var(--accent); width: 20px; height: 20px; cursor: pointer; }
@@ -137,18 +135,18 @@
                 </a>
                 <div class="hidden lg:flex items-center gap-6">
                     <a href="#home" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Home">الرئيسية</a>
-                    <a href="#hospitals" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Hospitals">المشافي</a>
-                    <a href="#clinics" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Clinics">العيادات</a>
-                    <a href="#centers" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Centers">المراكز</a>
-                    <a href="#labs" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Labs">المخابر</a>
-                    <a href="#doctors" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Doctors">الأطباء</a>
-                    <a href="#pharmacies" class="text-white/80 hover:text-white text-sm transition-colors no-underline" data-en="Pharmacies">الصيدليات</a>
-                    <a href="#emergencies" class="text-red-300 hover:text-red-200 text-sm font-semibold transition-colors no-underline" data-en="Emergency"><i class="fas fa-ambulance ml-1"></i> الطوارئ</a>
+                    <a href="#hospitals" class="text-white/80 hover:text-white text-sm transition-colors no-undefined" data-en="Hospitals">المشافي</a>
+                    <a href="#clinics" class="text-white/80 hover:text-white text-sm transition-colors no-undefined" data-en="Clinics">العيادات</a>
+                    <a href="#centers" class="text-white/80 hover:text-white text-sm transition-colors no-undefined" data-en="Centers">المراكز</a>
+                    <a href="#labs" class="text-white/80 hover:text-white text-sm transition-colors no-undefined" data-en="Labs">المخابر</a>
+                    <a href="#doctors" class="text-white/80 hover:text-white text-sm transition-colors no-undefined" data-en="Doctors">الأطباء</a>
+                    <a href="#pharmacies" class="text-white/80 hover:text-white text-sm transition-colors no-undefined" data-en="Pharmacies">الصيدليات</a>
+                    <a href="#emergencies" class="text-red-300 hover:text-red-200 text-sm font-semibold transition-colors no-undefined" data-en="Emergency"><i class="fas fa-ambulance ml-1"></i> الطوارئ</a>
                     <button onclick="openMedicineFinder()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all" data-en="Find Medicine"><i class="fas fa-pills ml-1"></i> ابحث عن دوائك</button>
                     <div class="flex items-center gap-2 border-r border-white/20 pr-4">
                         <button onclick="openDoctorLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all" data-en="Doctor"><i class="fas fa-user-md" style="color:var(--gold)"></i> الطبيب</button>
                         <button onclick="openAdminLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all" data-en="Admin"><i class="fas fa-cogs text-gray-300"></i> الإدارة</button>
-                        <button onclick="openPharmacyPanel()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all" data-en="Pharmacy"><i class="fas fa-prescription-bottle-medical text-green-300"></i> الصيدلية</button>
+                        <button onclick="openPharmacyLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all" data-en="Pharmacy"><i class="fas fa-prescription-bottle-medical text-green-300"></i> الصيدلية</button>
                     </div>
                 </div>
                 <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()" aria-label="فتح القائمة"><i class="fas fa-bars" id="menuIcon"></i></button>
@@ -163,7 +161,7 @@
                 <button onclick="toggleMobileMenu()" class="text-white/60 hover:text-white text-xl" aria-label="إغلاق"><i class="fas fa-times"></i></button>
             </div>
             <div class="flex flex-col gap-1">
-                <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-underline flex items-center gap-3" data-en="Home"><i class="fas fa-home w-5"></i> الرئيسية</a>
+                <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all no-undefined flex items-center gap-3" data-en="Home"><i class="fas fa-home w-5"></i> الرئيسية</a>
                 <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Hospitals"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
                 <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Clinics"><i class="fas fa-hospital w-5"></i> العيادات</a>
                 <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Medical Centers"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
@@ -175,7 +173,7 @@
                 <div class="border-t border-white/10 my-4 pt-4 flex flex-col gap-2">
                     <button onclick="toggleMobileMenu(); openDoctorLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Doctor Panel"><i class="fas fa-user-md w-5" style="color:var(--gold)"></i> لوحة الطبيب</button>
                     <button onclick="toggleMobileMenu(); openAdminLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Admin Panel"><i class="fas fa-cogs w-5 text-gray-300"></i> لوحة الإدارة</button>
-                    <button onclick="toggleMobileMenu(); openPharmacyPanel()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Pharmacy Panel"><i class="fas fa-prescription-bottle-medical w-5 text-green-300"></i> لوحة الصيدلية</button>
+                    <button onclick="toggleMobileMenu(); openPharmacyLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3" data-en="Pharmacy Panel"><i class="fas fa-prescription-bottle-medical w-5 text-green-300"></i> لوحة الصيدلية</button>
                 </div>
             </div>
         </div>
@@ -325,11 +323,22 @@
         </div>
     </section>
 
+    <!-- Disclaimer Section -->
+    <section id="disclaimer" class="py-12 sm:py-16" style="background: #073D2E; color: white;">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="ornament-line mb-3"><i class="fas fa-shield-alt text-sm" style="color: var(--gold)"></i></div>
+            <h2 class="text-2xl sm:text-3xl font-black mb-4" style="font-family: 'Noto Kufi Arabic';" data-en="Disclaimer & Terms of Use">إخلاء مسؤولية وشروط الاستخدام</h2>
+            <p class="text-white/70 leading-relaxed mb-6 text-sm sm:text-base">
+                هذا الموقع هو دليل إرشادي تطوعي يهدف لتسهيل الوصول للخدمات الطبية في مدينة الرحيبة. المعلومات الواردة في الموقع تم جمعها من مصادر عامة أو أرسلها أصحاب الفعاليات أنفسهم. لا يتحمل الموقع أو إدارته أي مسؤولية عن صحة البيانات أو جودة الخدمات الطبية المقدمة. للتبليغ عن أي خطأ أو لطلب حذف بياناتك، يرجى التواصل معنا فوراً عبر <a href="#contact" class="text-yellow-400 underline hover:text-yellow-300 transition-colors font-semibold">صفحة اتصل بنا</a>.
+            </p>
+        </div>
+    </section>
+
     <footer class="py-10 sm:py-14" style="background: #052E22">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <div class="sm:col-span-2 lg:col-span-1"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><i class="fas fa-heartbeat" style="color: var(--gold)"></i></div><span class="text-white font-bold" style="font-family: 'Noto Kufi Arabic'" data-en="Al-Raheba Guide">دليل الرحيبة</span></div><p class="text-white/50 text-sm leading-relaxed" data-en="Your comprehensive guide to medical services in Al-Raheba city. Hospitals, clinics, medical centers, labs, doctors, and pharmacies in one place.">دليلك الشامل للخدمات الطبية في مدينة الرحيبة. مشافي، عيادات، مراكز طبية، مخابر، أطباء وصيدليات في مكان واحد.</p></div>
-                <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'" data-en="Quick Links">روابط سريعة</h4><div class="flex flex-col gap-2"><a href="#home" class="text-white/50 hover:text-white text-sm transition-colors no-underline" data-en="Home">الرئيسية</a><a href="#hospitals" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Hospitals">المشافي</a><a href="#clinics" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Clinics">العيادات</a><a href="#centers" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Medical Centers">المراكز الطبية</a><a href="#labs" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Labs">المخابر</a><a href="#doctors" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Doctors">الأطباء</a><a href="#pharmacies" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Pharmacies">الصيدليات</a></div></div>
+                <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'" data-en="Quick Links">روابط سريعة</h4><div class="flex flex-col gap-2"><a href="#home" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Home">الرئيسية</a><a href="#hospitals" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Hospitals">المشافي</a><a href="#clinics" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Clinics">العيادات</a><a href="#pharmacies" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Pharmacies">الصيدليات</a><a href="#disclaimer" class="text-white/50 hover:text-white text-sm transition-colors no-undefined" data-en="Disclaimer">إخلاء المسؤولية</a></div></div>
                 <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'" data-en="City Information">معلومات المدينة</h4><div class="flex flex-col gap-2 text-white/50 text-sm"><div class="flex items-center gap-2"><i class="fas fa-map-marker-alt w-4" style="color: var(--gold)"></i> <span data-en="Rural Damascus, Syria">ريف دمشق، سوريا</span></div><div class="flex items-center gap-2"><i class="fas fa-users w-4" style="color: var(--gold)"></i> <span data-en="Approx. 70,000 people">حوالي 70,000 نسمة</span></div><div class="flex items-center gap-2"><i class="fas fa-compass w-4" style="color: var(--gold)"></i> <span data-en="Northeast of Damascus">شمال شرق دمشق</span></div></div></div>
                 <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'" data-en="Contact Us">تواصل معنا</h4><div class="flex items-center gap-3 mt-4"><a href="https://chat.whatsapp.com/LqQzuVc6GlILFqQslzyJrD" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all" aria-label="واتساب"><i class="fab fa-whatsapp text-sm"></i></a><a href="https://t.me/Raheba2026" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all" aria-label="تيليجرام"><i class="fab fa-telegram-plane text-sm"></i></a><a href="https://www.facebook.com/share/1GLT1xyBPA/" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all" aria-label="فيسبوك"><i class="fab fa-facebook-f text-sm"></i></a></div></div>
             </div>
@@ -369,8 +378,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const IMGBB_API_KEY = "YOUR_IMGBB_API_KEY"; 
-    const PHARMACY_PASSWORD = "Pharmacy2026";
+    const IMGBB_API_KEY = "8a92929a2c1c90634ffc7ba88f2d481d"; 
 
     const seedData = [
         { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110" },
@@ -434,7 +442,8 @@
             if (ctrlTitle.includes('لوحة التحكم:') || ctrlTitle.includes('Control Panel:')) {
                 const docName = ctrlTitle.replace('لوحة التحكم: ', '').replace('Control Panel: ', '').trim();
                 const docData = allData.find(d => d.name === docName);
-                if (docData) renderDoctorDashboard(docData);
+                if (docData && docData.type === 'doctor') renderDoctorDashboard(docData);
+                if (docData && docData.type === 'pharmacy') renderPharmacyDashboard(docData);
             }
         });
 
@@ -448,7 +457,7 @@
             if (ctrlTitle.includes('لوحة التحكم:') || ctrlTitle.includes('Control Panel:')) {
                 const docName = ctrlTitle.replace('لوحة التحكم: ', '').replace('Control Panel: ', '').trim();
                 const docData = allData.find(d => d.name === docName);
-                if (docData) renderDoctorDashboard(docData);
+                if (docData && docData.type === 'doctor') renderDoctorDashboard(docData);
             }
         });
 
@@ -533,7 +542,7 @@
             const daysText = item.workingDays && item.workingDays.length > 0 ? item.workingDays.join('، ') : 'غير محدد';
             detailsHTML = `<div class="detail-row"><i class="fas fa-graduation-cap"></i><span>${item.specialty || ''}</span></div><div class="detail-row"><i class="fas fa-hospital"></i><span>${item.clinic || ''}</span></div><div class="detail-row"><i class="fas fa-calendar-check"></i><span>${daysText}</span></div><div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours || ''}</span></div>`;
         }
-        else detailsHTML = `<div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address || ''}</span></div><div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours || ''}</span></div>${item.night ? '<div class="detail-row"><i class="fas fa-moon" style="color: var(--gold)"></i><span style="color: var(--gold); font-weight: 600">خدمة ليلية</span></div>' : ''}`;
+        else detailsHTML = `<div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>${item.address || ''}</span></div><div class="detail-row"><i class="fas fa-clock"></i><span>${item.hours || ''}</span></div>${item.night ? '<div class="detail-row"><i class="fas fa-moon" style="color: var(--gold)"></i><span style="color: var(--gold); font-weight: 600">مناوبة ليلية متوفرة</span></div>' : ''}`;
 
         const canBook = item.type === 'doctor' || item.type === 'clinic';
         const bookingBtn = canBook ? `<button onclick="event.stopPropagation(); openBookingModal('${item.id}')" class="w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50" style="border-color: var(--border); color: var(--accent);" aria-label="حجز"><i class="fas fa-calendar-plus"></i></button>` : '';
@@ -548,7 +557,7 @@
                 <div class="flex items-start gap-3 mb-3"><div class="cat-icon ${t.iconClass}"><i class="fas ${t.icon}"></i></div><div class="flex-1 min-w-0"><h3 class="font-bold text-sm mb-1 leading-tight" style="font-family: 'Noto Kufi Arabic'; color: var(--fg);">${item.name}</h3><div class="flex items-center gap-1 text-[11px]" style="color: ${t.color};">${starsHTML}<span class="mr-1 font-semibold">${item.rating || 0}</span></div></div></div>
                 <div class="flex flex-col gap-1.5 mb-4">${detailsHTML}</div>
                 <div class="flex items-center gap-2">
-                    <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="call-btn flex-1 py-2.5 rounded-xl text-white text-xs font-semibold text-center no-underline flex items-center justify-center gap-2" style="background: ${t.color}"><i class="fas fa-phone-alt"></i><span dir="ltr">${item.phone}</span></a>
+                    <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="call-btn flex-1 py-2.5 rounded-xl text-white text-xs font-semibold text-center no-undefined flex items-center justify-center gap-2" style="background: ${t.color}"><i class="fas fa-phone-alt"></i><span dir="ltr">${item.phone}</span></a>
                     ${bookingBtn}
                     <button onclick="event.stopPropagation(); openModal('${item.id}')" class="w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50" style="border-color: var(--border); color: var(--muted);" aria-label="تفاصيل"><i class="fas fa-info-circle"></i></button>
                 </div>
@@ -563,7 +572,7 @@
             center: { el: document.getElementById('centersGrid'), section: document.getElementById('centers'), data: allData.filter(d => d.type === 'center') },
             lab: { el: document.getElementById('labsGrid'), section: document.getElementById('labs'), data: allData.filter(d => d.type === 'lab') },
             doctor: { el: document.getElementById('doctorsGrid'), section: document.getElementById('doctors'), data: allData.filter(d => d.type === 'doctor') },
-            pharmacy: { el: document.getElementById('pharmaciesGrid'), section: document.getElementById('pharmacies'), data: allData.filter(d => d.type === 'pharmacy') }
+            pharmacy: { el: document.getElementById('pharmaciesGrid'), section: document.getElementById('pharmacies'), data: allData.filter(d => d.type === 'pharmacy').sort((a,b) => (b.night === true) - (a.night === true)) } // Sort pharmacies by night shift
         };
         let total = 0;
         for (const [type, g] of Object.entries(grids)) {
@@ -626,7 +635,7 @@
             <p class="text-sm leading-relaxed mb-5" style="color: var(--fg-light)">${item.description || ''}</p>
             <div class="flex flex-col gap-2 mb-5"><div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas ${t.icon}" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">التخصص / النوع</div><div class="text-sm font-bold">${item.specialty || 'غير محدد'}</div></div></div>${item.address ? `<div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas fa-map-marker-alt" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">العنوان</div><div class="text-sm font-bold">${item.address}</div></div></div>` : ''}<div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg)"><i class="fas fa-clock" style="color: ${t.color}"></i><div><div class="text-xs" style="color: var(--muted)">أوقات العمل</div><div class="text-sm font-bold">${item.hours || ''}</div></div></div>${extraHTML}</div>
             ${mapEmbed}
-            <div class="flex items-center gap-3 mt-4"><a href="tel:${item.phone}" class="call-btn flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center no-underline flex items-center justify-center gap-2" style="background: ${t.color}"><i class="fas fa-phone-alt"></i> اتصال ${item.phone}</a><button onclick="copyNumber('${item.phone}')" class="w-12 h-12 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50 flex-shrink-0" style="border-color: var(--border)" aria-label="نسخ"><i class="fas fa-copy" style="color: var(--muted)"></i></button></div>
+            <div class="flex items-center gap-3 mt-4"><a href="tel:${item.phone}" class="call-btn flex-1 py-3.5 rounded-xl text-white text-sm font-bold text-center no-undefined flex items-center justify-center gap-2" style="background: ${t.color}"><i class="fas fa-phone-alt"></i> اتصال ${item.phone}</a><button onclick="copyNumber('${item.phone}')" class="w-12 h-12 rounded-xl border flex items-center justify-center transition-all hover:bg-gray-50 flex-shrink-0" style="border-color: var(--border)" aria-label="نسخ"><i class="fas fa-copy" style="color: var(--muted)"></i></button></div>
             ${canBook ? `<div class="mt-3">${bookingBtnModal}</div>` : ''}</div>`;
         document.getElementById('modalOverlay').classList.add('active');
         lockScroll();
@@ -707,7 +716,7 @@
         try {
             const formData = new FormData();
             formData.append('image', file);
-            const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${de1fa2050de41810e6839c048d4c401d}`, {
+            const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
                 method: 'POST',
                 body: formData
             });
@@ -743,33 +752,48 @@
     }
 
     // === Pharmacy Panel Feature ===
-    window.openPharmacyPanel = () => {
+    window.openPharmacyLogin = () => {
         openCtrlPanel('لوحة الصيدليات', `
             <div class="max-w-sm mx-auto py-8">
-                <div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-prescription-bottle-medical text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'">دخول الصيدليات</h3><p class="text-xs mt-1" style="color: var(--muted)">الرجاء إدخال كلمة المرور لعرض طلبات الأدوية</p></div>
-                <form onsubmit="handlePharmacyLogin(event)" class="flex flex-col gap-4"><input type="password" id="pharmacyPass" class="ctrl-input text-center" placeholder="كلمة المرور" required autofocus><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90" style="background: var(--accent)"><i class="fas fa-sign-in-alt ml-2"></i> دخول</button></form>
+                <div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-prescription-bottle-medical text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'">دخول الصيدليات</h3><p class="text-xs mt-1" style="color: var(--muted)">الرجاء إدخال اسم الصيدلية وكلمة المرور الخاصة بكم</p></div>
+                <form onsubmit="handlePharmacyLogin(event)" class="flex flex-col gap-4">
+                    <input type="text" id="pharmName" class="ctrl-input text-center" placeholder="اسم الصيدلية" required>
+                    <input type="text" id="pharmPass" class="ctrl-input text-center font-mono" placeholder="كلمة المرور (مثال: A7B9X2)" required>
+                    <button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90" style="background: var(--accent)"><i class="fas fa-sign-in-alt ml-2"></i> دخول</button>
+                </form>
             </div>`, '#0E7C5F');
     }
     
     window.handlePharmacyLogin = (e) => {
         e.preventDefault();
-        if (document.getElementById('pharmacyPass').value === PHARMACY_PASSWORD) {
-            renderPharmacyRequests();
+        const name = document.getElementById('pharmName').value.trim();
+        const pass = document.getElementById('pharmPass').value.trim().toUpperCase();
+        const pharmData = allData.find(d => d.name === name && d.type === 'pharmacy' && d.pharmacyPass === pass);
+        if (pharmData) {
+            renderPharmacyDashboard(pharmData);
         } else { 
-            showToast('كلمة المرور خاطئة!'); 
-            document.getElementById('pharmacyPass').value = '';
+            showToast('بيانات الدخول غير صحيحة! تأكد من الاسم وكلمة المرور.'); 
         }
     }
 
-    window.renderPharmacyRequests = () => {
-        openCtrlPanel('طلبات الأدوية الواردة', `
-            <div class="flex flex-col gap-4">
-                <div class="bg-white p-4 rounded-xl border text-sm flex items-center gap-2" style="border-color: var(--border); color: var(--accent-dark); background: var(--accent-light);">
-                    <i class="fas fa-info-circle"></i>
-                    <span>سيتم عرض الطلبات الجديدة هنا فور ورودها. يمكنك التواصل مع المريض عبر واتساب أو الاتصال مباشرة.</span>
+    window.renderPharmacyDashboard = (pharm) => {
+        openCtrlPanel(`لوحة تحكم: ${pharm.name}`, `
+            <div class="flex flex-col gap-5">
+                <div class="bg-white p-5 rounded-xl border flex items-center justify-between flex-col sm:flex-row gap-4" style="border-color: var(--border)">
+                    <div class="flex items-center gap-4">
+                        <img src="${pharm.image}" class="w-20 h-20 rounded-2xl object-cover" alt="${pharm.name}">
+                        <div><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">${pharm.name}</h3><p class="text-sm" style="color: var(--pharmacy)">صيدلية</p><p class="text-xs mt-1" style="color: var(--muted)"><i class="fas fa-map-marker-alt ml-1"></i> ${pharm.address || ''}</p></div>
+                    </div>
+                    <button onclick="toggleNightShift('${pharm.id}', ${!pharm.night})" class="px-4 py-2 rounded-xl font-bold text-sm transition-all w-full sm:w-auto ${pharm.night ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700'}">
+                        <i class="fas ${pharm.night ? 'fa-moon' : 'fa-sun'} ml-1"></i> ${pharm.night ? 'إيقاف المناوبة الليلية' : 'تفعيل المناوبة الليلية'}
+                    </button>
                 </div>
-                <div id="requestsContainer" class="flex flex-col gap-3">
-                    <p class="text-center py-10" style="color: var(--muted)">جاري تحميل الطلبات...</p>
+
+                <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                    <h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-pills" style="color: var(--pharmacy)"></i> طلبات الأدوية الواردة</h4>
+                    <div id="requestsContainer" class="flex flex-col gap-3">
+                        <p class="text-center py-10" style="color: var(--muted)">جاري تحميل الطلبات...</p>
+                    </div>
                 </div>
             </div>`, '#0E7C5F');
 
@@ -786,7 +810,7 @@
                 const req = doc.data();
                 const date = new Date(req.createdAt).toLocaleString('ar-EG', { date: 'short', time: 'short' });
                 const phone = req.patientPhone;
-                const waNumber = `963${phone.substring(1)}`; // Convert 09... to 9639...
+                const waNumber = `963${phone.substring(1)}`; 
                 
                 html += `
                     <div class="bg-white border rounded-xl p-4 flex flex-col gap-3" style="border-color: var(--border)">
@@ -813,6 +837,15 @@
             });
             container.innerHTML = html;
         });
+    }
+
+    window.toggleNightShift = async (id, currentStatus) => {
+        try {
+            await updateDoc(doc(db, 'listings', id), { night: currentStatus });
+            showToast(currentStatus ? 'تم تفعيل المناوبة الليلية بنجاح!' : 'تم إيقاف المناوبة الليلية.');
+        } catch (e) {
+            showToast('حدث خطأ أثناء تحديث الحالة');
+        }
     }
 
     window.resolveRequest = async (id) => {
@@ -920,7 +953,7 @@
         tempBooking.phone = phone;
         tempBooking.notes = notes;
         tempBooking.status = 'pending';
-        tempBooking.time = "بانتظار تحديد الموعد من قبل العيادة"; // New default time text
+        tempBooking.time = "بانتظار تحديد الموعد من قبل العيادة"; 
         tempBooking.createdAt = new Date().toISOString();
         
         try {
@@ -976,6 +1009,7 @@
                         <span class="font-semibold text-sm">${item.name}</span>
                     </div>
                     ${item.bookingPass ? `<span class="text-[11px] text-gray-500 mt-1">رمز دخول الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}
+                    ${item.pharmacyPass ? `<span class="text-[11px] text-gray-500 mt-1">رمز دخول الصيدلية: <span class="font-mono font-bold text-green-600">${item.pharmacyPass}</span></span>` : ''}
                 </div>
                 <div class="flex gap-1">
                     <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50 transition-all"><i class="fas fa-edit"></i></button>
@@ -1024,6 +1058,9 @@
                 let dataToAdd = { ...item };
                 if (dataToAdd.type === 'doctor' || dataToAdd.type === 'clinic') {
                     dataToAdd.bookingPass = generateUniqueId();
+                }
+                if (dataToAdd.type === 'pharmacy') {
+                    dataToAdd.pharmacyPass = generateUniqueId();
                 }
                 const docId = dataToAdd.name.replace(/\s/g, '_');
                 await setDoc(doc(db, 'listings', docId), dataToAdd, { merge: true });
@@ -1084,6 +1121,9 @@
         if (!id && (type === 'doctor' || type === 'clinic')) {
             data.bookingPass = generateUniqueId();
         }
+        if (!id && type === 'pharmacy') {
+            data.pharmacyPass = generateUniqueId();
+        }
 
         if (type === 'hospital') { data.specialty = specialty; data.address = address; data.departments = extra; data.emergencyPhone = emergency; }
         else if (type === 'doctor') { data.specialty = specialty; data.clinic = address; }
@@ -1100,9 +1140,8 @@
                 if (!data.image) data.image = `https://picsum.photos/seed/new${Date.now()}/400/250`;
                 await addDoc(collection(db, 'listings'), data);
                 let successMsg = 'تمت إضافة المنشأة بنجاح!';
-                if (data.bookingPass) {
-                    successMsg += ` كلمة مرور الطبيب: ${data.bookingPass}`;
-                }
+                if (data.bookingPass) successMsg += ` كلمة مرور الطبيب: ${data.bookingPass}`;
+                if (data.pharmacyPass) successMsg += ` كلمة مرور الصيدلية: ${data.pharmacyPass}`;
                 showToast(successMsg);
             }
             document.querySelector('form').reset();
@@ -1160,7 +1199,7 @@
                 actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'pending')" class="text-xs text-white px-2 py-1 rounded bg-gray-500 hover:bg-gray-600 transition-all">استعادة</button>`;
                 actionButtons += `<button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800 hover:bg-black transition-all mr-1">حذف نهائي</button>`;
             } else {
-                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>';
+                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>`;
                 actionButtons = `
                     <div class="flex flex-col gap-1 w-full">
                         <input type="text" id="time_${b.id}" placeholder="حدد الموعد (مثال: 5:00 م)" class="ctrl-input text-sm py-1">
@@ -1217,7 +1256,6 @@
             </div>`, '#2563EB');
     }
 
-    // New function to accept booking with specific time
     window.acceptBooking = async (bookingId) => {
         const timeInput = document.getElementById(`time_${bookingId}`);
         const time = timeInput.value.trim();
