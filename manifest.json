@@ -1,25 +1,27 @@
 {
-  "name": "دليل الرحيبة الطبي",
+  "name": "دليل الرحيبة الطبي | مشافي، عيادات، أطباء، صيدليات",
   "short_name": "دليل الرحيبة",
-  "description": "دليلك الطبي الشامل في مدينة الرحيبة. مشافي، عيادات، أطباء، صيدليات ومخابر.",
+  "description": "اعثر على أقرب مشفى، عيادة، مركز طبي، مخبر، طبيب أو صيدلية في مدينة الرحيبة.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAF8F4",
   "theme_color": "#0E7C5F",
-  "orientation": "portrait-primary",
-  "dir": "rtl",
   "lang": "ar",
+  "dir": "rtl",
+  "orientation": "portrait-primary",
+  "gcm_sender_id": "482941778795",
+  "gcm_send_id": "482941778795",
   "icons": [
     {
       "src": "icon-192.png",
-      "type": "image/png",
       "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
-      "type": "image/png",
       "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
