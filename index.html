@@ -395,7 +395,7 @@
     let bookings = []; 
     let tempBooking = {}; 
     let scrollLockCount = 0;
-    let unsubscribeMedRequests = null; // متغير لإيقاف مستمع طلبات الأدوية
+    let unsubscribeMedRequests = null;
 
     function generateUniqueId() {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -442,7 +442,6 @@
             if (ctrlTitle.includes('لوحة تحكم:')) {
                 const docName = ctrlTitle.replace('لوحة تحكم: ', '').replace('Control Panel: ', '').trim();
                 const docData = allData.find(d => d.name === docName);
-                // تحديث لوحة الطبيب فقط (لأنها لا تنشئ مستمعاً جديداً) لتجنب إعادة استدعاء لوحة الصيدلية (لأن لها مستمعاً خاصاً)
                 if (docData && docData.type === 'doctor') renderDoctorDashboard(docData);
             }
         });
@@ -702,6 +701,11 @@
         const fileInput = document.getElementById('medImage');
         const file = fileInput.files[0];
 
+        if (!file) {
+            showToast('الرجاء اختيار صورة الوصفة الطبية');
+            return;
+        }
+
         if (!/^09\d{8}$/.test(phone)) {
             phoneInput.classList.add('input-invalid');
             showToast('الرجاء إدخال رقم هاتف صحيح (مثال: 09XXXXXXXX)');
@@ -711,20 +715,30 @@
 
         const submitBtn = document.getElementById('medSubmitBtn');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الصورة وإرسال الطلب...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الصورة...';
+
+        let imageUrl = '';
 
         try {
+            // Step 1: Upload to ImgBB
             const formData = new FormData();
             formData.append('image', file);
+            
             const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
                 method: 'POST',
                 body: formData
             });
-            const imgbbData = await imgbbRes.json();
             
+            if (!imgbbRes.ok) throw new Error('ImgBB Network response was not ok');
+            
+            const imgbbData = await imgbbRes.json();
             if (!imgbbData.success) throw new Error('ImgBB upload failed');
-            const imageUrl = imgbbData.data.url;
+            
+            imageUrl = imgbbData.data.url;
 
+            // Step 2: Save to Firebase
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب للصيدليات...';
+            
             await addDoc(collection(db, 'medicine_requests'), {
                 patientName: name,
                 patientPhone: phone,
@@ -745,7 +759,20 @@
             `;
 
         } catch (err) {
-            showToast('حدث خطأ أثناء رفع الصورة، يرجى المحاولة مرة أخرى');
+            console.error("Submission error: ", err);
+            let errorMsg = 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+            
+            // تحديد رسالة الخطأ بدقة لمعرفة السبب الحقيقي
+            if (err.message && err.message.includes('ImgBB')) {
+                errorMsg = 'فشل رفع الصورة. تأكد من حجم الصورة واتصالك بالإنترنت.';
+            } else if (err.message && err.message.includes('Network')) {
+                errorMsg = 'فشل الاتصال بخادم الصور. تحقق من الإنترنت.';
+            } else {
+                // إذا نجح رفع الصورة وفشل هنا، فالمشكلة من قواعد كتابة Firebase
+                errorMsg = 'تم رفع الصورة ولكن فشل إرسال الطلب لقاعدة البيانات. تأكد من صلاحيات Firebase.';
+            }
+            
+            showToast(errorMsg);
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للصيدليات';
         }
@@ -799,16 +826,13 @@
 
         const q = query(collection(db, 'medicine_requests'), where('status', '==', 'active'));
         
-        // إيقاف المستمع القديم إذا كان موجوداً لمنع تسرب الذاكرة
         if (unsubscribeMedRequests) {
             unsubscribeMedRequests();
             unsubscribeMedRequests = null;
         }
 
-        // تعيين المستمع الجديد وتخزين دالة إيقافه
         unsubscribeMedRequests = onSnapshot(q, (snapshot) => {
             const container = document.getElementById('requestsContainer');
-            // التأكد من أن الحاوية لا تزال موجودة في الصفحة
             if (!container) {
                 if (unsubscribeMedRequests) {
                     unsubscribeMedRequests();
@@ -874,7 +898,7 @@
         }
     }
 
-    // === Booking Modal (Modified) ===
+    // === Booking Modal ===
     window.openBookingModal = (id) => {
         closeModal();
         const item = allData.find(d => d.id === id);
@@ -1008,7 +1032,6 @@
         document.getElementById('ctrlOverlay').classList.remove('active'); 
         unlockScroll();
         
-        // إيقاف مستمع طلبات الأدوية عند إغلاق لوحة التحكم لتوفير الموارد
         if (unsubscribeMedRequests) {
             unsubscribeMedRequests();
             unsubscribeMedRequests = null;
@@ -1030,7 +1053,7 @@
                 <div class="flex flex-col gap-1">
                     <div class="flex items-center gap-3">
                         <span class="badge badge-${item.type}">${item.type}</span>
-                        <span class="font-semibold text-sm">${item.name}</span>
+                        <span class="font-semibold text-sm">${item.name || item.id}</span>
                     </div>
                     ${item.bookingPass ? `<span class="text-[11px] text-gray-500 mt-1">رمز دخول الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}
                     ${item.pharmacyPass ? `<span class="text-[11px] text-gray-500 mt-1">رمز دخول الصيدلية: <span class="font-mono font-bold text-green-600">${item.pharmacyPass}</span></span>` : ''}
@@ -1110,7 +1133,7 @@
         document.getElementById('new_emergency').value = item.emergencyPhone || '';
         document.getElementById('new_image_url').value = item.image || '';
         document.getElementById('formTitle').textContent = `تعديل: ${item.name}`;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('ctrlContent').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     window.deleteFacility = async (id) => {
@@ -1126,6 +1149,7 @@
 
     window.saveFacility = async (e) => {
         e.preventDefault();
+        const form = e.target; 
         const id = document.getElementById('edit_id').value;
         const type = document.getElementById('new_type').value;
         const name = document.getElementById('new_name').value;
@@ -1156,24 +1180,38 @@
         else if (type === 'center') { data.specialty = specialty; data.address = address; data.services = extra; }
         else if (type === 'lab') { data.specialty = specialty; data.address = address; data.tests = extra; }
 
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+        }
+
         try {
             if (id) {
                 await updateDoc(doc(db, 'listings', id), data);
                 showToast('تم تعديل البيانات بنجاح!');
             } else {
                 if (!data.image) data.image = `https://picsum.photos/seed/new${Date.now()}/400/250`;
-                await addDoc(collection(db, 'listings'), data);
+                const customId = name.trim().replace(/\s+/g, '_');
+                await setDoc(doc(db, 'listings', customId), data);
+                
                 let successMsg = 'تمت إضافة المنشأة بنجاح!';
                 if (data.bookingPass) successMsg += ` كلمة مرور الطبيب: ${data.bookingPass}`;
                 if (data.pharmacyPass) successMsg += ` كلمة مرور الصيدلية: ${data.pharmacyPass}`;
                 showToast(successMsg);
             }
-            document.querySelector('form').reset();
+            
+            form.reset();
             document.getElementById('edit_id').value = '';
             document.getElementById('formTitle').textContent = 'إضافة منشأة طبية جديدة';
             renderAdminDashboard(); 
         } catch (err) {
-            showToast('حدث خطأ أثناء الحفظ في Firebase');
+            console.error("Save error:", err);
+            showToast('حدث خطأ أثناء الحفظ في Firebase: ' + err.message);
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save ml-1"></i> حفظ';
+            }
         }
     }
 
