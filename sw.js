@@ -1,47 +1,71 @@
-const CACHE_NAME = 'raheba-med-cache-v2';
+const CACHE_NAME = 'raheba-medical-cache-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/manifest.json'
+  '/index.html', // اسم ملف الـ HTML الخاص بك
+  'https://cdn.tailwindcss.com',
+  'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
 ];
 
+// تثبيت الـ Service Worker وتخزين الملفات
 self.addEventListener('install', event => {
-  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
   );
+  self.skipWaiting();
 });
 
+// تفعيل الـ Service Worker وحذف الكاش القديم
 self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
+  self.clients.claim();
 });
 
+// جلب الملفات من الكاش أو من الإنترنت
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  
-  // عدم اعتراض طلبات Firebase أو Google Maps أبداً
-  if (url.origin.includes('firebaseio.com') || 
-      url.origin.includes('googleapis.com') || 
-      url.origin.includes('gstatic.com') || 
-      url.origin.includes('google.com') || 
-      url.origin.includes('googleMaps')) {
-    return; // دع الطلب يمر مباشرة للإنترنت
+  // تجاهل طلبات Firebase و OneSignal حتى لا تتداخل مع آلياتهما الخاصة
+  if (event.request.url.includes('firestore.googleapis.com') || 
+      event.request.url.includes('onesignal.com')) {
+    return;
   }
 
-  // اعتراض باقي الطلبات (ملفات الموقع) والبحث عنها في الكاش
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).then(
+          response => {
+            // تحقق من صحة الاستجابة قبل تخزينها
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+            return response;
+          }
+        );
+      }).catch(() => {
+        // يمكن هنا إضافة صفحة Offline احتياطية
+      })
   );
 });
