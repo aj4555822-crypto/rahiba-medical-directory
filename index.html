@@ -378,6 +378,7 @@
     const db = getFirestore(app);
 
     const IMGBB_API_KEY = "8a92929a2c1c90634ffc7ba88f2d481d"; 
+    const notificationSound = "data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";
 
     const seedData = [
         { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110" },
@@ -396,6 +397,7 @@
     let tempBooking = {}; 
     let scrollLockCount = 0;
     let unsubscribeMedRequests = null;
+    let initialLoadMedRequests = true;
 
     function generateUniqueId() {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -438,11 +440,18 @@
             renderData();
             updateStats();
             
-            const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
-            if (ctrlTitle.includes('لوحة تحكم:')) {
-                const docName = ctrlTitle.replace('لوحة تحكم: ', '').replace('Control Panel: ', '').trim();
-                const docData = allData.find(d => d.name === docName);
-                if (docData && docData.type === 'doctor') renderDoctorDashboard(docData);
+            // Auto-login for Pharmacy
+            const savedPharmId = localStorage.getItem('pharmSession');
+            if (savedPharmId) {
+                const pharmData = allData.find(d => d.id === savedPharmId);
+                if (pharmData) renderPharmacyDashboard(pharmData);
+            }
+
+            // Auto-login for Doctor
+            const savedDocId = localStorage.getItem('docSession');
+            if (savedDocId) {
+                const docData = allData.find(d => d.id === savedDocId);
+                if (docData) renderDoctorDashboard(docData);
             }
         });
 
@@ -720,7 +729,6 @@
         let imageUrl = '';
 
         try {
-            // Step 1: Upload to ImgBB
             const formData = new FormData();
             formData.append('image', file);
             
@@ -736,7 +744,6 @@
             
             imageUrl = imgbbData.data.url;
 
-            // Step 2: Save to Firebase
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب للصيدليات...';
             
             await addDoc(collection(db, 'medicine_requests'), {
@@ -761,17 +768,13 @@
         } catch (err) {
             console.error("Submission error: ", err);
             let errorMsg = 'حدث خطأ غير متوقع. حاول مرة أخرى.';
-            
-            // تحديد رسالة الخطأ بدقة لمعرفة السبب الحقيقي
             if (err.message && err.message.includes('ImgBB')) {
                 errorMsg = 'فشل رفع الصورة. تأكد من حجم الصورة واتصالك بالإنترنت.';
             } else if (err.message && err.message.includes('Network')) {
                 errorMsg = 'فشل الاتصال بخادم الصور. تحقق من الإنترنت.';
             } else {
-                // إذا نجح رفع الصورة وفشل هنا، فالمشكلة من قواعد كتابة Firebase
                 errorMsg = 'تم رفع الصورة ولكن فشل إرسال الطلب لقاعدة البيانات. تأكد من صلاحيات Firebase.';
             }
-            
             showToast(errorMsg);
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للصيدليات';
@@ -793,17 +796,32 @@
     
     window.handlePharmacyLogin = (e) => {
         e.preventDefault();
-        const name = document.getElementById('pharmName').value.trim();
-        const pass = document.getElementById('pharmPass').value.trim().toUpperCase();
+        const nameInput = document.getElementById('pharmName');
+        const passInput = document.getElementById('pharmPass');
+        if (!nameInput || !passInput) return;
+
+        const name = nameInput.value.trim();
+        const pass = passInput.value.trim().toUpperCase();
+        
         const pharmData = allData.find(d => d.name === name && d.type === 'pharmacy' && d.pharmacyPass === pass);
+        
         if (pharmData) {
+            localStorage.setItem('pharmSession', pharmData.id);
             renderPharmacyDashboard(pharmData);
         } else { 
             showToast('بيانات الدخول غير صحيحة! تأكد من الاسم وكلمة المرور.'); 
         }
     }
 
+    window.logoutPharm = () => {
+        localStorage.removeItem('pharmSession');
+        closeCtrlPanel();
+        showToast('تم تسجيل الخروج بنجاح');
+    }
+
     window.renderPharmacyDashboard = (pharm) => {
+        initialLoadMedRequests = true; 
+
         openCtrlPanel(`لوحة تحكم: ${pharm.name}`, `
             <div class="flex flex-col gap-5">
                 <div class="bg-white p-5 rounded-xl border flex items-center justify-between flex-col sm:flex-row gap-4" style="border-color: var(--border)">
@@ -811,9 +829,14 @@
                         <img src="${pharm.image}" class="w-20 h-20 rounded-2xl object-cover" alt="${pharm.name}">
                         <div><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">${pharm.name}</h3><p class="text-sm" style="color: var(--pharmacy)">صيدلية</p><p class="text-xs mt-1" style="color: var(--muted)"><i class="fas fa-map-marker-alt ml-1"></i> ${pharm.address || ''}</p></div>
                     </div>
-                    <button onclick="toggleNightShift('${pharm.id}', ${!pharm.night})" class="px-4 py-2 rounded-xl font-bold text-sm transition-all w-full sm:w-auto ${pharm.night ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700'}">
-                        <i class="fas ${pharm.night ? 'fa-moon' : 'fa-sun'} ml-1"></i> ${pharm.night ? 'إيقاف المناوبة الليلية' : 'تفعيل المناوبة الليلية'}
-                    </button>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="toggleNightShift('${pharm.id}', ${!pharm.night})" class="px-4 py-2 rounded-xl font-bold text-sm transition-all flex-1 sm:flex-none ${pharm.night ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700'}">
+                            <i class="fas ${pharm.night ? 'fa-moon' : 'fa-sun'} ml-1"></i> ${pharm.night ? 'إيقاف المناوبة' : 'تفعيل المناوبة'}
+                        </button>
+                        <button onclick="logoutPharm()" class="px-4 py-2 rounded-xl font-bold text-sm transition-all bg-red-500 text-white hover:bg-red-600">
+                            <i class="fas fa-sign-out-alt"></i> خروج
+                        </button>
+                    </div>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
@@ -841,6 +864,20 @@
                 return;
             }
             
+            if (!initialLoadMedRequests && snapshot.size > 0) {
+                if (Notification.permission === 'granted') {
+                    new Notification('طلب دواء جديد! 💊', { 
+                        body: 'يوجد طلب وصفة طبية جديدة من أحد المرضى. تفقد لوحة التحكم.',
+                        icon: pharm.image
+                    });
+                    try {
+                        const audio = new Audio(notificationSound);
+                        audio.play();
+                    } catch(e) { console.warn('Audio play failed', e); }
+                }
+            }
+            initialLoadMedRequests = false;
+
             if (snapshot.empty) {
                 container.innerHTML = '<p class="text-center py-10" style="color: var(--muted)">لا توجد طلبات أدوية حالياً.</p>';
                 return;
@@ -1112,7 +1149,7 @@
                 const docId = dataToAdd.name.replace(/\s/g, '_');
                 await setDoc(doc(db, 'listings', docId), dataToAdd, { merge: true });
             }
-            showToast('تم ترحيل البيانات بنجاح (تم تجاهل المكرر إن وجد)!');
+            showToast('تم ترحيل البيانات بنجاح (تم تجاهل المكرر إن وجود)!');
         } catch (e) {
             showToast('خطأ في الترحيل: تأكد من إعداد قواعد Firebase');
         }
@@ -1229,14 +1266,27 @@
     
     window.handleDoctorLogin = (e) => {
         e.preventDefault();
-        const name = document.getElementById('docName').value.trim();
-        const pass = document.getElementById('docPass').value.trim().toUpperCase();
+        const nameInput = document.getElementById('docName');
+        const passInput = document.getElementById('docPass');
+        if (!nameInput || !passInput) return;
+
+        const name = nameInput.value.trim();
+        const pass = passInput.value.trim().toUpperCase();
+        
         const docData = allData.find(d => d.name === name && d.bookingPass === pass);
+        
         if (docData) {
+            localStorage.setItem('docSession', docData.id); 
             renderDoctorDashboard(docData);
         } else { 
             showToast('بيانات الدخول غير صحيحة! تأكد من الاسم وكلمة المرور.'); 
         }
+    }
+
+    window.logoutDoc = () => {
+        localStorage.removeItem('docSession');
+        closeCtrlPanel();
+        showToast('تم تسجيل الخروج بنجاح');
     }
     
     window.renderDoctorDashboard = (doc) => {
@@ -1295,9 +1345,14 @@
 
         openCtrlPanel(`لوحة تحكم: ${doc.name}`, `
             <div class="flex flex-col gap-5">
-                <div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)">
-                    <img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover" alt="${doc.name}">
-                    <div><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p><p class="text-xs mt-1" style="color: var(--muted)"><i class="fas fa-hospital ml-1"></i> ${doc.clinic || doc.address || ''}</p></div>
+                <div class="bg-white p-5 rounded-xl border flex items-center justify-between flex-col sm:flex-row gap-4" style="border-color: var(--border)">
+                    <div class="flex items-center gap-4">
+                        <img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover" alt="${doc.name}">
+                        <div><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'; color: var(--fg)">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p><p class="text-xs mt-1" style="color: var(--muted)"><i class="fas fa-hospital ml-1"></i> ${doc.clinic || doc.address || ''}</p></div>
+                    </div>
+                    <button onclick="logoutDoc()" class="px-4 py-2 rounded-xl font-bold text-sm transition-all bg-red-500 text-white hover:bg-red-600 w-full sm:w-auto">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل خروج
+                    </button>
                 </div>
                 
                 <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
