@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دليل الرحيبة الطبي | مشافي، عيادات، أطباء، صيدليات، مراكز طبية، مخابر</title>
+    
+    <!-- PWA & Apple Touch Settings -->
+    <meta name="theme-color" content="#0E7C5F">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="دليل الرحيبة">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -359,6 +368,26 @@
         <button class="ui-btn dark-btn" id="darkModeToggle" title="الوضع الليلي" data-en-title="Dark Mode"><i class="fas fa-moon"></i></button>
         <button class="ui-btn lang-btn" id="langToggle" title="English" data-en-title="العربية">EN</button>
     </div>
+
+    <!-- OneSignal SDK -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "1fca68bb-8057-4974-98ed-c29b32da9a77",
+        });
+      });
+
+      // تسجيل Service Worker الخاص بـ PWA (تأكد أن ملف sw.js موجود بنفس المجلد)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => console.log('ServiceWorker registration successful with scope: ', registration.scope))
+            .catch(err => console.log('ServiceWorker registration failed: ', err));
+        });
+      }
+    </script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
@@ -1311,7 +1340,7 @@
                 actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'pending')" class="text-xs text-white px-2 py-1 rounded bg-gray-500 hover:bg-gray-600 transition-all">استعادة</button>`;
                 actionButtons += `<button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800 hover:bg-black transition-all mr-1">حذف نهائي</button>`;
             } else {
-                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>';
+                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>`;
                 actionButtons = `
                     <div class="flex flex-col gap-1 w-full">
                         <input type="text" id="time_${b.id}" placeholder="حدد الموعد (مثال: 5:00 م)" class="ctrl-input text-sm py-1">
