@@ -1,13 +1,16 @@
+// استيراد إعدادات OneSignal داخل عامل الخدمة (Service Worker)
+importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
+
 const CACHE_NAME = 'raheba-medical-cache-v1';
 const urlsToCache = [
   '/',
-  '/index.html', // اسم ملف الـ HTML الخاص بك
+  '/index.html',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@200;400;600;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
 ];
 
-// تثبيت الـ Service Worker وتخزين الملفات
+// تثبيت الـ Service Worker وحفظ الملفات في الكاش
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -19,7 +22,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// تفعيل الـ Service Worker وحذف الكاش القديم
+// تفعيل الـ Service Worker وتنظيف الكاش القديم
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -36,11 +39,13 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// جلب الملفات من الكاش أو من الإنترنت
+// جلب البيانات (استراتيجية: الكاش أولاً، ثم الشبكة)
 self.addEventListener('fetch', event => {
-  // تجاهل طلبات Firebase و OneSignal حتى لا تتداخل مع آلياتهما الخاصة
+  // تجاهل طلبات Firebase و OneSignal و ImgBB لضمان عملها بشكل مباشر دائماً
   if (event.request.url.includes('firestore.googleapis.com') || 
-      event.request.url.includes('onesignal.com')) {
+      event.request.url.includes('firebase') ||
+      event.request.url.includes('onesignal') ||
+      event.request.url.includes('imgbb')) {
     return;
   }
 
@@ -52,7 +57,6 @@ self.addEventListener('fetch', event => {
         }
         return fetch(event.request).then(
           response => {
-            // تحقق من صحة الاستجابة قبل تخزينها
             if(!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
@@ -64,8 +68,6 @@ self.addEventListener('fetch', event => {
             return response;
           }
         );
-      }).catch(() => {
-        // يمكن هنا إضافة صفحة Offline احتياطية
       })
   );
 });
