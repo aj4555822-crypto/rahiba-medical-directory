@@ -2054,19 +2054,24 @@
     // === Quick Lookup & Chat System Functions ===
     let activeFollowupUnsub = null;
 
-    window.quickLookup = async () => {
-        const val = document.getElementById('quickLookupInput').value.trim().toUpperCase();
+        window.quickLookup = async () => {
+        // تنظيف المدخل من المسافات والرموز وتحويله لأحرف كبيرة
+        let val = document.getElementById('quickLookupInput').value.trim().toUpperCase().replace(/#/g, '').replace(/\s/g, '');
         if (!val) { showToast('الرجاء إدخال رقم الاستعلام'); return; }
         
-        if (val.startsWith('#R-')) {
-            const id = val.replace('#R-', '');
-            const q = query(collection(db, 'bookings'), where('ref', '==', id));
+        // بحث الحجز (R-xxx)
+        if (val.startsWith('R-')) {
+            const q = query(collection(db, 'bookings'), where('ref', '==', val));
             const snap = await getDocs(q);
-            if (!snap.empty) { openBookingFollowup(snap.docs[0].id); } 
-            else { showToast('لم يتم العثور على حجز بهذا الرقم'); }
-        } else if (val.startsWith('#MED-')) {
-            const id = val.replace('#MED-', '');
-            const q = query(collection(db, 'medicine_requests'), where('medRef', '==', id));
+            if (!snap.empty) { 
+                openBookingFollowup(snap.docs[0].id); 
+            } else { 
+                showToast('لم يتم العثور على حجز بهذا الرقم'); 
+            }
+        } 
+        // بحث الدواء (MED-xxx)
+        else if (val.startsWith('MED-')) {
+            const q = query(collection(db, 'medicine_requests'), where('medRef', '==', val));
             const snap = await getDocs(q);
             if (!snap.empty) {
                 const m = snap.docs[0].data();
@@ -2093,8 +2098,9 @@
                 document.getElementById('modalOverlay').classList.add('active');
                 lockScroll();
             } else { showToast('لم يتم العثور على طلب دواء بهذا الرقم'); }
-        } else {
-            showToast('صيغة غير صحيحة. استخدم #R-XXX للحجز أو #MED-XXX للدواء');
+        } 
+        else {
+            showToast('صيغة غير صحيحة. استخدم R-XXX للحجز أو MED-XXX للدواء');
         }
     }
 
