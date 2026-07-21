@@ -1929,7 +1929,7 @@
                 </div>
 
                 <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
-                    ><i class="fas fa-list text-indigo-600"></i> تذكيراتي المحفوظة</h4>
+            ><i class="fas fa-list text-indigo-600"></i> تذكيراتي المحفوظة</h4>
                     <div id="remindersList" class="flex flex-col gap-3">
                         <p class="text-center py-8 text-gray-400 text-sm">لا توجد تذكيرات بعد.</p>
                     </div>
@@ -2050,6 +2050,146 @@
             </div>
         `;
     }
+
+    // === Quick Lookup & Chat System Functions ===
+    let activeFollowupUnsub = null;
+
+    window.quickLookup = async () => {
+        const val = document.getElementById('quickLookupInput').value.trim().toUpperCase();
+        if (!val) { showToast('الرجاء إدخال رقم الاستعلام'); return; }
+        
+        if (val.startsWith('#R-')) {
+            const id = val.replace('#R-', '');
+            const q = query(collection(db, 'bookings'), where('ref', '==', id));
+            const snap = await getDocs(q);
+            if (!snap.empty) { openBookingFollowup(snap.docs[0].id); } 
+            else { showToast('لم يتم العثور على حجز بهذا الرقم'); }
+        } else if (val.startsWith('#MED-')) {
+            const id = val.replace('#MED-', '');
+            const q = query(collection(db, 'medicine_requests'), where('medRef', '==', id));
+            const snap = await getDocs(q);
+            if (!snap.empty) {
+                const m = snap.docs[0].data();
+                let statusText = '', statusColor = '', statusIcon = '';
+                if (m.status === 'searching') { statusText = 'قيد البحث والتأمين'; statusColor = '#F59E0B'; statusIcon = 'fa-clock'; }
+                else if (m.status === 'available') { statusText = 'تم التوفير - جاهز للاستلام'; statusColor = '#10B981'; statusIcon = 'fa-check-circle'; }
+                else if (m.status === 'unavailable') { statusText = 'غير متوفر حالياً'; statusColor = '#6B7280'; statusIcon = 'fa-times-circle'; }
+                else { statusText = 'تم إنهاء الطلب'; statusColor = '#6B7280'; statusIcon = 'fa-archive'; }
+                
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="p-6 text-center">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-lg"><i class="fas fa-pills ml-2" style="color: var(--gold)"></i> حالة طلب الدواء</h3>
+                            <button onclick="closeModal()" class="text-2xl hover:text-gray-400 leading-none">&times;</button>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-1">رقم الطلب</div>
+                        <div class="text-xl font-black text-yellow-600 mb-6">#${m.medRef}</div>
+                        <div class="p-4 rounded-xl mb-4" style="background: ${statusColor}20; color: ${statusColor};">
+                            <i class="fas ${statusIcon} text-3xl mb-2"></i>
+                            <div class="font-bold text-lg">${statusText}</div>
+                        </div>
+                        ${m.notes ? `<div class="bg-gray-50 p-3 rounded-xl text-sm text-gray-700 text-right"><b>ملاحظة الصيدلية:</b><br>${m.notes}</div>` : '<div class="text-xs text-gray-400">لا توجد ملاحظات حتى الآن.</div>'}
+                    </div>`;
+                document.getElementById('modalOverlay').classList.add('active');
+                lockScroll();
+            } else { showToast('لم يتم العثور على طلب دواء بهذا الرقم'); }
+        } else {
+            showToast('صيغة غير صحيحة. استخدم #R-XXX للحجز أو #MED-XXX للدواء');
+        }
+    }
+
+    window.openBookingFollowup = (bookingId) => {
+        if (activeFollowupUnsub) activeFollowupUnsub();
+        openCtrlPanel('متابعة الحجز والدردشة', `
+            <div id="followupContent" class="flex flex-col gap-4">
+                <p class="text-center py-8 text-gray-400">جاري تحميل بيانات الحجز...</p>
+            </div>
+        `, '#0E7C5F');
+        
+        activeFollowupUnsub = onSnapshot(doc(db, 'bookings', bookingId), (docSnap) => {
+            if (!docSnap.exists()) {
+                document.getElementById('followupContent').innerHTML = '<p class="text-center py-8 text-red-500">لم يتم العثور على الحجز.</p>';
+                return;
+            }
+            const b = docSnap.data();
+            const bid = docSnap.id;
+            let statusBadge = '';
+            if (b.status === 'accepted') statusBadge = `<span class="px-3 py-1 rounded text-sm" style="background: #D1FAE5; color: #065F46">🟢 تم التأكيد - ${b.time}</span>`;
+            else if (b.status === 'canceled') statusBadge = `<span class="px-3 py-1 rounded text-sm" style="background: #FEE2E2; color: #991B1B">تم الإلغاء</span>`;
+            else statusBadge = `<span class="px-3 py-1 rounded text-sm" style="background: #FEF3C7; color: #92400E">🟡 الحجز قيد المراجعة من العيادة</span>`;
+            
+            let chatHtml = '';
+            if (b.chat && b.chat.length > 0) {
+                chatHtml = b.chat.map(msg => `
+                    <div class="flex ${msg.sender === 'patient' ? 'justify-start' : 'justify-end'}">
+                        <div class="max-w-[75%] p-3 rounded-xl text-sm ${msg.sender === 'patient' ? 'bg-gray-100 text-gray-800' : 'bg-blue-500 text-white'}">
+                            ${msg.text}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                chatHtml = '<p class="text-center text-xs text-gray-400 my-4">لا توجد رسائل بعد. انتظر رد العيادة.</p>';
+            }
+
+            document.getElementById('followupContent').innerHTML = `
+                <div class="bg-white p-4 rounded-xl border" style="border-color: var(--border)">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <div class="font-bold text-sm">${b.itemName}</div>
+                            <div class="text-xs text-gray-500">${b.dayStr}</div>
+                        </div>
+                        ${statusBadge}
+                    </div>
+                    <div class="text-xs text-yellow-600 font-bold mt-2">رقم المرجع: #${b.ref}</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border flex flex-col h-96" style="border-color: var(--border)">
+                    <div class="flex-1 overflow-y-auto flex flex-col gap-2 mb-3 pr-1" id="chatBox">
+                        ${chatHtml}
+                    </div>
+                    <div class="flex gap-2 border-t pt-3" style="border-color: var(--border)">
+                        <input type="text" id="chatInput" class="ctrl-input text-sm" placeholder="اكتب رسالتك للطبيب..." onkeydown="if(event.key==='Enter') sendChatMessage('${bid}')">
+                        <button onclick="sendChatMessage('${bid}')" class="px-4 rounded-xl text-white" style="background: var(--accent)"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            `;
+            const chatBox = document.getElementById('chatBox');
+            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    }
+
+    window.sendChatMessage = async (bookingId) => {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        const docRef = doc(db, 'bookings', bookingId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const currentChat = docSnap.data().chat || [];
+            currentChat.push({ sender: 'patient', text: text, timestamp: new Date().toISOString() });
+            await updateDoc(docRef, { chat: currentChat });
+        }
+    }
+
+    window.sendDocMessage = async (bookingId) => {
+        const input = document.getElementById(`docChat_${bookingId}`);
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        const booking = bookings.find(b => b.id === bookingId);
+        const currentChat = booking.chat || [];
+        currentChat.push({ sender: 'doctor', text: text, timestamp: new Date().toISOString() });
+        try { await updateDoc(doc(db, 'bookings', bookingId), { chat: currentChat }); } catch (e) { showToast('خطأ في الإرسال'); }
+    }
+
+    window.updateMedStatus = async (id, status) => {
+        try { await updateDoc(doc(db, 'medicine_requests', id), { status: status }); showToast('تم تحديث حالة الدواء'); } catch (e) { showToast('خطأ في التحديث'); }
+    }
+
+    window.updateMedNotes = async (id, notes) => {
+        try { await updateDoc(doc(db, 'medicine_requests', id), { notes: notes }); showToast('تم حفظ الملاحظة'); } catch (e) { showToast('خطأ في الحفظ'); }
+    }
 </script>
 </body>
 </html>
+        
