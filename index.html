@@ -347,6 +347,13 @@
                     <button onclick="handleSearch(document.getElementById('heroSearch').value)" class="px-6 sm:px-8 py-3 rounded-xl text-white font-semibold text-sm sm:text-base transition-all hover:opacity-90 flex-shrink-0" style="background: var(--gold)">بحث</button>
                 </div>
                 
+                <!-- Quick Lookup Box -->
+                <div class="mt-4 max-w-2xl mx-auto bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex items-center gap-2">
+                    <i class="fas fa-ticket-alt text-yellow-400 text-lg pr-2"></i>
+                    <input type="text" id="quickLookupInput" class="search-input flex-1 py-2 text-sm" placeholder="استعلم عن حالة حجزك أو طلب دوائك (مثال: #R-842 أو #MED-509)">
+                    <button onclick="quickLookup()" class="px-5 py-2 rounded-xl text-white font-semibold text-sm" style="background: var(--gold)">استعلام</button>
+                </div>
+
                 <div class="mt-8 max-w-2xl mx-auto bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex items-center gap-4 text-right">
                     <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-lightbulb text-yellow-400 text-lg"></i>
@@ -1087,7 +1094,7 @@
         { icon: "fa-burn", title: "الحروق الكيميائية", steps: "1. ارتدِ قفازات واقية إن أمكن.\n2. اغسل المنطقة المصابة بكميات كبيرة من الماء الفاتر لمدة 20 دقيقة.\n3. اخلع الملابس الملوثة بالكيمياء بحذر.\n4. لا تحاول معادلة الحمض بالقلوي أو العكس.\n5. انقل المصاب لأقرب مشفى مع إحضار عبوة المادة الكيميائية إن أمكن." },
         { icon: "fa-bone", title: "الكسور", steps: "1. لا تحرك العظمة المكسورة وحاول تثبيتها في وضعها الحالي.\n2. ضع جبيرة (خشبة أو مجلة صلبة) حول العظمة لتثبيتها.\n3. ضع كمادات ثلج ملفوفة بقطعة قماش لتخفيف التورم.\n4. لا تحاول إعادة العظمة لمكانها أبداً.\n5. انقل المصاب للمشفى بحذر شديد." },
         { icon: "fa-bleeding", title: "النزيف الشديد (الجروح)", steps: "1. ضع ضغطاً مباشراً وقوياً على الجرح بقطعة قماش نظيفة.\n2. ارفع العضو المصاب فوق مستوى القلب إن أمكن.\n3. إذا تشربت القماش بالدم، ضع طبقة أخرى فوقها ولا ترفع الأولى أبداً.\n4. إذا كان النزيف في الطرف ولم يتوقف، استخدم حزاماً ضاغطاً ووثق وقت وضعه.\n5. اطلب الإسعاف فوراً." },
-        { icon: "fa-droplet", title: "نزيف الأنف (الرعاف)", steps: "1. اجلس المريض وأمِل رأسه للأمام قليلاً (لا تميله للخلف لئلا يبلع الدم).\n2. اضغط برفق على الجزء الطري من الأنف (الأجناف) لمدة 10-15 دقيقة.\n3. تنفس من الفم وضع كمادة باردة على الجبهة أو جسر الأنف.\n4. لا نفث الأنف لمدة ساعة بعد توقف النزيف." },
+        { icon: "fa-droplet", title: "نزيف الأنف (الرعاف)", steps: "1. اجلس المريض وأمِل رأسه للأمام قليلاً (لا تميله للخارج لئلا يبلع الدم).\n2. اضغط برفق على الجزء الطري من الأنف (الأجناف) لمدة 10-15 دقيقة.\n3. تنفس من الفم وضع كمادة باردة على الجبهة أو جسر الأنف.\n4. لا نفث الأنف لمدة ساعة بعد توقف النزيف." },
         { icon: "fa-bolt", title: "الصعق الكهربائي", steps: "1. افصل مصدر الكهرباء فوراً أو اسحب المصاب بعيداً باستخدام عازل (خشبة، بلاستيك).\n2. لا تلمس المصاب بيديك العاريتين قبل فصل التيار.\n3. تحقق من تنفسه ونبضه، إذا توقف ابدأ الإنعاش القلبي الرئوي.\n4. عالج الحروق الناتجة (حروق كهربائية) بكمادات باردة.\n5. انقل للمشفى حتى لو بدا سليماً (لخطر اضطراب نبض القلب)." },
         { icon: "fa-water", title: "الغرق", steps: "1. أخرج المصاب من الماء بأمان دون تعريض نفسك للخطر.\n2. تحقق من التنفس، إذا كان متوقفاً ابدأ الإنعاش القلبي الرئوي فوراً.\n3. إذا كان يتنفس، ضعه في وضعية الأمان (الإفاقة) لتجنب الشفط.\n4. أبعده عن البرد ولفه ببطانية.\n5. انقله للمشفى دائماً حتى لو بدا معافى (لخطر الغرق الثانوي)." },
         { icon: "fa-temperature-high", title: "ضربة الشمس", steps: "1. انقل المصاب لمكان بارد وظليل فوراً.\n2. اخلع ملابسه الفضفاضة وغير الضرورية.\n3. برّد جسمه برشه ماء بارد، أو وضع كمادات ثلج على الإبطين والرقبة والفخذين.\n4. إذا كان واعياً، أعطه ماء بارد ليشربه رشفاً (لا يشرب دفعة واحدة).\n5. اطلب الإسعاف، ضربة الشمس حالة طارئة مميتة." },
@@ -1540,21 +1547,140 @@
 
     window.openMedicineFinder = () => { document.getElementById('modalContent').innerHTML = `<div class="p-6"><div class="flex justify-between items-center mb-6"><h3 class="font-bold text-lg" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-pills ml-2" style="color: var(--gold)"></i> ابحث عن دوائك</h3><button onclick="closeModal()" class="text-2xl hover:text-gray-400 leading-none">&times;</button></div><div class="mb-4 p-3 rounded-xl text-sm" style="background: var(--accent-light); color: var(--accent-dark)"><i class="fas fa-info-circle ml-1"></i> صور وصفة الطبيب، وسنتولى إرسالها للصيدليات. سيقوم أول صيدلية يتوفر فيها الدواء بالاتصال بك مباشرة!</div><form onsubmit="submitMedicineRequest(event)"><div class="mb-4"><label class="block text-sm font-semibold mb-2">اسم المريض (اختياري)</label><input type="text" id="medName" class="ctrl-input" placeholder="اكتب اسمك"></div><div class="mb-4"><label class="block text-sm font-semibold mb-2">رقم الهاتف للتواصل</label><input type="tel" id="medPhone" class="ctrl-input" placeholder="09XXXXXXXX" required></div><div class="mb-6"><label class="block text-sm font-semibold mb-2">صورة الوصفة الطبية</label><div class="file-input-wrapper"><label class="file-input-label" for="medImage"><i class="fas fa-camera text-2xl mb-2"></i><span>اضغط لاختيار صورة الوصفة</span><img id="imagePreview" class="preview-image hidden" src="" alt="معاينة"></label><input type="file" id="medImage" accept="image/*" required onchange="previewMedicineImage(event)"></div></div><button type="submit" id="medSubmitBtn" class="w-full py-3.5 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2" style="background: var(--accent)"><i class="fas fa-paper-plane"></i> إرسال للصيدليات</button></form></div>`; document.getElementById('modalOverlay').classList.add('active'); lockScroll(); }
     window.previewMedicineImage = (event) => { const file = event.target.files[0]; const reader = new FileReader(); reader.onload = (e) => { const img = document.getElementById('imagePreview'); img.src = e.target.result; img.classList.remove('hidden'); }; reader.readAsDataURL(file); }
-    window.submitMedicineRequest = async (e) => { e.preventDefault(); const name = document.getElementById('medName').value.trim() || 'مريض'; const phoneInput = document.getElementById('medPhone'); const phone = phoneInput.value.trim(); const fileInput = document.getElementById('medImage'); const file = fileInput.files[0]; if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('الرجاء إدخال رقم هاتف صحيح'); return; } phoneInput.classList.remove('input-invalid'); const submitBtn = document.getElementById('medSubmitBtn'); submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الصورة وإرسال الطلب...'; try { const formData = new FormData(); formData.append('image', file); const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData }); const imgbbData = await imgbbRes.json(); if (!imgbbData.success) throw new Error('Upload failed'); await addDoc(collection(db, 'medicine_requests'), { patientName: name, patientPhone: phone, imageUrl: imgbbData.data.url, status: 'active', createdAt: new Date().toISOString() }); document.getElementById('modalContent').innerHTML = `<div class="p-8 text-center"><div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: var(--accent-light)"><i class="fas fa-check text-4xl" style="color: var(--accent)"></i></div><h3 class="text-xl font-bold mb-2" style="font-family: 'Noto Kufi Arabic'">تم إرسال طلبك بنجاح!</h3><p class="text-sm mb-6" style="color: var(--muted)">تم إرسال صورتك إلى جميع الصيدليات المشتركة في الدليل. سيقوم أحد الصيادلة بالاتصال بك عبر الرقم الذي أدخلته بأسرع وقت ممكن إذا توفر الدواء.</p><button onclick="closeModal()" class="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90" style="background: var(--accent)">حسناً</button></div>`; } catch (err) { showToast('حدث خطأ أثناء رفع الصورة'); submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للصيدليات'; } }
+    window.submitMedicineRequest = async (e) => { 
+        e.preventDefault(); 
+        const name = document.getElementById('medName').value.trim() || 'مريض'; 
+        const phoneInput = document.getElementById('medPhone'); 
+        const phone = phoneInput.value.trim(); 
+        const fileInput = document.getElementById('medImage'); 
+        const file = fileInput.files[0]; 
+        if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('الرجاء إدخال رقم هاتف صحيح'); return; } 
+        phoneInput.classList.remove('input-invalid'); 
+        const submitBtn = document.getElementById('medSubmitBtn'); 
+        submitBtn.disabled = true; 
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الصورة وإرسال الطلب...'; 
+        try { 
+            const formData = new FormData(); 
+            formData.append('image', file); 
+            const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData }); 
+            const imgbbData = await imgbbRes.json(); 
+            if (!imgbbData.success) throw new Error('Upload failed'); 
+            const medRef = `MED-${Math.floor(Math.random() * 900) + 100}`; 
+            await addDoc(collection(db, 'medicine_requests'), { 
+                medRef: medRef, 
+                patientName: name, 
+                patientPhone: phone, 
+                imageUrl: imgbbData.data.url, 
+                status: 'searching', 
+                notes: '', 
+                createdAt: new Date().toISOString() 
+            }); 
+            document.getElementById('modalContent').innerHTML = `
+            <div class="p-8 text-center">
+                <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: var(--accent-light)"><i class="fas fa-check text-4xl" style="color: var(--accent)"></i></div>
+                <h3 class="text-xl font-bold mb-2" style="font-family: 'Noto Kufi Arabic'">تم إرسال طلبك بنجاح!</h3>
+                <p class="text-sm mb-2" style="color: var(--muted)">رقم طلبك الدوائي هو:</p>
+                <div class="text-2xl font-black text-yellow-600 mb-4">#${medRef}</div>
+                <p class="text-sm mb-6" style="color: var(--muted)">احفظ هذا الرقم للاستعلام عن حالة الدواء لاحقاً في خانة الاستعلام السريع أعلى الصفحة.</p>
+                <button onclick="closeModal()" class="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:opacity-90" style="background: var(--accent)">حسناً</button>
+            </div>`; 
+        } catch (err) { 
+            showToast('حدث خطأ أثناء رفع الصورة'); 
+            submitBtn.disabled = false; 
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للصيدليات'; 
+        } 
+    }
 
     window.openPharmacyLogin = () => { openCtrlPanel('لوحة الصيدليات', `<div class="max-w-sm mx-auto py-8"><div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-prescription-bottle-medical text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg">دخول الصيدليات</h3></div><form onsubmit="handlePharmacyLogin(event)" class="flex flex-col gap-4"><input type="text" id="pharmName" class="ctrl-input text-center" placeholder="اسم الصيدلية" required><input type="text" id="pharmPass" class="ctrl-input text-center font-mono" placeholder="كلمة المرور" required><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">دخول</button></form></div>`, '#0E7C5F'); }
     window.handlePharmacyLogin = (e) => { e.preventDefault(); const name = document.getElementById('pharmName').value.trim(); const pass = document.getElementById('pharmPass').value.trim().toUpperCase(); const pharmData = allData.find(d => d.name === name && d.type === 'pharmacy' && d.pharmacyPass === pass); if (pharmData) { renderPharmacyDashboard(pharmData); } else { showToast('بيانات الدخول غير صحيحة!'); } }
-    window.renderPharmacyDashboard = (pharm) => { openCtrlPanel(`لوحة تحكم: ${pharm.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center justify-between flex-col sm:flex-row gap-4" style="border-color: var(--border)"><div class="flex items-center gap-4"><img src="${pharm.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${pharm.name}</h3><p class="text-sm" style="color: var(--pharmacy)">صيدلية</p></div></div><button onclick="toggleNightShift('${pharm.id}', ${!pharm.night})" class="px-4 py-2 rounded-xl font-bold text-sm ${pharm.night ? 'bg-yellow-500 text-white' : 'bg-gray-200'}">${pharm.night ? 'إيقاف المناوبة' : 'تفعيل المناوبة'}</button></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm">طلبات الأدوية الواردة</h4><div id="requestsContainer" class="flex flex-col gap-3"><p class="text-center py-10" style="color: var(--muted)">جاري تحميل الطلبات...</p></div></div></div>`, '#0E7C5F'); const q = query(collection(db, 'medicine_requests'), where('status', '==', 'active')); if (unsubscribeMedRequests) { unsubscribeMedRequests(); unsubscribeMedRequests = null; } unsubscribeMedRequests = onSnapshot(q, (snapshot) => { const container = document.getElementById('requestsContainer'); if (!container) { if (unsubscribeMedRequests) { unsubscribeMedRequests(); unsubscribeMedRequests = null; } return; } if (snapshot.empty) { container.innerHTML = '<p class="text-center py-10" style="color: var(--muted)">لا توجد طلبات أدوية حالياً.</p>'; return; } let html = ''; snapshot.forEach(doc => { const req = doc.data(); const date = new Date(req.createdAt).toLocaleString('ar-EG', { date: 'short', time: 'short' }); const phone = req.patientPhone; const waNumber = `963${phone.substring(1)}`; html += `<div class="bg-white border rounded-xl p-4 flex flex-col gap-3" style="border-color: var(--border)"><div class="flex flex-col sm:flex-row gap-3 items-center"><img src="${req.imageUrl}" class="w-full sm:w-24 h-24 object-cover rounded-lg cursor-zoom-in" onclick="openLightbox('${req.imageUrl}')"><div class="flex-1 text-center sm:text-right"><h4 class="font-bold">${req.patientName}</h4><p class="text-xs" style="color: var(--muted)"><i class="fas fa-clock"></i> ${date}</p></div></div><div class="flex flex-col sm:flex-row gap-2 mt-2 border-t pt-3" style="border-color: var(--border)"><a href="https://wa.me/${waNumber}?text=${encodeURIComponent('مرحباً، الدواء متوفر لدينا')}" target="_blank" class="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-green-600"><i class="fab fa-whatsapp"></i> واتساب</a><a href="tel:${phone}" class="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-blue-600"><i class="fas fa-phone"></i> اتصال</a><button onclick="resolveRequest('${doc.id}')" class="flex-1 bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 hover:bg-gray-300"><i class="fas fa-check"></i> إنهاء</button></div></div>`; }); container.innerHTML = html; }); }
+    window.renderPharmacyDashboard = (pharm) => { 
+        openCtrlPanel(`لوحة تحكم: ${pharm.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center justify-between flex-col sm:flex-row gap-4" style="border-color: var(--border)"><div class="flex items-center gap-4"><img src="${pharm.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${pharm.name}</h3><p class="text-sm" style="color: var(--pharmacy)">صيدلية</p></div></div><button onclick="toggleNightShift('${pharm.id}', ${!pharm.night})" class="px-4 py-2 rounded-xl font-bold text-sm ${pharm.night ? 'bg-yellow-500 text-white' : 'bg-gray-200'}">${pharm.night ? 'إيقاف المناوبة' : 'تفعيل المناوبة'}</button></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm">طلبات الأدوية الواردة</h4><div id="requestsContainer" class="flex flex-col gap-3"><p class="text-center py-10" style="color: var(--muted)">جاري تحميل الطلبات...</p></div></div></div>`, '#0E7C5F'); 
+        
+        const q = query(collection(db, 'medicine_requests'), where('status', 'in', ['active', 'searching', 'available', 'unavailable'])); 
+        if (unsubscribeMedRequests) { unsubscribeMedRequests(); unsubscribeMedRequests = null; } 
+        unsubscribeMedRequests = onSnapshot(q, (snapshot) => { 
+            const container = document.getElementById('requestsContainer'); 
+            if (!container) { if (unsubscribeMedRequests) { unsubscribeMedRequests(); unsubscribeMedRequests = null; } return; } 
+            if (snapshot.empty) { container.innerHTML = '<p class="text-center py-10" style="color: var(--muted)">لا توجد طلبات أدوية حالياً.</p>'; return; } 
+            let html = ''; 
+            snapshot.forEach(doc => { 
+                const req = doc.data(); 
+                const date = new Date(req.createdAt).toLocaleString('ar-EG', { date: 'short', time: 'short' }); 
+                const phone = req.patientPhone; 
+                const waNumber = `963${phone.substring(1)}`;
+                let statusSelect = `
+                    <select id="medStatus_${doc.id}" onchange="updateMedStatus('${doc.id}', this.value)" class="ctrl-input text-sm py-1 mb-2">
+                        <option value="searching" ${req.status === 'searching' || req.status === 'active' ? 'selected' : ''}>🟡 قيد البحث والتأمين</option>
+                        <option value="available" ${req.status === 'available' ? 'selected' : ''}>🟢 تم التوفير - جاهز للاستلام</option>
+                        <option value="unavailable" ${req.status === 'unavailable' ? 'selected' : ''}>⚪ غير متوفر حالياً</option>
+                        <option value="resolved" ${req.status === 'resolved' ? 'selected' : ''}>إنهاء الطلب نهائياً</option>
+                    </select>`;
+                html += `<div class="bg-white border rounded-xl p-4 flex flex-col gap-3" style="border-color: var(--border)">
+                    <div class="flex flex-col sm:flex-row gap-3 items-center">
+                        <img src="${req.imageUrl}" class="w-full sm:w-24 h-24 object-cover rounded-lg cursor-zoom-in" onclick="openLightbox('${req.imageUrl}')">
+                        <div class="flex-1 text-center sm:text-right">
+                            <h4 class="font-bold">${req.patientName} <span class="text-xs text-yellow-600 font-mono">#${req.medRef || ''}</span></h4>
+                            <p class="text-xs" style="color: var(--muted)"><i class="fas fa-clock"></i> ${date}</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-2 border-t pt-3" style="border-color: var(--border)">
+                        <label class="text-xs font-bold text-gray-600">تحديث حالة الدواء:</label>
+                        ${statusSelect}
+                        <input type="text" id="medNotes_${doc.id}" placeholder="ملاحظة للمواطن (مثال: استلمه من صيدلية...)" value="${req.notes || ''}" onblur="updateMedNotes('${doc.id}', this.value)" class="ctrl-input text-sm py-1">
+                        <div class="flex gap-2 mt-2">
+                            <a href="https://wa.me/${waNumber}?text=${encodeURIComponent('مرحباً، بخصوص طلبك الدوائي #'+req.medRef)}" target="_blank" class="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-green-600"><i class="fab fa-whatsapp"></i> واتساب</a>
+                            <a href="tel:${phone}" class="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-blue-600"><i class="fas fa-phone"></i> اتصال</a>
+                        </div>
+                    </div>
+                </div>`; 
+            }); 
+            container.innerHTML = html; 
+        });
+    }
     window.toggleNightShift = async (id, currentStatus) => { try { await updateDoc(doc(db, 'listings', id), { night: currentStatus }); showToast(currentStatus ? 'تم تفعيل المناوبة!' : 'تم إيقاف المناوبة.'); } catch (e) { showToast('خطأ في التحديث'); } }
     window.resolveRequest = async (id) => { try { await updateDoc(doc(db, 'medicine_requests', id), { status: 'resolved' }); showToast('تم إنهاء الطلب.'); } catch (e) { showToast('خطأ في إنهاء الطلب'); } }
 
     window.openBookingModal = (id) => { closeModal(); const item = allData.find(d => d.id === id); if (!item) return; tempBooking = { itemId: id, itemName: item.name, itemPhone: (item.phone || '').replace(/[^0-9]/g, '') }; let daysHTML = ''; let validDaysCount = 0; for (let i = 1; i <= 14; i++) { const date = new Date(); date.setDate(date.getDate() + i); const dayName = date.toLocaleDateString('ar-EG', { weekday: 'long' }); if (item.workingDays && item.workingDays.includes(dayName) && validDaysCount < 5) { validDaysCount++; const dayShort = date.toLocaleDateString('ar-EG', { weekday: 'short' }); const dayNum = date.toLocaleDateString('ar-EG', { day: 'numeric' }); const iso = date.toISOString(); daysHTML += `<button onclick="selectDay('${iso}', this)" class="day-btn flex-shrink-0 w-16 h-20 rounded-xl flex flex-col items-center justify-center gap-1 bg-white"><span class="text-xs font-bold">${dayShort}</span><span class="text-2xl font-black">${dayNum}</span></button>`; } } if (validDaysCount === 0) { daysHTML = '<p class="text-sm text-center w-full" style="color: var(--muted)">لا توجد أيام متاحة للحجز.</p>'; } document.getElementById('modalContent').innerHTML = `<div class="p-6"><div class="flex justify-between items-center mb-6"><h3 class="font-bold text-lg"><i class="fas fa-calendar-plus ml-2" style="color: var(--accent)"></i> طلب موعد</h3><button onclick="closeModal()" class="text-2xl hover:text-gray-400 leading-none">&times;</button></div><div class="mb-4 p-3 rounded-xl flex items-center gap-3" style="background: var(--accent-light)"><i class="fas fa-hospital text-xl" style="color: var(--accent)"></i><div><div class="text-xs" style="color: var(--accent-dark)">سيتم طلب الموعد في:</div><div class="font-bold text-sm" style="color: var(--accent-dark)">${item.name}</div></div></div><div id="step1" class="booking-step active"><h4 class="text-sm font-bold mb-3">1. اختر اليوم المناسب:</h4><div class="flex gap-2 overflow-x-auto pb-2 mb-6">${daysHTML}</div><button onclick="goToStep(2)" id="step1Next" disabled class="w-full py-3 rounded-xl text-white font-bold text-sm transition-all opacity-50 cursor-not-allowed" style="background: var(--accent)">التالي</button></div><div id="step2" class="booking-step"><h4 class="text-sm font-bold mb-3">2. أدخل بياناتك:</h4><div class="flex flex-col gap-3 mb-6"><input type="text" id="patientName" class="ctrl-input" placeholder="الاسم الكامل" required><input type="tel" id="patientPhone" class="ctrl-input" placeholder="09XXXXXXXX" required><textarea id="patientNotes" class="ctrl-input" rows="2" placeholder="ملاحظات (اختياري)"></textarea></div><div class="flex gap-2"><button onclick="goToStep(1)" class="w-1/3 py-3 rounded-xl border font-bold text-sm" style="border-color: var(--border)"><i class="fas fa-arrow-right ml-2"></i> رجوع</button><button onclick="confirmBooking()" class="w-2/3 py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">تأكيد</button></div></div></div>`; document.getElementById('modalOverlay').classList.add('active'); lockScroll(); }
     window.selectDay = (iso, btn) => { tempBooking.day = new Date(iso); tempBooking.dayStr = tempBooking.day.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' }); document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('step1Next').disabled = false; document.getElementById('step1Next').classList.remove('opacity-50', 'cursor-not-allowed'); }
     window.goToStep = (step) => { document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active')); document.getElementById(`step${step}`).classList.add('active'); }
-    window.confirmBooking = async () => { const name = document.getElementById('patientName').value.trim(); const phoneInput = document.getElementById('patientPhone'); const phone = phoneInput.value.trim(); const notes = document.getElementById('patientNotes').value.trim(); if (!name || !phone) { showToast('الرجاء إدخال الاسم والهاتف'); return; } if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('رقم هاتف غير صحيح'); return; } phoneInput.classList.remove('input-invalid'); const ref = Math.floor(Math.random() * 9000) + 1000; tempBooking.ref = ref; tempBooking.name = name; tempBooking.phone = phone; tempBooking.notes = notes; tempBooking.status = 'pending'; tempBooking.time = "بانتظار التحديد"; tempBooking.createdAt = new Date().toISOString(); try { await addDoc(collection(db, 'bookings'), tempBooking); document.getElementById('step2').innerHTML = `<div class="text-center py-6 flex flex-col items-center"><div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: var(--accent-light)"><i class="fas fa-check text-3xl" style="color: var(--accent)"></i></div><h4 class="text-lg font-bold mb-2">تم إرسال طلبك!</h4><p class="text-sm mb-2" style="color: var(--muted)">رقم المرجع: <span class="font-bold text-yellow-600">${ref}</span></p><button onclick="closeModal()" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">تم</button></div>`; } catch (e) { showToast('خطأ في الحفظ'); } }
+    window.confirmBooking = async () => { 
+        const name = document.getElementById('patientName').value.trim(); 
+        const phoneInput = document.getElementById('patientPhone'); 
+        const phone = phoneInput.value.trim(); 
+        const notes = document.getElementById('patientNotes').value.trim(); 
+        if (!name || !phone) { showToast('الرجاء إدخال الاسم والهاتف'); return; } 
+        if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('رقم هاتف غير صحيح'); return; } 
+        phoneInput.classList.remove('input-invalid'); 
+        const ref = `R-${Math.floor(Math.random() * 900) + 100}`; 
+        tempBooking.ref = ref; 
+        tempBooking.name = name; 
+        tempBooking.phone = phone; 
+        tempBooking.notes = notes; 
+        tempBooking.status = 'pending'; 
+        tempBooking.time = "بانتظار التحديد"; 
+        tempBooking.chat = []; 
+        tempBooking.createdAt = new Date().toISOString(); 
+        try { 
+            const docRef = await addDoc(collection(db, 'bookings'), tempBooking); 
+            document.getElementById('step2').innerHTML = `
+            <div class="text-center py-6 flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background: var(--accent-light)"><i class="fas fa-check text-3xl" style="color: var(--accent)"></i></div>
+                <h4 class="text-lg font-bold mb-2">تم إرسال طلبك!</h4>
+                <p class="text-sm mb-2" style="color: var(--muted)">رقم المرجع: <span class="font-bold text-yellow-600">#${ref}</span></p>
+                <button onclick="closeModal(); openBookingFollowup('${docRef.id}')" class="w-full py-3 rounded-xl text-white font-bold text-sm mb-2" style="background: var(--accent)">متابعة الحجز والدردشة</button>
+                <button onclick="closeModal()" class="w-full py-2 rounded-xl border font-bold text-sm" style="border-color: var(--border)">إغلاق</button>
+            </div>`; 
+        } catch (e) { showToast('خطأ في الحفظ'); } 
+    }
 
     window.openCtrlPanel = (title, contentHtml, headerColor = '#073D2E') => { document.getElementById('ctrlTitle').textContent = title; document.getElementById('ctrlContent').innerHTML = contentHtml; document.getElementById('ctrlOverlay').classList.add('active'); document.querySelector('#ctrlOverlay .p-5').style.background = headerColor; lockScroll(); }
-    window.closeCtrlPanel = (event) => { if (event && event.target.id !== 'ctrlOverlay') return; document.getElementById('ctrlOverlay').classList.remove('active'); unlockScroll(); if (unsubscribeMedRequests) { unsubscribeMedRequests(); unsubscribeMedRequests = null; } }
+    window.closeCtrlPanel = (event) => { 
+        if (event && event.target.id !== 'ctrlOverlay') return; 
+        document.getElementById('ctrlOverlay').classList.remove('active'); 
+        unlockScroll(); 
+        if (unsubscribeMedRequests) { unsubscribeMedRequests(); unsubscribeMedRequests = null; } 
+        if (activeFollowupUnsub) { activeFollowupUnsub(); activeFollowupUnsub = null; } 
+    }
 
     window.openAdminLogin = () => { openCtrlPanel('لوحة الإدارة', `<div class="max-w-sm mx-auto py-8"><div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-user-shield text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg">دخول الإدارة</h3></div><form onsubmit="handleAdminLogin(event)" class="flex flex-col gap-4"><input type="password" id="adminPass" class="ctrl-input text-center" placeholder="كلمة المرور" required><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">دخول</button></form></div>`, '#073D2E'); }
     window.handleAdminLogin = (e) => { e.preventDefault(); if (document.getElementById('adminPass').value === ADMIN_PASSWORD) renderAdminDashboard(); else { showToast('كلمة المرور خاطئة!'); document.getElementById('adminPass').value = ''; } }
@@ -1615,7 +1741,46 @@
 
     window.openDoctorLogin = () => { openCtrlPanel('لوحة الطبيب', `<div class="max-w-sm mx-auto py-8"><div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: #DBEAFE"><i class="fas fa-user-md text-2xl" style="color: var(--doctor)"></i></div><h3 class="font-bold text-lg">دخول الطبيب</h3></div><form onsubmit="handleDoctorLogin(event)" class="flex flex-col gap-4"><input type="text" id="docName" class="ctrl-input text-center" placeholder="الاسم" required><input type="text" id="docPass" class="ctrl-input text-center font-mono" placeholder="كلمة المرور" required><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--doctor)">دخول</button></form></div>`, '#2563EB'); }
     window.handleDoctorLogin = (e) => { e.preventDefault(); const name = document.getElementById('docName').value.trim(); const pass = document.getElementById('docPass').value.trim().toUpperCase(); const docData = allData.find(d => d.name === name && d.bookingPass === pass); if (docData) { renderDoctorDashboard(docData); } else { showToast('بيانات غير صحيحة!'); } }
-    window.renderDoctorDashboard = (doc) => { const docBookings = bookings.filter(b => b.itemId === doc.id); const daysCheckboxes = daysOfWeek.map(day => `<label class="flex items-center gap-2"><input type="checkbox" name="docWorkingDays" value="${day}" class="day-checkbox" ${doc.workingDays?.includes(day) ? 'checked' : ''}><span class="text-sm">${day}</span></label>`).join(''); const bookingsListHtml = docBookings.length === 0 ? '<p class="text-sm text-center py-4" style="color: var(--muted)">لا توجد طلبات.</p>' : docBookings.map(b => { let statusBadge = ''; let actionButtons = ''; if (b.status === 'accepted') { statusBadge = `<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #D1FAE5; color: #065F46">مقبول - ${b.time}</span>`; actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'canceled')" class="text-xs text-white px-2 py-1 rounded bg-red-500">إلغاء</button><button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800">حذف</button>`; } else if (b.status === 'canceled') { statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #F3F4F6; color: #4B5563">ملغي</span>'; actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'pending')" class="text-xs text-white px-2 py-1 rounded bg-gray-500">استعادة</button><button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800">حذف</button>`; } else { statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>'; actionButtons = `<div class="flex flex-col gap-1 w-full"><input type="text" id="time_${b.id}" placeholder="حدد الموعد" class="ctrl-input text-sm py-1"><div class="flex gap-1"><button onclick="acceptBooking('${b.id}')" class="text-xs text-white px-2 py-1 rounded bg-green-600 flex-1">قبول</button><button onclick="updateBookingStatus('${b.id}', 'canceled')" class="text-xs text-white px-2 py-1 rounded bg-red-500">رفض</button></div></div>`; } return `<div class="flex flex-col p-3 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center justify-between mb-2"><div><span class="text-sm font-bold">${b.name}</span><br><span class="text-xs" style="color: var(--muted)">${b.dayStr}</span></div><div>${statusBadge}<span class="text-[10px] text-gray-400">مرجع: ${b.ref}</span></div></div><div class="flex items-center justify-between border-t pt-2" style="border-color: var(--border)"><a href="tel:${b.phone}" class="text-xs text-blue-600">${b.phone}</a><div class="flex gap-1">${actionButtons}</div></div></div>`; }).join('');
+    window.renderDoctorDashboard = (doc) => { 
+        const docBookings = bookings.filter(b => b.itemId === doc.id); 
+        const daysCheckboxes = daysOfWeek.map(day => `<label class="flex items-center gap-2"><input type="checkbox" name="docWorkingDays" value="${day}" class="day-checkbox" ${doc.workingDays?.includes(day) ? 'checked' : ''}><span class="text-sm">${day}</span></label>`).join(''); 
+        const bookingsListHtml = docBookings.length === 0 ? '<p class="text-sm text-center py-4" style="color: var(--muted)">لا توجد طلبات.</p>' : docBookings.map(b => { 
+            let statusBadge = ''; let actionButtons = ''; 
+            if (b.status === 'accepted') { 
+                statusBadge = `<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #D1FAE5; color: #065F46">مقبول - ${b.time}</span>`; 
+                actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'canceled')" class="text-xs text-white px-2 py-1 rounded bg-red-500">إلغاء</button><button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800">حذف</button>`; 
+            } else if (b.status === 'canceled') { 
+                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #F3F4F6; color: #4B5563">ملغي</span>'; 
+                actionButtons = `<button onclick="updateBookingStatus('${b.id}', 'pending')" class="text-xs text-white px-2 py-1 rounded bg-gray-500">استعادة</button><button onclick="updateBookingStatus('${b.id}', 'deleted')" class="text-xs text-white px-2 py-1 rounded bg-gray-800">حذف</button>`; 
+            } else { 
+                statusBadge = '<span class="text-xs px-2 py-1 rounded block mb-1" style="background: #FEF3C7; color: #92400E">طلب جديد</span>'; 
+                actionButtons = `<div class="flex flex-col gap-1 w-full"><input type="text" id="time_${b.id}" placeholder="حدد الموعد (مثال: 4:30 مساءً)" class="ctrl-input text-sm py-1"><div class="flex gap-1"><button onclick="acceptBooking('${b.id}')" class="text-xs text-white px-2 py-1 rounded bg-green-600 flex-1">قبول</button><button onclick="updateBookingStatus('${b.id}', 'canceled')" class="text-xs text-white px-2 py-1 rounded bg-red-500">رفض</button></div></div>`; 
+            }
+            
+            let chatHtml = '';
+            if (b.chat && b.chat.length > 0) {
+                chatHtml = b.chat.map(msg => `<div class="text-xs p-2 rounded-lg mb-1 ${msg.sender === 'doctor' ? 'bg-blue-100 text-left' : 'bg-gray-100 text-right'}">${msg.text}</div>`).join('');
+            }
+            
+            return `<div class="flex flex-col p-3 rounded-lg border mb-3" style="border-color: var(--border)">
+                <div class="flex items-center justify-between mb-2">
+                    <div><span class="text-sm font-bold">${b.name}</span><br><span class="text-xs" style="color: var(--muted)">${b.dayStr}</span></div>
+                    <div>${statusBadge}<span class="text-[10px] text-gray-400">مرجع: #${b.ref}</span></div>
+                </div>
+                <div class="flex items-center justify-between border-t pt-2 mb-2" style="border-color: var(--border)">
+                    <a href="tel:${b.phone}" class="text-xs text-blue-600">${b.phone}</a>
+                    <div class="flex gap-1">${actionButtons}</div>
+                </div>
+                <div class="border-t pt-2" style="border-color: var(--border)">
+                    <div class="text-xs font-bold text-gray-600 mb-1">المحادثة:</div>
+                    <div class="max-h-32 overflow-y-auto mb-2 bg-gray-50 p-2 rounded-lg">${chatHtml || '<span class="text-xs text-gray-400">لا توجد رسائل</span>'}</div>
+                    <div class="flex gap-1">
+                        <input type="text" id="docChat_${b.id}" placeholder="اكتب ردك للمريض..." class="ctrl-input text-sm py-1 flex-1">
+                        <button onclick="sendDocMessage('${b.id}')" class="text-xs text-white px-3 py-1 rounded bg-blue-500"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>`; 
+        }).join('');
         
         openCtrlPanel(`لوحة: ${doc.name}`, `<div class="flex flex-col gap-5">
             <div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)"><img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p></div></div>
@@ -1625,7 +1790,24 @@
         </div>`, '#2563EB'); 
     }
 
-    window.acceptBooking = async (bookingId) => { const timeInput = document.getElementById(`time_${bookingId}`); const time = timeInput.value.trim(); if (!time) { showToast('أدخل وقت الموعد'); return; } const booking = bookings.find(b => b.id === bookingId); if (!booking) return; try { await updateDoc(doc(db, 'bookings', bookingId), { status: 'accepted', time: time }); const phone = (booking.phone || '').replace(/[^0-9]/g, ''); const msg = `تأكيد موعد 🏥%0A${booking.name}،%0A${booking.itemName}%0Aالتاريخ: ${booking.dayStr}%0Aالموعد: ${time}%0Aالمرجع: ${booking.ref}`; window.open(`https://wa.me/${phone}?text=${msg}`, '_blank'); showToast('تم القبول وفتح واتساب'); } catch (e) { showToast('خطأ'); } }
+    window.acceptBooking = async (bookingId) => { 
+        const timeInput = document.getElementById(`time_${bookingId}`); 
+        const time = timeInput.value.trim(); 
+        if (!time) { showToast('أدخل وقت الموعد'); return; } 
+        const booking = bookings.find(b => b.id === bookingId); 
+        if (!booking) return; 
+        try { 
+            const docRef = doc(db, 'bookings', bookingId);
+            const currentChat = booking.chat || [];
+            currentChat.push({ sender: 'doctor', text: `تم تثبيت موعدك اليوم الساعة ${time}`, timestamp: new Date().toISOString() });
+            await updateDoc(docRef, { status: 'accepted', time: time, chat: currentChat }); 
+            
+            const phone = (booking.phone || '').replace(/[^0-9]/g, ''); 
+            const msg = `تأكيد موعد 🏥%0A${booking.name}،%0A${booking.itemName}%0Aالتاريخ: ${booking.dayStr}%0Aالموعد: ${time}%0Aالمرجع: #${booking.ref}`; 
+            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank'); 
+            showToast('تم القبول وفتح واتساب'); 
+        } catch (e) { showToast('خطأ'); } 
+    }
     window.updateBookingStatus = async (bookingId, newStatus) => { const booking = bookings.find(b => b.id === bookingId); if (!booking) return; try { if (newStatus === 'deleted') { await deleteDoc(doc(db, 'bookings', bookingId)); showToast('تم الحذف'); return; } await updateDoc(doc(db, 'bookings', bookingId), { status: newStatus }); showToast('تم التحديث'); } catch (e) { showToast('خطأ'); } }
     window.saveDoctorSettings = async (id) => { const workingDays = Array.from(document.querySelectorAll('input[name="docWorkingDays"]:checked')).map(cb => cb.value); try { await updateDoc(doc(db, 'listings', id), { workingDays }); showToast('تم الحفظ!'); } catch (e) { showToast('خطأ'); } }
 
@@ -1747,7 +1929,7 @@
                 </div>
 
                 <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
-                    <h4 class="font-bold mb-4 text-sm flex items-center gap-2"><i class="fas fa-list text-indigo-600"></i> تذكيراتي المحفوظة</h4>
+                    ><i class="fas fa-list text-indigo-600"></i> تذكيراتي المحفوظة</h4>
                     <div id="remindersList" class="flex flex-col gap-3">
                         <p class="text-center py-8 text-gray-400 text-sm">لا توجد تذكيرات بعد.</p>
                     </div>
@@ -1847,7 +2029,7 @@
         const diffTime = renewDate - today;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        let statusText = ""; let statusColor = "";
+        let statusText = "", statusColor = "";
         if (diffDays < 0) { statusText = "لقد نفد الدواء! يرجى تجديده فوراً."; statusColor = "#EF4444"; }
         else if (diffDays === 0) { statusText = "الدواء سينفد اليوم! جدده اليوم."; statusColor = "#F59E0B"; }
         else if (diffDays <= 3) { statusText = `متبقى ${diffDays} أيام فقط! استعد لتجديد الدواء.`; statusColor = "#F59E0B"; }
