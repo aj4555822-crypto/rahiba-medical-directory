@@ -22,6 +22,15 @@
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; -webkit-font-smoothing: antialiased; }
         h1, h2, h3, h4, h5 { font-family: 'Noto Kufi Arabic', sans-serif; }
         
+        /* Announcement Bar Styles */
+        .top-announcement { position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: 40px; display: none; align-items: center; justify-content: center; background: linear-gradient(90deg, #073D2E, #095E47, #0E7C5F); color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 0 40px; }
+        body.has-announcement .top-announcement { display: flex; }
+        body.has-announcement .navbar { top: 40px; }
+        body.has-announcement .sticky-filters { top: 104px; }
+        @media (min-width: 640px) { body.has-announcement .sticky-filters { top: 120px; } }
+        .close-ann-btn { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.7; }
+        .close-ann-btn:hover { opacity: 1; }
+
         .hero-bg { position: relative; overflow: hidden; background: linear-gradient(160deg, #0E7C5F 0%, #095E47 40%, #073D2E 100%); }
         .search-container { backdrop-filter: blur(10px); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s ease; }
         .search-container:focus-within { background: rgba(255,255,255,0.2); border-color: rgba(196,150,44,0.5); box-shadow: 0 0 40px rgba(196,150,44,0.15); }
@@ -165,6 +174,13 @@
 </head>
 <body>
 
+    <!-- Announcement Bar -->
+    <div id="topAnnouncement" class="top-announcement">
+        <i class="fas fa-bullhorn text-yellow-400 ml-2"></i>
+        <span id="announcementText" class="font-bold text-sm text-center">مرحباً بكم في دليل الرحيبة الطبي</span>
+        <i class="fas fa-times close-ann-btn" onclick="document.body.classList.remove('has-announcement')"></i>
+    </div>
+
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
@@ -234,7 +250,12 @@
                     </div>
 
                     <a href="#emergencies" class="text-red-300 hover:text-red-200 text-sm font-semibold transition-colors no-underline"><i class="fas fa-ambulance ml-1"></i> الطوارئ</a>
-                    <button onclick="openMedicineFinder()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"><i class="fas fa-pills ml-1"></i> ابحث عن دوائك</button>
+                    
+                    <div class="flex items-center gap-2">
+                        <button onclick="openHealthRecord()" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i class="fas fa-id-card"></i> ملفك الصحي</button>
+                        <button onclick="openMedicineFinder()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i class="fas fa-pills"></i> ابحث عن دوائك</button>
+                    </div>
+                    
                     <div class="flex items-center gap-2 border-r border-white/20 pr-4">
                         <button onclick="openDoctorLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-user-md" style="color:var(--gold)"></i> الطبيب</button>
                         <button onclick="openAdminLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-cogs text-gray-300"></i> الإدارة</button>
@@ -360,7 +381,7 @@
         </div>
     </section>
 
-    <section class="py-6 sticky top-16 sm:top-20 z-30" style="background: var(--bg); border-bottom: 1px solid var(--border)">
+    <section class="py-6 sticky top-16 sm:top-20 z-30 sticky-filters" style="background: var(--bg); border-bottom: 1px solid var(--border)">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between gap-3">
                 <div class="filters-scroll flex items-center gap-2 sm:gap-3 flex-1">
@@ -486,7 +507,7 @@
                 <div class="sm:col-span-2 lg:col-span-1"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><i class="fas fa-heartbeat" style="color: var(--gold)"></i></div><span class="text-white font-bold" style="font-family: 'Noto Kufi Arabic'">دليل الرحيبة</span></div><p class="text-white/50 text-sm leading-relaxed">دليلك الشامل للخدمات الطبية في مدينة الرحيبة. مشافي، عيادات، مراكز طبية، مخابر، أطباء وصيدليات في مكان واحد.</p></div>
                 <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">روابط سريعة</h4><div class="flex flex-col gap-2"><a href="#home" class="text-white/50 hover:text-white text-sm transition-colors">الرئيسية</a><a href="#hospitals" class="text-white/50 hover:text-white text-sm transition-colors">المشافي</a><a href="#clinics" class="text-white/50 hover:text-white text-sm transition-colors">العيادات</a><a href="#pharmacies" class="text-white/50 hover:text-white text-sm transition-colors">الصيدليات</a><a href="#disclaimer" class="text-white/50 hover:text-white text-sm transition-colors">إخلاء المسؤولية</a></div></div>
                 <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">معلومات المدينة</h4><div class="flex flex-col gap-2 text-white/50 text-sm"><div class="flex items-center gap-2"><i class="fas fa-map-marker-alt w-4" style="color: var(--gold)"></i> <span>ريف دمشق، سوريا</span></div><div class="flex items-center gap-2"><i class="fas fa-users w-4" style="color: var(--gold)"></i> <span>حوالي 70,000 نسمة</span></div><div class="flex items-center gap-2"><i class="fas fa-compass w-4" style="color: var(--gold)"></i> <span>شمال شرق دمشق</span></div></div></div>
-                <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">تواصل معنا</h4><div class="flex items-center gap-3 mt-4"><a href="https://chat.whatsapp.com/LqQzuVc6GlILFqQslzyJrD" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"><i class="fab fa-whatsapp text-sm"></i></a><a href="https://t.me/Raheba2026" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"><i class="fab fa-telegram-plane text-sm"></i></a><a href="https://www.facebook.com/share/1GLT1xyBPA/" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"><i class="fab fa-facebook-f text-sm"></i></a></div></div>
+                <div><h4 class="text-white font-bold mb-4 text-sm" style="font-family: 'Noto Kufi Arabic'">تواصل معنا</h4><div class="flex items-center gap-3 mt-4"><a href="https://chat.whatsapp.com/LqQzuVc6GlILFqQslzyJrD" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"><i class="fab fa-whatsapp text-sm"></i></a><a href="https://t.me/Raheba2026" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"><i class="fab fatelegram-plane text-sm"></i></a><a href="https://www.facebook.com/share/1GLT1xyBPA/" target="_blank" class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"><i class="fab fa-facebook-f text-sm"></i></a></div></div>
             </div>
             <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p class="text-white/40 text-xs">جميع الحقوق محفوظة 2026 - دليل الرحيبة الطبي</p>
@@ -586,6 +607,19 @@
     function generateUniqueId() { return Math.random().toString(36).substring(2, 8).toUpperCase(); }
     function lockScroll() { scrollLockCount++; document.body.style.overflow = 'hidden'; }
     function unlockScroll() { scrollLockCount = Math.max(0, scrollLockCount - 1); if (scrollLockCount === 0) { document.body.style.overflow = ''; } }
+
+    // === Announcement Bar Logic ===
+    function listenToAnnouncement() {
+        const annRef = doc(db, 'settings', 'announcement');
+        onSnapshot(annRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().active && docSnap.data().text) {
+                document.getElementById('announcementText').innerText = docSnap.data().text;
+                document.body.classList.add('has-announcement');
+            } else {
+                document.body.classList.remove('has-announcement');
+            }
+        });
+    }
 
     // === Tips Logic ===
     async function loadTips() {
@@ -1546,6 +1580,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         loadTips(); // Load dynamic tips from Firebase
+        listenToAnnouncement(); // Listen to announcement bar
         
         onSnapshot(collection(db, 'listings'), (snapshot) => { allData = []; snapshot.forEach(doc => { allData.push({ id: doc.id, ...doc.data() }); }); renderData(); updateStats(); const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || ''; if (ctrlTitle.includes('لوحة تحكم:')) { const docName = ctrlTitle.replace('لوحة تحكم: ', '').replace('Control Panel: ', '').trim(); const docData = allData.find(d => d.name === docName); if (docData && docData.type === 'doctor') renderDoctorDashboard(docData); } });
         onSnapshot(collection(db, 'bookings'), (snapshot) => { bookings = []; snapshot.forEach(doc => { bookings.push({ id: doc.id, ...doc.data() }); }); const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || ''; if (ctrlTitle.includes('لوحة تحكم:')) { const docName = ctrlTitle.replace('لوحة تحكم: ', '').replace('Control Panel: ', '').trim(); const docData = allData.find(d => d.name === docName); if (docData && docData.type === 'doctor') renderDoctorDashboard(docData); } });
@@ -1701,6 +1736,7 @@
 
     window.openAdminLogin = () => { openCtrlPanel('لوحة الإدارة', `<div class="max-w-sm mx-auto py-8"><div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-user-shield text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg">دخول الإدارة</h3></div><form onsubmit="handleAdminLogin(event)" class="flex flex-col gap-4"><input type="password" id="adminPass" class="ctrl-input text-center" placeholder="كلمة المرور" required><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">دخول</button></form></div>`, '#073D2E'); }
     window.handleAdminLogin = (e) => { e.preventDefault(); if (document.getElementById('adminPass').value === ADMIN_PASSWORD) renderAdminDashboard(); else { showToast('كلمة المرور خاطئة!'); document.getElementById('adminPass').value = ''; } }
+    
     window.renderAdminDashboard = () => { 
         let listHtml = allData.map(item => `<div class="flex items-center justify-between p-3 rounded-xl border bg-white" style="border-color: var(--border)"><div class="flex flex-col gap-1"><div class="flex items-center gap-3"><span class="badge badge-${item.type}">${item.type}</span><span class="font-semibold text-sm">${item.name}</span></div>${item.bookingPass ? `<span class="text-[11px] text-gray-500">رمز الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}${item.pharmacyPass ? `<span class="text-[11px] text-gray-500">رمز الصيدلية: <span class="font-mono font-bold text-green-600">${item.pharmacyPass}</span></span>` : ''}</div><div class="flex gap-1"><button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50"><i class="fas fa-edit"></i></button><button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button></div></div>`).join(''); 
         
@@ -1730,7 +1766,25 @@
             </div>
         `).join('');
 
+        // Fetch Announcement Data
+        getDoc(doc(db, 'settings', 'announcement')).then(d => {
+            if (d.exists()) {
+                document.getElementById('annText').value = d.data().text || '';
+                document.getElementById('annActive').checked = d.data().active || false;
+            }
+        }).catch(e => console.log("Announcement fetch error", e));
+
         openCtrlPanel('لوحة الإدارة', `<div class="flex flex-col gap-6">
+            <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                <h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-bullhorn text-yellow-600"></i> إدارة الشريط الإعلاني</h4>
+                <textarea id="annText" class="ctrl-input text-sm mb-3" rows="2" placeholder="نص الإعلان (يظهر أعلى الموقع)"></textarea>
+                <div class="flex items-center gap-2 mb-4">
+                    <input type="checkbox" id="annActive" class="w-5 h-5 accent-yellow-600">
+                    <span class="text-sm font-semibold">تفعيل عرض الإعلان</span>
+                </div>
+                <button onclick="saveAnnouncement()" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--gold);">حفظ الإعلان</button>
+            </div>
+
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
                 <h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-tint text-red-600"></i> إدارة استغاثات الدم (${bloodRequests.length})</h4>
                 <div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${bloodHtml}</div>
@@ -1743,9 +1797,41 @@
 
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-plus-circle ml-2" style="color: var(--accent)"></i> <span id="formTitle">إضافة منشأة</span></h4><form onsubmit="saveFacility(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3"><input type="hidden" id="edit_id"><select id="new_type" class="ctrl-input text-sm" required><option value="clinic">عيادة</option><option value="hospital">مشفى</option><option value="center">مركز</option><option value="lab">مخبر</option><option value="doctor">طبيب</option><option value="pharmacy">صيدلية</option></select><input type="text" id="new_name" class="ctrl-input text-sm" placeholder="الاسم" required><input type="text" id="new_specialty" class="ctrl-input text-sm" placeholder="التخصص" required><input type="text" id="new_address" class="ctrl-input text-sm" placeholder="العنوان" required><input type="text" id="new_phone" class="ctrl-input text-sm" placeholder="الهاتف" required><input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل" required><input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="تفاصيل إضافية"><input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي)"><input type="text" id="new_image_url" class="ctrl-input text-sm" placeholder="رابط الصورة (URL)"><textarea id="new_desc" class="ctrl-input text-sm col-span-2" placeholder="وصف" rows="2" required></textarea><button type="submit" class="col-span-1 sm:col-span-2 py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--accent)"><i class="fas fa-save ml-1"></i> حفظ</button></form></div>
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-list ml-2"></i> المنشآت (${allData.length})</h4><div class="flex flex-col gap-2 max-h-96 overflow-y-auto">${listHtml}</div></div>
-            <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية</button>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية</button>
+                <button onclick="seedMedicalTips()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--accent); color: var(--accent)"><i class="fas fa-lightbulb ml-2"></i> ترحيل النصائح الطبية</button>
+            </div>
         </div>`, '#073D2E'); 
     }
+
+    window.saveAnnouncement = async () => {
+        const text = document.getElementById('annText').value.trim();
+        const active = document.getElementById('annActive').checked;
+        try {
+            await setDoc(doc(db, 'settings', 'announcement'), { text, active });
+            showToast('تم حفظ الإعلان بنجاح');
+        } catch (e) {
+            showToast('حدث خطأ أثناء الحفظ');
+        }
+    };
+
+    window.seedMedicalTips = async () => {
+        try {
+            const tipsCol = collection(db, 'medical_tips');
+            const existing = await getDocs(tipsCol);
+            if (!existing.empty) {
+                if (!confirm("يوجد نصائح مسبقاً. هل تريد إضافة نسخة أخرى (تكرار)؟")) return;
+            }
+            for (const tip of seedTips) {
+                await addDoc(tipsCol, { text: tip });
+            }
+            showToast('تم ترحيل النصائح الطبية بنجاح!');
+        } catch (e) {
+            showToast('خطأ في ترحيل النصائح');
+        }
+    };
+
     window.seedDatabase = async () => { try { for (const item of seedData) { let dataToAdd = { ...item }; if (dataToAdd.type === 'doctor' || dataToAdd.type === 'clinic') { dataToAdd.bookingPass = generateUniqueId(); } if (dataToAdd.type === 'pharmacy') { dataToAdd.pharmacyPass = generateUniqueId(); } const docId = dataToAdd.name.replace(/\s/g, '_'); await setDoc(doc(db, 'listings', docId), dataToAdd, { merge: true }); } showToast('تم الترحيل!'); } catch (e) { showToast('خطأ في الترحيل'); } }
     window.editFacility = (id) => { const item = allData.find(d => d.id === id); if (!item) return; document.getElementById('edit_id').value = id; document.getElementById('new_type').value = item.type; document.getElementById('new_name').value = item.name; document.getElementById('new_specialty').value = item.specialty || ''; document.getElementById('new_address').value = item.address || item.clinic || ''; document.getElementById('new_phone').value = item.phone; document.getElementById('new_hours').value = item.hours; document.getElementById('new_desc').value = item.description; document.getElementById('new_extra').value = item.departments || item.services || item.tests || ''; document.getElementById('new_emergency').value = item.emergencyPhone || ''; document.getElementById('new_image_url').value = item.image || ''; document.getElementById('formTitle').textContent = `تعديل: ${item.name}`; window.scrollTo({ top: 0, behavior: 'smooth' }); }
     window.deleteFacility = async (id) => { if (!confirm("متأكد من الحذف؟")) return; try { await deleteDoc(doc(db, 'listings', id)); showToast('تم الحذف'); renderAdminDashboard(); } catch (e) { showToast('خطأ'); } }
