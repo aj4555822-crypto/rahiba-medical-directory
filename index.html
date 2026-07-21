@@ -79,8 +79,11 @@
         .back-to-top { position: fixed; bottom: 30px; left: 30px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(20px) scale(0.5); transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(14,124,95,0.4); z-index: 1000; border: none; }
         .back-to-top.visible { opacity: 1; transform: translateY(0) scale(1); }
         .back-to-top:hover { transform: translateY(-5px) scale(1.1); }
-        .mobile-menu { transform: translateX(100%); transition: transform 0.4s ease; }
+        
+        .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .mobile-menu.open { transform: translateX(0); }
+        .mobile-menu-link { transition: all 0.3s ease; border-right: 3px solid transparent; }
+        .mobile-menu-link:hover { border-right-color: var(--gold); background: rgba(255,255,255,0.05); padding-right: 1.5rem; }
         
         ::-webkit-scrollbar { width: 8px; } 
         ::-webkit-scrollbar-track { background: var(--bg); } 
@@ -169,8 +172,20 @@
         .med-donation-card:hover { border-color: #059669; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.08); }
 
         #dailyTipText { transition: opacity 0.3s ease; }
-        #topAnnouncementBar { box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         
+        /* Epic Announcement Bar */
+        #topAnnouncementBar {
+            background: linear-gradient(90deg, #b91c1c, #7f1d1d, #b91c1c);
+            color: white; padding: 10px 20px; font-weight: 700; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: fixed; top: 0; width: 100%; z-index: 60;
+            display: none; align-items: center; justify-content: center; gap: 15px; font-size: 0.95rem;
+            border-bottom: 2px solid #fbbf24;
+        }
+        #topAnnouncementBar .close-btn { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.8; }
+        #topAnnouncementBar .close-btn:hover { opacity: 1; }
+        #topAnnouncementBar i.icon { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
         .accordion-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
         .accordion-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; background: var(--bg); }
         .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
@@ -181,7 +196,11 @@
 </head>
 <body>
 
-    <div id="topAnnouncementBar" class="hidden bg-red-600 text-white text-center py-2 text-sm font-bold fixed top-0 w-full z-[60]"></div>
+    <div id="topAnnouncementBar">
+        <i class="fas fa-bullhorn icon"></i>
+        <span id="announcementText"></span>
+        <i class="fas fa-times close-btn" onclick="document.getElementById('topAnnouncementBar').style.display='none';"></i>
+    </div>
 
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar" style="transition: top 0.3s ease;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -296,40 +315,40 @@
                 <button onclick="toggleMobileMenu()" class="text-white/60 hover:text-white text-xl" aria-label="إغلاق"><i class="fas fa-times"></i></button>
             </div>
             <div class="flex flex-col gap-1">
-                <a href="#home" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
-                <a href="#hospitals" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
-                <a href="#clinics" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
-                <a href="#centers" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
-                <a href="#labs" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
-                <a href="#doctors" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
-                <a href="#pharmacies" onclick="toggleMobileMenu()" class="text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
+                <a href="#home" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-home w-5"></i> الرئيسية</a>
+                <a href="#hospitals" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-hospital-symbol w-5"></i> المشافي</a>
+                <a href="#clinics" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-hospital w-5"></i> العيادات</a>
+                <a href="#centers" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-clinic-medical w-5"></i> المراكز الطبية</a>
+                <a href="#labs" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-flask w-5"></i> المخابر</a>
+                <a href="#doctors" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-user-md w-5"></i> الأطباء</a>
+                <a href="#pharmacies" onclick="toggleMobileMenu()" class="mobile-menu-link text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-pills w-5"></i> الصيدليات</a>
                 
                 <div class="border-t border-white/10 my-3"></div>
                 
-                <div class="px-4 pt-2 text-yellow-400 text-xs font-bold">أدوات طبية تفاعلية</div>
+                <div class="px-4 pt-2 text-yellow-400 text-xs font-bold flex items-center gap-2"><i class="fas fa-toolbox"></i> أدوات طبية تفاعلية</div>
                 
-                <button onclick="toggleMobileMenu(); openChronicNutrition()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-bowl-food w-5" style="color:#16A34A"></i> التغذية لمرضى الأمراض المزمنة</button>
-                <button onclick="toggleMobileMenu(); openVisitGuidelines()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-clipboard-list w-5" style="color:#0EA5E9"></i> إرشادات قبل زيارة الطبيب/المخبر</button>
-                <button onclick="toggleMobileMenu(); openFoodInteractions()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-utensils w-5" style="color:#D97706"></i> تعارضات الدواء مع الطعام</button>
-                <button onclick="toggleMobileMenu(); openPatientReminder()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-bell w-5" style="color:#7C3AED"></i> دفتر المواعيد والتذكير الذاتي</button>
-                <button onclick="toggleMobileMenu(); openRenewalCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-calendar-day w-5" style="color:#0891B2"></i> حاسبة تجديد الدواء</button>
+                <button onclick="toggleMobileMenu(); openChronicNutrition()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-bowl-food w-5" style="color:#16A34A"></i> التغذية لمرضى الأمراض المزمنة</button>
+                <button onclick="toggleMobileMenu(); openVisitGuidelines()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-clipboard-list w-5" style="color:#0EA5E9"></i> إرشادات قبل زيارة الطبيب/المخبر</button>
+                <button onclick="toggleMobileMenu(); openFoodInteractions()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-utensils w-5" style="color:#D97706"></i> تعارضات الدواء مع الطعام</button>
+                <button onclick="toggleMobileMenu(); openPatientReminder()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-bell w-5" style="color:#7C3AED"></i> دفتر المواعيد والتذكير الذاتي</button>
+                <button onclick="toggleMobileMenu(); openRenewalCalc()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-calendar-day w-5" style="color:#0891B2"></i> حاسبة تجديد الدواء</button>
                 
-                <button onclick="toggleMobileMenu(); openMedicineDonation()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-hand-holding-medical w-5" style="color:#059669"></i> صندوق الأدوية الفائضة</button>
-                <button onclick="toggleMobileMenu(); openBloodBank()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-tint w-5" style="color:#DC2626"></i> بنك التبرع بالدم الرقمي</button>
-                <button onclick="toggleMobileMenu(); openBurnCalculator()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-fire-extinguisher w-5" style="color:#F97316"></i> مُسعف الحروق الذكي</button>
-                <button onclick="toggleMobileMenu(); openSeasonalDiseases()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-virus-covid w-5" style="color:#8B5CF6"></i> أمراض الرحيبة الموسمية</button>
-                <button onclick="toggleMobileMenu(); openPregnancyCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-baby w-5" style="color:#EC4899"></i> حاسبة الحمل والولادة</button>
-                <button onclick="toggleMobileMenu(); openDoseCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-syringe w-5" style="color:#2563EB"></i> حاسبة جرعات الأطفال</button>
-                <button onclick="toggleMobileMenu(); openHealthCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-weight-scale w-5" style="color:#4F46E5"></i> حاسبة الصحة (BMI والسعرات)</button>
-                <button onclick="toggleMobileMenu(); openWaterCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-glass-water w-5" style="color:#0891B2"></i> حاسبة الماء اليومية</button>
-                <button onclick="toggleMobileMenu(); openFirstAid()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-kit-medical w-5" style="color:#DC2626"></i> دليل الإسعافات الأولية</button>
-                <button onclick="toggleMobileMenu(); openMedSymbols()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-file-medical w-5" style="color:#0D9488"></i> رموز التحاليل والروشتات</button>
+                <button onclick="toggleMobileMenu(); openMedicineDonation()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-hand-holding-medical w-5" style="color:#059669"></i> صندوق الأدوية الفائضة</button>
+                <button onclick="toggleMobileMenu(); openBloodBank()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-tint w-5" style="color:#DC2626"></i> بنك التبرع بالدم الرقمي</button>
+                <button onclick="toggleMobileMenu(); openBurnCalculator()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-fire-extinguisher w-5" style="color:#F97316"></i> مُسعف الحروق الذكي</button>
+                <button onclick="toggleMobileMenu(); openSeasonalDiseases()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-virus-covid w-5" style="color:#8B5CF6"></i> أمراض الرحيبة الموسمية</button>
+                <button onclick="toggleMobileMenu(); openPregnancyCalc()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-baby w-5" style="color:#EC4899"></i> حاسبة الحمل والولادة</button>
+                <button onclick="toggleMobileMenu(); openDoseCalc()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-syringe w-5" style="color:#2563EB"></i> حاسبة جرعات الأطفال</button>
+                <button onclick="toggleMobileMenu(); openHealthCalc()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-weight-scale w-5" style="color:#4F46E5"></i> حاسبة الصحة (BMI والسعرات)</button>
+                <button onclick="toggleMobileMenu(); openWaterCalc()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-glass-water w-5" style="color:#0891B2"></i> حاسبة الماء اليومية</button>
+                <button onclick="toggleMobileMenu(); openFirstAid()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-kit-medical w-5" style="color:#DC2626"></i> دليل الإسعافات الأولية</button>
+                <button onclick="toggleMobileMenu(); openMedSymbols()" class="mobile-menu-link text-right text-white/70 hover:text-white rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-file-medical w-5" style="color:#0D9488"></i> رموز التحاليل والروشتات</button>
                 
                 <div class="border-t border-white/10 my-3"></div>
 
-                <button onclick="toggleMobileMenu(); openHealthFile()" class="text-right text-pink-300 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-id-card w-5"></i> ملفي الصحي الذكي</button>
-                <button onclick="toggleMobileMenu(); openMedicineFinder()" class="text-right text-yellow-300 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-pills w-5"></i> ابحث عن دوائك</button>
-                <a href="#emergencies" onclick="toggleMobileMenu()" class="text-red-300 hover:text-red-200 hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ</a>
+                <button onclick="toggleMobileMenu(); openHealthFile()" class="mobile-menu-link text-right text-pink-300 hover:bg-white/10 rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-id-card w-5"></i> ملفي الصحي الذكي</button>
+                <button onclick="toggleMobileMenu(); openMedicineFinder()" class="mobile-menu-link text-right text-yellow-300 hover:bg-white/10 rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-pills w-5"></i> ابحث عن دوائك</button>
+                <a href="#emergencies" onclick="toggleMobileMenu()" class="mobile-menu-link text-red-300 hover:text-red-200 rounded-xl px-4 py-3 text-sm flex items-center gap-3"><i class="fas fa-ambulance w-5"></i> الطوارئ</a>
                 
                 <div class="border-t border-white/10 my-4 pt-4 flex flex-col gap-2">
                     <button onclick="toggleMobileMenu(); openDoctorLogin()" class="w-full text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-user-md w-5" style="color:var(--gold)"></i> لوحة الطبيب</button>
@@ -692,8 +711,8 @@
     </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAHQhRHtRb-MN5HkEd_MwJqMIbDbfKwuX0",
@@ -728,18 +747,9 @@
     let tipInterval = null;
     let currentHealthFileId = localStorage.getItem('healthFileId') || null;
 
-    function generateUniqueId() { 
-        return Math.random().toString(36).substring(2, 8).toUpperCase(); 
-    }
-    
-    function lockScroll() { 
-        scrollLockCount++; document.body.style.overflow = 'hidden'; 
-    }
-    
-    function unlockScroll() { 
-        scrollLockCount = Math.max(0, scrollLockCount - 1); 
-        if (scrollLockCount === 0) { document.body.style.overflow = ''; } 
-    }
+    function generateUniqueId() { return Math.random().toString(36).substring(2, 8).toUpperCase(); }
+    function lockScroll() { scrollLockCount++; document.body.style.overflow = 'hidden'; }
+    function unlockScroll() { scrollLockCount = Math.max(0, scrollLockCount - 1); if (scrollLockCount === 0) { document.body.style.overflow = ''; } }
 
     const localFallbackTips = [
         "احرص على شرب 8 أكواب من الماء يومياً للحفاظ على ترطيب الجسم.",
@@ -755,13 +765,10 @@
         const tipsToUse = healthTips.length > 0 ? healthTips : localFallbackTips;
         const tip = tipsToUse[Math.floor(Math.random() * tipsToUse.length)];
         tipEl.style.opacity = '0';
-        setTimeout(() => {
-            tipEl.innerText = tip;
-            tipEl.style.opacity = '1';
-        }, 300);
+        setTimeout(() => { tipEl.innerText = tip; tipEl.style.opacity = '1'; }, 300);
     }
 
-    // === NEW MEDICAL TOOLS LOGIC ===
+    // === TOOL FUNCTIONS ===
     window.openChronicNutrition = () => {
         const diseases = [
             { name: "مرض السكري", color: "#2563EB", icon: "fa-droplet", tips: ["تناول 5 وجبات صغيرة موزعة على اليوم.", "قلل من السكريات السريعة والحلويات.", "اعتمد على الخبز الأسمر بدل الأبيض.", "زيد من تناول الألياف كالخضار والبقوليات."] },
@@ -945,6 +952,43 @@
         `;
     }
 
+    window.openMedicineDonation = () => {
+        openCtrlPanel('صندوق الأدوية الفائضة', `
+            <div class="flex flex-col gap-4">
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-green-800 text-sm flex items-center gap-3">
+                    <i class="fas fa-hand-holding-medical text-xl"></i>
+                    <span>تكافل طبي مجاني بين أهالي الرحيبة لمشاركة الأدوية الفائضة.</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                    <p class="text-sm text-gray-500">يمكنك هنا إضافة دواء فائض لديك لتتبرع به لمن يحتاجه.</p>
+                </div>
+            </div>
+        `, '#059669');
+    }
+
+    window.openBloodBank = () => {
+        openCtrlPanel('بنك التبرع بالدم الرقمي', `
+            <div class="flex flex-col gap-4">
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-800 text-sm flex items-center gap-3">
+                    <i class="fas fa-tint text-xl"></i>
+                    <span>نظام رقمي لربط المرضى المحتاجين للدم بالمتبرعين في الرحيبة.</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                    <p class="text-sm text-gray-500">قسم استغاثات الدم وتسجيل المتبرعين.</p>
+                </div>
+            </div>
+        `, '#DC2626');
+    }
+
+    window.openBurnCalculator = () => { showToast("جاري فتح حاسبة الحروق..."); openCtrlPanel('مُسعف الحروق الذكي', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">أداة إسعافية لتقييم الحروق المنزلية.</p></div>`, '#F97316'); };
+    window.openSeasonalDiseases = () => { showToast("جاري فتح دليل الأمراض الموسمية..."); openCtrlPanel('أمراض الرحيبة الموسمية', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">دليل توعوي بأبرز الأمراض المنتشرة موسمياً.</p></div>`, '#8B5CF6'); };
+    window.openPregnancyCalc = () => { showToast("جاري فتح حاسبة الحمل..."); openCtrlPanel('حاسبة الحمل والولادة', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">احسبي موعد الولادة وتتبعي تطور الجنين.</p></div>`, '#EC4899'); };
+    window.openDoseCalc = () => { showToast("جاري فتح حاسبة الجرعات..."); openCtrlPanel('حاسبة جرعات الأطفال', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">احسبي الجرعة الآمنة من خافضات الحرارة للأطفال.</p></div>`, '#2563EB'); };
+    window.openHealthCalc = () => { showToast("جاري فتح حاسبة الصحة..."); openCtrlPanel('حاسبة الصحة (BMI والسعرات)', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">احسب مؤشر كتلة جسمك واحتياجك من السعرات.</p></div>`, '#4F46E5'); };
+    window.openWaterCalc = () => { showToast("جاري فتح حاسبة الماء..."); openCtrlPanel('حاسبة الماء اليومية', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">احسب احتياجك اليومي من الماء.</p></div>`, '#0891B2'); };
+    window.openFirstAid = () => { showToast("جاري فتح دليل الإسعافات..."); openCtrlPanel('الإسعافات الأولية', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">دليل شامل للإسعافات الأولية في الحوادث المنزلية.</p></div>`, '#DC2626'); };
+    window.openMedSymbols = () => { showToast("جاري فتح دليل الرموز..."); openCtrlPanel('رموز التحاليل والروشتات', `<div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><p class="text-sm text-gray-500">دليل لفهم المصطلحات والرموز الطبية.</p></div>`, '#0D9488'); };
+
     // === Core App Functions ===
     window.openLightbox = (src) => { 
         const lightbox = document.getElementById('lightbox'); 
@@ -965,9 +1009,9 @@
         getDoc(doc(db, 'settings', 'announcement')).then(snap => {
             if (snap.exists() && snap.data().text) {
                 const bar = document.getElementById('topAnnouncementBar');
-                bar.innerText = snap.data().text;
-                bar.classList.remove('hidden');
-                document.getElementById('navbar').style.top = '36px';
+                document.getElementById('announcementText').innerText = snap.data().text;
+                bar.style.display = 'flex';
+                document.getElementById('navbar').style.top = '40px';
             }
         });
         
@@ -1010,9 +1054,6 @@
                     return `<div class="blood-alert-card"><div class="w-16 h-16 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0"><span class="text-2xl font-black text-red-600">${req.bloodType}</span></div><div class="flex-1 min-w-0"><div class="font-bold text-gray-800 text-sm truncate">${req.patientName}</div><div class="text-xs text-gray-500 mt-1 flex items-center gap-1"><i class="fas fa-hospital"></i> ${req.hospital}</div></div><div class="flex flex-col gap-2"><a href="tel:${req.phone}" class="w-9 h-9 rounded-lg bg-blue-500 text-white flex items-center justify-center hover:bg-blue-600 transition-colors"><i class="fas fa-phone-alt text-xs"></i></a><a href="https://wa.me/${waNum}?text=${encodeURIComponent('مرحباً، أنا متبرع بالدم وأرى استغاثتك في دليل الرحيبة الطبي')}" target="_blank" class="w-9 h-9 rounded-lg bg-green-500 text-white flex items-center justify-center hover:bg-green-600 transition-colors"><i class="fab fa-whatsapp text-sm"></i></a></div></div>`;
                 }).join('');
             }
-            const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
-            if (ctrlTitle === 'بنك التبرع بالدم الرقمي (الرحيبة)') renderBloodBankUI();
-            if (ctrlTitle === 'لوحة الإدارة') renderAdminDashboard();
         });
 
         onSnapshot(query(collection(db, 'medicine_donations'), where('status', '==', 'active')), (snapshot) => {
@@ -1039,9 +1080,6 @@
                     </div>
                 `).join('');
             }
-            const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
-            if (ctrlTitle === 'صندوق الأدوية الفائضة (تكافل طبي)') renderMedicineDonationsUI();
-            if (ctrlTitle === 'لوحة الإدارة') renderAdminDashboard();
         });
 
         document.getElementById('lightbox').addEventListener('click', () => { 
@@ -1345,7 +1383,7 @@
     }
     
     window.goToStep = (step) => { 
-        document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active')); 
+        document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'); 
         document.getElementById(`step${step}`).classList.add('active'); 
     }
     
@@ -1387,7 +1425,7 @@
         if (unsubscribeDocNotes) { unsubscribeDocNotes(); unsubscribeDocNotes = null; } 
     }
 
-    // === ADMIN DASHBOARD (RESTORED FULLY) ===
+    // === ADMIN DASHBOARD ===
     window.openAdminLogin = () => { 
         openCtrlPanel('لوحة الإدارة', `<div class="max-w-sm mx-auto py-8"><div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-user-shield text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg">دخول الإدارة</h3></div><form onsubmit="handleAdminLogin(event)" class="flex flex-col gap-4"><input type="password" id="adminPass" class="ctrl-input text-center" placeholder="كلمة المرور" required><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">دخول</button></form></div>`, '#073D2E'); 
     }
@@ -1398,6 +1436,25 @@
         else { showToast('كلمة المرور خاطئة!'); document.getElementById('adminPass').value = ''; } 
     }
     
+    window.seedDatabase = async () => {
+        const seedData = [
+            { type: "hospital", name: "مشفى الرحيبة الحكومي", specialty: "مشفى عام", address: "الطريق الدولي، الرحيبة", phone: "0115550099", hours: "24 ساعة", description: "مشفى حكومي يقدم خدمات طبية طارئة ومستعجلة لكافة مواطني المنطقة", rating: 4.2, image: "https://picsum.photos/seed/hosp1/400/250", departments: "طوارئ، جراحة عامة، باطنية، أطفال", emergencyPhone: "110" },
+            { type: "clinic", name: "عيادة الرحيبة الطبية الشاملة", specialty: "طب عام وباطنية", address: "الشارع الرئيسي، وسط المدينة", phone: "0115550001", hours: "8:00 ص - 10:00 م", description: "عيادة شاملة تقدم خدمات طب الأسرة والباطنية مع مخبر تحاليل حديث", rating: 4.5, image: "https://picsum.photos/seed/clinic1/400/250", workingDays: ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"] },
+            { type: "doctor", name: "د. أحمد الخطيب", specialty: "طب عام وباطنية", clinic: "عيادة الرحيبة الطبية", phone: "0991000010", hours: "8:00 ص - 2:00 م / 5:00 م - 10:00 م", experience: "15 سنة", description: "استشاري باطنية وطب أسرة، خريج جامعة دمشق", rating: 4.8, image: "https://picsum.photos/seed/doc1/400/250", workingDays: ["السبت","الاثنين","الأربعاء"] },
+            { type: "pharmacy", name: "صيدلية الرحيبة الرئيسية", address: "الساحة الرئيسية، وسط المدينة", phone: "0115550022", hours: "24 ساعة", description: "أكبر صيدلية في المدينة، توفر جميع الأدوية والمستلزمات الطبية", rating: 4.6, night: true, image: "https://picsum.photos/seed/pharm1/400/250" }
+        ];
+        try { 
+            for (const item of seedData) { 
+                let dataToAdd = { ...item }; 
+                if (dataToAdd.type === 'doctor' || dataToAdd.type === 'clinic') { dataToAdd.bookingPass = generateUniqueId(); } 
+                if (dataToAdd.type === 'pharmacy') { dataToAdd.pharmacyPass = generateUniqueId(); } 
+                const docId = dataToAdd.name.replace(/\s/g, '_'); 
+                await setDoc(doc(db, 'listings', docId), dataToAdd, { merge: true }); 
+            } 
+            showToast('تم ترحيل البيانات الافتراضية بنجاح!'); 
+        } catch (e) { showToast('خطأ في الترحيل'); }
+    }
+
     window.seedMedicalTips = async () => {
         const tips = [
             "احرص على شرب 8 أكواب من الماء يومياً للحفاظ على ترطيب الجسم ووظائف الكلى.",
@@ -1445,9 +1502,9 @@
                     ${item.bookingPass ? `<span class="text-[11px] text-gray-500">رمز الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}
                     ${item.pharmacyPass ? `<span class="text-[11px] text-gray-500">رمز الصيدلية: <span class="font-mono font-bold text-green-600">${item.pharmacyPass}</span></span>` : ''}
                 </div>
-                <div class="flex gap-1">
-                    <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button>
+                <div class="flex gap-2">
+                    <button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-colors"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-red-500 hover:bg-red-600 transition-colors"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         `).join(''); 
@@ -1520,7 +1577,10 @@
                     <div class="flex flex-col gap-2 max-h-96 overflow-y-auto">${listHtml}</div>
                 </div>
                 
-                <button onclick="seedMedicalTips()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: #EC4899; color: #EC4899"><i class="fas fa-lightbulb ml-2"></i> ترحيل 30 نصيحة طبية للفايربايس</button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية</button>
+                    <button onclick="seedMedicalTips()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: #EC4899; color: #EC4899"><i class="fas fa-lightbulb ml-2"></i> ترحيل 30 نصيحة طبية</button>
+                </div>
             </div>
         `, '#073D2E'); 
 
@@ -1539,11 +1599,11 @@
             showToast('تم نشر الإعلان بنجاح!');
             const bar = document.getElementById('topAnnouncementBar');
             if (text) {
-                bar.innerText = text;
-                bar.classList.remove('hidden');
-                document.getElementById('navbar').style.top = '36px';
+                document.getElementById('announcementText').innerText = text;
+                bar.style.display = 'flex';
+                document.getElementById('navbar').style.top = '40px';
             } else {
-                bar.classList.add('hidden');
+                bar.style.display = 'none';
                 document.getElementById('navbar').style.top = '0';
             }
         } catch (e) { showToast('خطأ في النشر'); }
