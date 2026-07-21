@@ -1110,7 +1110,7 @@
     function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 4000); }
     window.showToast = showToast;
     window.toggleMobileMenu = () => { const menu = document.getElementById('mobileMenu'); const overlay = document.getElementById('menuOverlay'); const icon = document.getElementById('menuIcon'); const isOpen = menu.classList.contains('open'); if (isOpen) { menu.classList.remove('open'); overlay.classList.add('hidden'); icon.className = 'fas fa-bars'; unlockScroll(); } else { menu.classList.add('open'); overlay.classList.remove('hidden'); icon.className = 'fas fa-times'; lockScroll(); } }
-    window.handleContactSubmit = (e) => { e.preventDefault(); const phoneInput = document.getElementById('contactPhone'); const phone = phoneInput.value.trim(); if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('رقم هاتف غير صحيح'); return; } phoneInput.classList.remove('input-invalid'); const name = document.getElementById('contactName').value; const type = document.getElementById('contactType').value; const message = document.getElementById     window.handleContactSubmit = (e) => { 
+        window.handleContactSubmit = (e) => { 
         e.preventDefault(); 
         const phoneInput = document.getElementById('contactPhone'); 
         const phone = phoneInput.value.trim(); 
