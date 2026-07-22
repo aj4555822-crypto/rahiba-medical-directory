@@ -1862,7 +1862,25 @@
     function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 4000); }
     window.showToast = showToast;
     window.toggleMobileMenu = () => { const menu = document.getElementById('mobileMenu'); const overlay = document.getElementById('menuOverlay'); const icon = document.getElementById('menuIcon'); const isOpen = menu.classList.contains('open'); if (isOpen) { menu.classList.remove('open'); overlay.classList.add('hidden'); icon.className = 'fas fa-bars'; unlockScroll(); } else { menu.classList.add('open'); overlay.classList.remove('hidden'); icon.className = 'fas fa-times'; lockScroll(); } }
-    window.handleContactSubmit = (e) => { e.preventDefault(); const phoneInput = document.getElementById('contactPhone'); const phone = phoneInput.value.trim(); if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('رقم هاتف غير صحيح'); return; } phoneInput.classList.remove('input-invalid'); const name = document.getElementById('contactName').value; const type = document.getElementById('contactType').value; const message = document.getElementById('contactMessage').value; const text = `*رسالة جديدة*\n*الاسم:* ${name}\n*الهاتف:* ${phone}\n*النوع:* ${type}\n*الرسالة:* ${message}`; navigator.clipboard.writeText(text).then(() => { showToast('تم نسخ بيانات الرسالة بنجاح! يمكنك لصقها وإرسالها عبر البريد أو أي تطقة مراسلة'); }); e.target.reset(); }
+    window.handleContactSubmit = (e) => { 
+    e.preventDefault(); 
+    const phoneInput = document.getElementById('contactPhone'); 
+    const phone = phoneInput.value.trim(); 
+    if (!/^09\d{8}$/.test(phone)) { phoneInput.classList.add('input-invalid'); showToast('رقم هاتف غير صحيح'); return; } 
+    phoneInput.classList.remove('input-invalid'); 
+    const name = document.getElementById('contactName').value; 
+    const type = document.getElementById('contactType').value; 
+    const message = document.getElementById('contactMessage').value; 
+    
+    const text = `*رسالة جديدة من دليل الرحيبة الطبي*%0A*الاسم:* ${name}%0A*الهاتف:* ${phone}%0A*النوع:* ${type}%0A*الرسالة:* ${message}`; 
+    
+    // ⚠️ ضع رقم واتساب الإدارة هنا (كود الدولة ثم الرقم بدون 0)
+    const adminWhatsAppNumber = "963944444444"; 
+    
+    window.open(`https://wa.me/${adminWhatsAppNumber}?text=${text}`, '_blank'); 
+    showToast('جاري تحويلك إلى واتساب لإرسال الرسالة...'); 
+    e.target.reset(); 
+}
     window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80); document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (document.getElementById('lightbox').classList.contains('active')) { document.getElementById('lightbox').classList.remove('active'); unlockScroll(); } if (document.getElementById('modalOverlay').classList.contains('active')) closeModal(); if (document.getElementById('ctrlOverlay').classList.contains('active')) closeCtrlPanel(); if (document.getElementById('mobileMenu').classList.contains('open')) toggleMobileMenu(); } });
     const allBtn = document.querySelector('[data-filter="all"]'); allBtn.style.background = 'var(--accent)'; allBtn.style.color = 'white'; allBtn.style.borderColor = 'var(--accent)';
