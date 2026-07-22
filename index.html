@@ -1836,7 +1836,7 @@
             showToast('تم قبول الموعد وإرسال رسالة للمريض في الشات'); 
         } catch (e) { showToast('خطأ'); } 
     }
-    'bookings', bookingId), { status: newStatus }); showToast('تم التحديث'); } catch (e) { showToast('خطأ'); } }
+        window.updateBookingStatus = async (bookingId, newStatus) => { const booking = bookings.find(b => b.id === bookingId); if (!booking) return; try { if (newStatus === 'deleted') { await deleteDoc(doc(db, 'bookings', bookingId)); showToast('تم الحذف'); return; } await updateDoc(doc(db, 'bookings', bookingId), { status: newStatus }); showToast('تم التحديث'); } catch (e) { showToast('خطأ'); } }
     window.saveDoctorSettings = async (id) => { const workingDays = Array.from(document.querySelectorAll('input[name="docWorkingDays"]:checked')).map(cb => cb.value); try { await updateDoc(doc(db, 'listings', id), { workingDays }); showToast('تم الحفظ!'); } catch (e) { showToast('خطأ'); } }
 
     function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 4000); }
