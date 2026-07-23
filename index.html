@@ -183,13 +183,28 @@
         #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
         #google_translate_element { display: none !important; }
         .accordion-body-inner { padding: 16px; font-size: 0.85rem; color: var(--fg-light); line-height: 1.6; }
+                /* === كود تحريك نص الإعلان === */
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        #announcementText {
+            white-space: nowrap;
+            display: inline-block;
+            animation: marquee 18s linear infinite; /* سرعة الحركة 18 ثانية */
+            padding-left: 100%;
+        }
+        /* إيقاف الحركة عند مرور الماوس لتسهيل القراءة */
+        #announcementText:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body>
         <!-- شريط الإعلانات العلوي -->
         <div id="topAnnouncementBar" class="hidden fixed top-0 right-0 left-0 z-[60] bg-gradient-to-l from-[#052E22] via-[#0E7C5F] to-[#052E22] text-white text-center py-2 px-12 text-xs sm:text-sm font-semibold shadow-md flex items-center justify-center gap-3 border-b border-[var(--gold)]/40">
             <i class="fas fa-bullhorn text-[var(--gold)] animate-pulse"></i>
-            <span id="announcementText" class="truncate flex-1"></span>
+            <span id="announcementText" class="flex-1"></span>
             <a id="announcementLink" href="#" target="_blank" class="text-[var(--gold)] hover:underline text-xs whitespace-nowrap hidden sm:inline">اضغط هنا</a>
         </div>
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
@@ -1471,8 +1486,9 @@ let currentFollowupBookingId = null;
             
             document.getElementById('announcementText').innerText = ann.text;
             const linkEl = document.getElementById('announcementLink');
-            if (ann.link) {
+                        if (ann.link) {
                 linkEl.href = ann.link;
+                linkEl.innerText = ann.linkText || 'اضغط هنا';
                 linkEl.classList.remove('hidden');
             } else {
                 linkEl.classList.add('hidden');
@@ -1810,7 +1826,17 @@ let currentFollowupBookingId = null;
         } catch (e) { showToast('خطأ في الحفظ'); } 
     }
 
-    window.openCtrlPanel = (title, contentHtml, headerColor = '#073D2E') => { document.getElementById('ctrlTitle').textContent = title; document.getElementById('ctrlContent').innerHTML = contentHtml; document.getElementById('ctrlOverlay').classList.add('active'); document.querySelector('#ctrlOverlay .p-5').style.background = headerColor; lockScroll(); }
+        window.openCtrlPanel = (title, contentHtml, headerColor = '#073D2E') => { 
+        document.getElementById('ctrlTitle').textContent = title; 
+        document.getElementById('ctrlContent').innerHTML = contentHtml; 
+        const overlay = document.getElementById('ctrlOverlay');
+        // التحقق إذا كانت اللوحة مفتوحة مسبقاً لمنع تكرار قفل التمرير
+        if (!overlay.classList.contains('active')) {
+            overlay.classList.add('active'); 
+            document.querySelector('#ctrlOverlay .p-5').style.background = headerColor; 
+            lockScroll(); 
+        }
+    
     window.closeCtrlPanel = (event) => { 
         if (event && event.target.id !== 'ctrlOverlay') return; 
         document.getElementById('ctrlOverlay').classList.remove('active'); 
@@ -1859,12 +1885,13 @@ let currentFollowupBookingId = null;
     }
     
     window.renderAdminDashboard = () => { 
-                const announcementsHtml = `
+                        const announcementsHtml = `
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
                 <h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-bullhorn text-blue-600"></i> إدارة الشريط الإعلاني العلوي</h4>
                 <form onsubmit="saveAnnouncement(event)" class="grid grid-cols-1 gap-3 mb-4">
                     <textarea id="annText" class="ctrl-input text-sm" rows="2" placeholder="نص الإعلان (مثال: افتتاحية قسم الطوارئ الجديد...)" required></textarea>
-                    <input type="text" id="annLink" class="ctrl-input text-sm" placeholder="رابط التفاصيل (اختياري - يبدأ بـ https://)">
+                    <input type="text" id="annLink" class="ctrl-input text-sm" placeholder="رابط التفاصيل (اتركه فارغاً لإخفاء الزر تماماً)">
+                    <input type="text" id="annLinkText" class="ctrl-input text-sm" placeholder="نص الزر (اختياري - افتراضي: اضغط هنا)">
                     <button type="submit" class="py-2.5 rounded-xl text-white font-semibold text-sm" style="background: #2563EB"><i class="fas fa-paper-plane ml-1"></i> نشر الإعلان</button>
                 </form>
                 <div id="adminAnnouncementList" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1"></div>
@@ -2409,13 +2436,14 @@ let currentFollowupBookingId = null;
         }).join('');
     });
 
-    window.saveAnnouncement = async (e) => {
+        window.saveAnnouncement = async (e) => {
         e.preventDefault();
         const text = document.getElementById('annText').value.trim();
         const link = document.getElementById('annLink').value.trim();
+        const linkText = document.getElementById('annLinkText').value.trim() || 'اضغط هنا';
         if (!text) return;
         try {
-            await addDoc(collection(db, 'announcements'), { text, link, isActive: true, createdAt: new Date().toISOString() });
+            await addDoc(collection(db, 'announcements'), { text, link, linkText, isActive: true, createdAt: new Date().toISOString() });
             showToast('تم نشر الإعلان بنجاح!');
             e.target.reset();
         } catch (err) { showToast('خطأ في النشر'); }
