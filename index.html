@@ -174,7 +174,12 @@
     </style>
 </head>
 <body>
-
+        <!-- شريط الإعلانات العلوي -->
+        <div id="topAnnouncementBar" class="hidden fixed top-0 right-0 left-0 z-[60] bg-gradient-to-l from-[#052E22] via-[#0E7C5F] to-[#052E22] text-white text-center py-2 px-12 text-xs sm:text-sm font-semibold shadow-md flex items-center justify-center gap-3 border-b border-[var(--gold)]/40">
+            <i class="fas fa-bullhorn text-[var(--gold)] animate-pulse"></i>
+            <span id="announcementText" class="truncate flex-1"></span>
+            <a id="announcementLink" href="#" target="_blank" class="text-[var(--gold)] hover:underline text-xs whitespace-nowrap hidden sm:inline">اضغط هنا</a>
+        </div>
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
@@ -1432,7 +1437,36 @@ let currentFollowupBookingId = null;
 
     // === Core App Functions ===
     window.openLightbox = (src) => { const lightbox = document.getElementById('lightbox'); lightbox.querySelector('img').src = src.includes('picsum.photos') ? src.replace('/400/250', '/1200/800') : src; lightbox.classList.add('active'); lockScroll(); }
-
+    let currentAnnouncement = null;
+    // استماع للإعلانات
+    onSnapshot(query(collection(db, 'announcements'), where('isActive', '==', true)), (snapshot) => {
+        const navbar = document.getElementById('navbar');
+        const annBar = document.getElementById('topAnnouncementBar');
+        const homeSection = document.getElementById('home');
+        if (!annBar || !navbar || !homeSection) return;
+        
+        if (!snapshot.empty) {
+            const ann = snapshot.docs[0].data();
+            currentAnnouncement = { id: snapshot.docs[0].id, ...ann };
+            
+            document.getElementById('announcementText').innerText = ann.text;
+            const linkEl = document.getElementById('announcementLink');
+            if (ann.link) {
+                linkEl.href = ann.link;
+                linkEl.classList.remove('hidden');
+            } else {
+                linkEl.classList.add('hidden');
+            }
+            annBar.classList.remove('hidden');
+            navbar.style.top = '36px'; // دفع الناف بار للأسفل
+            homeSection.style.paddingTop = '11rem'; // دفع محتوى الصفحة للأسفل
+        } else {
+            currentAnnouncement = null;
+            annBar.classList.add('hidden');
+            navbar.style.top = '0px';
+            homeSection.style.paddingTop = '6rem';
+        }
+    });
     window.addEventListener('DOMContentLoaded', () => {
         // Tips Listener
         onSnapshot(collection(db, 'medical_tips'), (snapshot) => {
@@ -1775,10 +1809,21 @@ let currentFollowupBookingId = null;
     }
     
     window.renderAdminDashboard = () => { 
+                const announcementsHtml = `
+            <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                <h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-bullhorn text-blue-600"></i> إدارة الشريط الإعلاني العلوي</h4>
+                <form onsubmit="saveAnnouncement(event)" class="grid grid-cols-1 gap-3 mb-4">
+                    <textarea id="annText" class="ctrl-input text-sm" rows="2" placeholder="نص الإعلان (مثال: افتتاحية قسم الطوارئ الجديد...)" required></textarea>
+                    <input type="text" id="annLink" class="ctrl-input text-sm" placeholder="رابط التفاصيل (اختياري - يبدأ بـ https://)">
+                    <button type="submit" class="py-2.5 rounded-xl text-white font-semibold text-sm" style="background: #2563EB"><i class="fas fa-paper-plane ml-1"></i> نشر الإعلان</button>
+                </form>
+                <div id="adminAnnouncementList" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1"></div>
+            </div>
+        `;
         let listHtml = allData.map(item => `<div class="flex items-center justify-between p-3 rounded-xl border bg-white" style="border-color: var(--border)"><div class="flex flex-col gap-1"><div class="flex items-center gap-3"><span class="badge badge-${item.type}">${item.type}</span><span class="font-semibold text-sm">${item.name}</span></div>${item.bookingPass ? `<span class="text-[11px] text-gray-500">رمز الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}${item.pharmacyPass ? `<span class="text-[11px] text-gray-500">رمز الصيدلية: <span class="font-mono font-bold text-green-600">${item.pharmacyPass}</span></span>` : ''}</div><div class="flex gap-1"><button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50"><i class="fas fa-edit"></i></button><button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button></div></div>`).join(''); 
         let bloodHtml = bloodRequests.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد استغاثات حالياً.</p>' : bloodRequests.map(b => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><span class="blood-type-badge text-sm py-1 px-3">${b.bloodType}</span><div><div class="text-sm font-semibold">${b.patientName}</div><div class="text-xs text-gray-500">${b.hospital}</div></div></div><button onclick="resolveBloodRequest('${b.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">إنهاء الطلب</button></div>`).join('');
         let medDonHtml = medicineDonations.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد أدوية مُتبرع بها حالياً.</p>' : medicineDonations.map(m => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><i class="fas fa-pills text-green-600"></i><div><div class="text-sm font-semibold">${m.medicineName} (${m.quantity})</div><div class="text-xs text-gray-500">ينتهي: ${m.expiryDate} | المتبرع: ${m.donorName}</div></div></div><button onclick="resolveMedicineDonation('${m.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">حذف/إنهاء</button></div>`).join('');
-        openCtrlPanel('لوحة الإدارة', `<div class="flex flex-col gap-6">
+        openCtrlPanel('لوحة الإدارة', `<div class="flex flex-col gap-6">            ${announcementsHtml}
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-tint text-red-600"></i> إدارة استغاثات الدم (${bloodRequests.length})</h4><div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${bloodHtml}</div></div>
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-hand-holding-medical text-green-600"></i> إدارة الأدوية الفائضة (${medicineDonations.length})</h4><div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${medDonHtml}</div></div>
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-plus-circle ml-2" style="color: var(--accent)"></i> <span id="formTitle">إضافة منشأة</span></h4><form onsubmit="saveFacility(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3"><input type="hidden" id="edit_id"><select id="new_type" class="ctrl-input text-sm" required><option value="clinic">عيادة</option><option value="hospital">مشفى</option><option value="center">مركز</option><option value="lab">مخبر</option><option value="doctor">طبيب</option><option value="pharmacy">صيدلية</option></select><input type="text" id="new_name" class="ctrl-input text-sm" placeholder="الاسم" required><input type="text" id="new_specialty" class="ctrl-input text-sm" placeholder="التخصص" required><input type="text" id="new_address" class="ctrl-input text-sm" placeholder="العنوان" required><input type="text" id="new_phone" class="ctrl-input text-sm" placeholder="الهاتف" required><input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل" required><input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="تفاصيل إضافية"><input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي)"><input type="text" id="new_image_url" class="ctrl-input text-sm" placeholder="رابط الصورة (URL)"><textarea id="new_desc" class="ctrl-input text-sm col-span-2" placeholder="وصف" rows="2" required></textarea><button type="submit" class="col-span-1 sm:col-span-2 py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--accent)"><i class="fas fa-save ml-1"></i> حفظ</button></form></div>
@@ -2190,7 +2235,7 @@ let currentFollowupBookingId = null;
         }
     }
 
-            window.openBookingFollowup = (bookingId) => {
+                window.openBookingFollowup = (bookingId) => {
         currentFollowupBookingId = bookingId;
         openCtrlPanel('متابعة الحجز والدردشة', `
             <div id="followupContent" class="flex flex-col gap-4">
@@ -2261,6 +2306,38 @@ let currentFollowupBookingId = null;
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+        // تحديث الرسائل فقط بدون مسح حقل الكتابة لمنع تعليق الصفحة
+        if (!document.getElementById('chatBox')) {
+            contentEl.innerHTML = `
+                <div class="bg-white p-4 rounded-xl border" style="border-color: var(--border)">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <div class="font-bold text-sm">${b.itemName}</div>
+                            <div class="text-xs text-gray-500">${b.dayStr}</div>
+                        </div>
+                        <div id="statusBadgeContainer">${statusBadge}</div>
+                    </div>
+                    <div class="text-xs text-yellow-600 font-bold mt-2">رقم المرجع: #${b.ref}</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border flex flex-col h-96" style="border-color: var(--border)">
+                    <div class="flex-1 overflow-y-auto flex flex-col gap-2 mb-3 pr-1" id="chatBox">
+                        ${chatHtml}
+                    </div>
+                    <div class="flex gap-2 border-t pt-3" style="border-color: var(--border)">
+                        <input type="text" id="chatInput" class="ctrl-input text-sm" placeholder="اكتب رسالتك للطبيب..." onkeydown="if(event.key==='Enter') sendChatMessage('${bookingId}')">
+                        <button onclick="sendChatMessage('${bookingId}')" class="px-4 rounded-xl text-white" style="background: var(--accent)"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            `;
+        } else {
+            document.getElementById('chatBox').innerHTML = chatHtml;
+            document.getElementById('statusBadgeContainer').innerHTML = statusBadge;
+        }
+
+        const chatBox = document.getElementById('chatBox');
+        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
     window.sendChatMessage = async (bookingId) => {
         const input = document.getElementById('chatInput');
         const text = input.value.trim();
@@ -2293,6 +2370,47 @@ let currentFollowupBookingId = null;
     window.updateMedNotes = async (id, notes) => {
         try { await updateDoc(doc(db, 'medicine_requests', id), { notes: notes }); showToast('تم حفظ الملاحظة'); } catch (e) { showToast('خطأ في الحفظ'); }
     }
+        // === دوال الإعلانات ===
+    onSnapshot(collection(db, 'announcements'), (snapshot) => {
+        const list = document.getElementById('adminAnnouncementList');
+        if (!list) return; // يعمل فقط داخل لوحة الإدارة
+        if (snapshot.empty) {
+            list.innerHTML = '<p class="text-center text-gray-400 text-sm py-2">لا توجد إعلانات حالياً.</p>';
+            return;
+        }
+        list.innerHTML = snapshot.docs.map(doc => {
+            const ann = doc.data();
+            return `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)">
+                <div class="text-xs truncate flex-1">${ann.text}</div>
+                <div class="flex gap-1 mr-2">
+                    <button onclick="toggleAnnouncement('${doc.id}', ${!ann.isActive})" class="px-2 py-1 rounded text-xs ${ann.isActive ? 'bg-green-500 text-white' : 'bg-gray-200'}">${ann.isActive ? 'مفعّل' : 'معطّل'}</button>
+                    <button onclick="deleteAnnouncement('${doc.id}')" class="px-2 py-1 rounded text-xs bg-red-500 text-white"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+    });
+
+    window.saveAnnouncement = async (e) => {
+        e.preventDefault();
+        const text = document.getElementById('annText').value.trim();
+        const link = document.getElementById('annLink').value.trim();
+        if (!text) return;
+        try {
+            await addDoc(collection(db, 'announcements'), { text, link, isActive: true, createdAt: new Date().toISOString() });
+            showToast('تم نشر الإعلان بنجاح!');
+            e.target.reset();
+        } catch (err) { showToast('خطأ في النشر'); }
+    };
+
+    window.toggleAnnouncement = async (id, status) => {
+        try { await updateDoc(doc(db, 'announcements', id), { isActive: status }); showToast('تم تحديث حالة الإعلان'); } 
+        catch (err) { showToast('خطأ'); }
+    };
+
+    window.deleteAnnouncement = async (id) => {
+        try { await deleteDoc(doc(db, 'announcements', id)); showToast('تم حذف الإعلان'); } 
+        catch (err) { showToast('خطأ'); }
+    };
 </script>
 </body>
 </html>
