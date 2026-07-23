@@ -260,6 +260,10 @@
                                 <i style="background: #0891B2;"><i class="fas fa-glass-water"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">حاسبة الماء اليومية</div><div class="text-xs text-gray-500">حسب الوزن والطقس</div></div>
                             </div>
+                            <div onclick="openMedRenewalCalc()" class="tools-dropdown-item">
+                                <i style="background: #06B6D4;"><i class="fas fa-calendar-check"></i></i>
+                                <div><div class="text-sm font-bold text-gray-800">حاسبة تجديد الدواء</div><div class="text-xs text-gray-500">أسبوعي/شهري</div></div>
+                                  </div>
                             <div onclick="openFirstAid()" class="tools-dropdown-item">
                                 <i style="background: #DC2626;"><i class="fas fa-kit-medical"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">الإسعافات الأولية</div><div class="text-xs text-gray-500">دليل شامل للطوارئ</div></div>
@@ -277,6 +281,15 @@
                                 <i style="background: #3B82F6;"><i class="fas fa-clipboard-list"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">إرشادات قبل الزيارة</div><div class="text-xs text-gray-500">دليل الطبيب والمخبر</div></div>
                             </div>
+                            <!-- New Tools Added Here -->
+<div onclick="openPreTestGuide()" class="tools-dropdown-item">
+    <i style="background: #0EA5E9;"><i class="fas fa-vial"></i></i>
+    <div><div class="text-sm font-bold text-gray-800">تعليمات قبل التحاليل</div><div class="text-xs text-gray-500">دليل الفحوصات والأشعة</div></div>
+</div>
+<div onclick="openEventsFirstAid()" class="tools-dropdown-item">
+    <i style="background: #B91C1C;"><i class="fas fa-people-group"></i></i>
+    <div><div class="text-sm font-bold text-gray-800">إسعافات المناسبات</div><div class="text-xs text-gray-500">التعامل مع حوادث التجمعات</div></div>
+</div>
                             <div onclick="openFoodInteractions()" class="tools-dropdown-item">
                                 <i style="background: #D97706;"><i class="fas fa-utensils"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">تعارضات الأدوية والطعام</div><div class="text-xs text-gray-500">جدول الصيدلية</div></div>
@@ -284,10 +297,6 @@
                             <div onclick="openPatientReminder()" class="tools-dropdown-item">
                                 <i style="background: #6366F1;"><i class="fas fa-bell"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">دفتر التذكير الذاتي</div><div class="text-xs text-gray-500">مواعيد الأدوية والزيارات</div></div>
-                            </div>
-                            <div onclick="openMedRenewalCalc()" class="tools-dropdown-item">
-                                <i style="background: #06B6D4;"><i class="fas fa-calendar-check"></i></i>
-                                <div><div class="text-sm font-bold text-gray-800">حاسبة تجديد الدواء</div><div class="text-xs text-gray-500">أسبوعي/شهري</div></div>
                             </div>
                         </div>
                     </div>
@@ -338,7 +347,8 @@
                 <button onclick="toggleMobileMenu(); openWaterCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-glass-water w-5" style="color:#0891B2"></i> حاسبة الماء اليومية</button>
                 <button onclick="toggleMobileMenu(); openFirstAid()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-kit-medical w-5" style="color:#DC2626"></i> دليل الإسعافات الأولية</button>
                 <button onclick="toggleMobileMenu(); openMedSymbols()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-file-medical w-5" style="color:#0D9488"></i> رموز التحاليل والروشتات</button>
-                
+                <button onclick="toggleMobileMenu(); openPreTestGuide()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-vial w-5" style="color:#0EA5E9"></i> تعليمات قبل التحاليل</button>
+                <button onclick="toggleMobileMenu(); openEventsFirstAid()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-people-group w-5" style="color:#B91C1C"></i> إسعافات المناسبات والتجمعات</button>
                 <!-- New Tools Added Here -->
                 <button onclick="toggleMobileMenu(); openChronicNutrition()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-bowl-food w-5" style="color:#10B981"></i> تغذية الأمراض المزمنة</button>
                 <button onclick="toggleMobileMenu(); openPreVisitGuide()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-clipboard-list w-5" style="color:#3B82F6"></i> إرشادات قبل زيارة الطبيب</button>
@@ -1836,7 +1846,7 @@ let currentFollowupBookingId = null;
             document.querySelector('#ctrlOverlay .p-5').style.background = headerColor; 
             lockScroll(); 
         }
-    
+}
     window.closeCtrlPanel = (event) => { 
         if (event && event.target.id !== 'ctrlOverlay') return; 
         document.getElementById('ctrlOverlay').classList.remove('active'); 
@@ -2259,7 +2269,46 @@ let currentFollowupBookingId = null;
             </div>
         `;
     }
+    // === Tool 1: Pre-Test & Scan Instructions ===
+    window.openPreTestGuide = () => {
+        const data = [
+            { icon: "fa-vial", title: "تحاليل الدم (السكر، الدهون، الكلى)", points: ["يتطلب الصيام من 8 إلى 12 ساعة.", "مسموح بشرب الماء فقط خلال فترة الصيام.", "تجنب الرياضة المجهدة صباح التحليل."] },
+            { icon: "fa-droplet", title: "تحليل البول والبراز", points: ["يُفضل أخذ العينة الصباحية الأولى.", "للبول: نظف المنطقة جيداً قبل أخذ العينة.", "للبراز: ضع العينة في علبة معقمة وتجنب اختلاطها بالبول أو الماء."] },
+            { icon: "fa-x-ray", title: "الأشعة (الصدر، العظام، الطبقي المحوري)", points: ["خلع جميع الإكسسوارات المعدنية والساعات.", "للأشعة بالصبغة: قد يُطلب منك صيام أو فحص كلى مسبق.", "إبلاغ الطبيب بوجود حمل (للنساء) قبل أي أشعة."] },
+            { icon: "fa-magnifying-glass", title: "التنظير (المعدة والقولون)", points: ["توقف عن الطعام والشراب من منتصف الليل.", "للقولون: شرب محلول تنظيف الأمعاء والالتزام بالحمية.", "إيقاف مميعات الدم (مثل الأسبرين) بتعليمات من الطبيب."] },
+            { icon: "fa-pills", title: "تنبيه بخصوص الأدوية", points: ["لا توقف دواء الضغط أو القلب إلا بتعليمات الطبيب.", "دواء السكر: لا تأخذه صباح التحليل قبل سحب الدم.", "أخبر المختبر بكل الأدوية والفيتامينات التي تناولتها مؤخراً."] }
+        ];
+        const html = data.map(d => `
+            <div class="bg-white p-4 rounded-xl border mb-3" style="border-color: var(--border)">
+                <h4 class="font-bold text-sm mb-2 flex items-center gap-2" style="color: var(--accent)"><i class="fas ${d.icon}"></i> ${d.title}</h4>
+                <ul class="list-disc pr-5 space-y-1 text-xs text-gray-600">
+                    ${d.points.map(p => `<li>${p}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+        openCtrlPanel('التعليمات قبل التحاليل والفحوصات', `<div class="flex flex-col gap-4"><div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-blue-800 text-sm flex items-center gap-3"><i class="fas fa-clipboard-list text-xl"></i><span>دليل أرشيفي سريع يجيب على تساؤلاتك قبل الذهاب للمختبر أو الأشعة.</span></div><div>${html}</div></div>`, '#3B82F6');
+    };
 
+    // === Tool 2: Events & Gatherings First Aid ===
+    window.openEventsFirstAid = () => {
+        const data = [
+            { icon: "fa-users-slash", title: "الإغماء وسط الازدحام", steps: "1. افسح المجال للهواء النقي حول المصاب.\n2. اجعل المصاب مستلقياً على ظهره وارفع قدميه 30 سم.\n3. فك الملابس الضيقة (ربطة العنق، الياقة).\n4. إذا لم يفق خلال دقيقة، اطلب الإسعاف فوراً." },
+            { icon: "fa-hand-holding-medical", title: "الجروح والنزيف الطفيف", steps: "1. اغسل الجرح بالماء النظيف.\n2. اضغط بقطعة شاش نظيفة أو قطن لإيقاف النزيف.\n3. قم بتطهير الجرح بمادة مطهرة ولفه بضمادة معقمة.\n4. إذا كان النزيف غزيراً ولا يتوقف، ارفع العضو واطلب الإسعاف." },
+            { icon: "fa-mug-hot", title: "الحروق البسيطة (شاي، أراكيل)", steps: "1. ضع مكان الحرق تحت ماء جارٍ بارد لمدة 10 دقائق.\n2. لا تضع معجون أسنان، ليمون، أو زيوت على الحرق.\n3. غط الحرق بقطعة قماش نظيفة وجافة.\n4. لا تفقع الفقاعات إن ظهرت للحفاظ على الجلد من التلوث." },
+            { icon: "fa-burger", title: "التسمم الغذائي المفاجئ", steps: "1. أكثر من شرب السوائل (ماء، مفرزات) لتجنب الجفاف.\n2. لا تأخذ دواء لإيقاف الإسهال فوراً، دع الجسم يطرد السم.\n3. تناول وجبات خفيفة (سوائل، رز مسلوق) عند تحسن الحالة.\n4. إذا استمر القيء أو ظهر دم، توجه للطوارئ فوراً." },
+            { icon: "fa-sun", title: "ضربة الشمس (المناسبات المكشوفة)", steps: "1. انقل المصاب لمكان بارد ومظلل فوراً.\n2. اخلع الملابس الثقيلة وضعه على بطانية باردة.\n3. رش جسمه بالماء وضع كمادات ثلج على الإبطين والرقبة.\n4. إذا فقد الوعي، اطلب الإسعاف ولا تعطه ماء عن الفم." }
+        ];
+        const html = data.map(d => `
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="flex items-center gap-3"><i class="fas ${d.icon} text-red-600 text-lg w-8"></i><span>${d.title}</span></div>
+                    <i class="fas fa-chevron-down transition-transform"></i>
+                </div>
+                <div class="accordion-body"><div class="accordion-body-inner whitespace-pre-line">${d.steps}</div></div>
+            </div>
+        `).join('');
+        openCtrlPanel('إسعافات المناسبات والتجمعات', `<div class="flex flex-col gap-4"><div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-800 text-sm flex items-center gap-3"><i class="fas fa-kit-medical text-xl"></i><span>دليل سريع للتعامل مع أكثر الحوادث شيوعاً في الأفراح والمهرجانات والتجمعات.</span></div><div>${html}</div></div>`, '#DC2626');
+    };
     // === Quick Lookup & Chat System Functions ===
 
         window.quickLookup = async () => {
