@@ -198,6 +198,24 @@
         #announcementText:hover {
             animation-play-state: paused;
         }
+                /* === قسم التعليمات قبل التحاليل === */
+        .fasting-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+        .fasting-8 { background: #FEF3C7; color: #92400E; }
+        .fasting-10 { background: #FFEDD5; color: #9A3412; }
+        .fasting-12 { background: #FEE2E2; color: #991B1B; }
+        .fasting-none { background: #D1FAE5; color: #065F46; }
+        .fasting-special { background: #EDE9FE; color: #5B21B6; }
+        .prelab-accordion { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .prelab-accordion.open { max-height: 800px; }
+        .prelab-toggle { cursor: pointer; transition: background 0.2s; }
+        .prelab-toggle:hover { background: var(--bg-deep); }
+        .tab-btn { padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); background: var(--card); color: var(--muted); }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+        .glow-border { position: relative; }
+        .glow-border::before { content: ''; position: absolute; inset: -2px; border-radius: 18px; background: linear-gradient(135deg, var(--accent), var(--gold), var(--accent)); background-size: 200% 200%; animation: glowShift 4s ease infinite; z-index: -1; opacity: 0; transition: opacity 0.3s; }
+        .glow-border:hover::before { opacity: 1; }
+        @keyframes glowShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     </style>
 </head>
 <body>
@@ -2269,90 +2287,110 @@ let currentFollowupBookingId = null;
             </div>
         `;
     }
-        // === Tool 1: Pre-Test & Scan Instructions ===
+            // === Tool 1: Pre-Test & Scan Instructions (Professional Edition) ===
+    const prelabData = [
+        { id:1, name:'فحص السكر الصائم (FBS)', cat:'blood', fasting:'8-12 ساعة', fastingClass:'fasting-8', icon:'fa-droplet', color:'#DC2626', instructions:['صيام 8-12 ساعة عن الطعام','يُسمح بشرب الماء بكميات قليلة','تجنب الأطعمة الدسمة مساء اليوم السابق','أخذ العينة صباحاً بشكل مفضل'], notes:'السكر الطبيعي الصائم: 70-100 ملغ/دل' },
+        { id:2, name:'فحص الشحوم والدهون (Lipid Profile)', cat:'blood', fasting:'12-14 ساعة', fastingClass:'fasting-12', icon:'fa-vial', color:'#F59E0B', instructions:['صيام تام 12-14 ساعة','لا يُسمح بشرب الماء خلال فترة الصيام','تجنب الكحوليات 48 ساعة قبل الفحص','الامتناع عن الأطعمة الدسمة يومين قبل'], notes:'يشمل: الكولسترول الكلي، HDL، LDL، الدهون الثلاثية' },
+        { id:3, name:'تحليل CBC (صورة دم كاملة)', cat:'blood', fasting:'لا يُطلب صيام', fastingClass:'fasting-none', icon:'fa-flask', color:'#059669', instructions:['لا يتطلب صيام','يمكن أخذه في أي وقت من اليوم','أخبر الفني إذا كنت تتناول أدوية'], notes:'يشمل: كريات حمراء، بيضاء، صفائح دموية، هيموغلوبين' },
+        { id:4, name:'وظائف الكبد (LFT)', cat:'blood', fasting:'8-10 ساعات', fastingClass:'fasting-10', icon:'fa-liver', color:'#8B5CF6', instructions:['صيام 8-10 ساعات يُفضل','تجنب الأدوية المسكنة قبل الفحص بيوم','إذا كنت تتناول أدوية كبدية، أبلغ الفني'], notes:'يشمل: ALT, AST, ALP, البيليروبين، الألبومين' },
+        { id:5, name:'إيكو / سونار البطن (Abdominal US)', cat:'imaging', fasting:'6-8 ساعات', fastingClass:'fasting-special', icon:'fa-wave-square', color:'#7C3AED', instructions:['صيام 6-8 ساعات لتصوير البطن العلوي','شرب 4-6 أكواب ماء قبل الفحص بساعة (مثانة ممتلئة)','لا تتبول قبل الفحص','تجنب الأطعمة الغازية يوم قبل'], notes:'المثانة الممتلئة ضرورية لتصوير الحوض' },
+        { id:6, name:'أشعة الصدر (Chest X-Ray)', cat:'imaging', fasting:'لا يُطلب صيام', fastingClass:'fasting-none', icon:'fa-lungs', color:'#0EA5E9', instructions:['لا يتطلب صيام أو تحضير خاص','إزالة المجوهرات المعدنية من منطقة الصدر','إزالة الأزرار والأحزمة المعدنية','إخبار الفني في حال وجود حمل'], notes:'مدة الفحص: دقائق معدودة' },
+        { id:7, name:'رنين مغناطيسي (MRI)', cat:'imaging', fasting:'حسب المنطقة', fastingClass:'fasting-special', icon:'fa-magnet', color:'#A855F7', instructions:['إزالة جميع المعادن: ساعات، أقراط، أسنان صناعية','لا يدخل معك أي إلكترونيات','أبلغ الفني إذا كان لديك: دعامة، منظم نبض','لـ MRI البطن: صيام 4-6 ساعات'], notes:'مدة الفحص: 30-60 دقيقة حسب المنطقة' },
+        { id:8, name:'تحليل بول عام (Urinalysis)', cat:'urine', fasting:'لا يُطلب صيام', fastingClass:'fasting-none', icon:'fa-flask-vial', color:'#14B8A6', instructions:['العينة الأولى في الصباح هي الأفضل','جمع منتصف التبول (تجاهل الجزء الأول والأخير)','استخدم العبوة المعقمة المخصصة','تسليم العينة للمخبر خلال ساعتين'], notes:'لا تجمع العينة أثناء الدورة الشهرية' },
+        { id:9, name:'فحص الحمل (Beta HCG - دم)', cat:'special', fasting:'لا يُطلب صيام', fastingClass:'fasting-none', icon:'fa-baby', color:'#EC4899', instructions:['لا يتطلب صيام','يمكن أخذ العينة في أي وقت','أخبر الفني بتاريخ آخر دورة'], notes:'يظهر الحمل في الدم بعد 7-10 أيام من الإخصاب' },
+        { id:10, name:'تحليل غازات الدم (ABG)', cat:'special', fasting:'لا يُطلب صيام', fastingClass:'fasting-none', icon:'fa-wind', color:'#EF4444', instructions:['يُؤخذ من الشريان (مؤلم أكثر من الوريد)','لا يتطلب صيام','أبلغ الفني إذا كنت تتناول أكسجين','الراحة لمدة 20 دقيقة قبل الفحص'], notes:'يجب وضع ضغط على مكان الوخز لمدة 5 دقائق' }
+    ];
+
     window.openPreTestGuide = () => {
-        const data = [
-            { 
-                icon: "fa-vial", 
-                title: "تحاليل الدم العامة (CBC، السكر، الدهون، الكلى، الكبد)", 
-                points: [
-                    "يتطلب الصيام من 8 إلى 12 ساعة قبل سحب الدم (خاصة للسكر والكوليسترول).",
-                    "مسموح بشرب كمية معتدلة من الماء فقط خلال فترة الصيام.",
-                    "تجنب شرب القهوة، الشاي، والعصائر قبل التحليل لأنها قد تغير النتائج.",
-                    "تجنب الرياضة المجهدة صباح التحليل لأنها قد ترفع إنزيمات العضلات وتؤثر على النتيجة.",
-                    "إذا كنت مصاباً بالسكري، لا تأخذ حبة الدواء أو الأنسولين صباح التحليل حتى لا تنخفض السكر لديك، ويمكنك أخذها بعد سحب الدم وتناول الإفطار."
-                ] 
-            },
-            { 
-                icon: "fa-droplet", 
-                title: "تحليل البول والبراز", 
-                points: [
-                    "يُفضل دائماً أخذ عينة البول الصباحية الأولى (أول تفريغ للمثانة صباحاً) لأنها تكون الأكثر تركيزاً والدقيقة في التشخيص.",
-                    "لتحليل البول: نظف المنطقة التناسلية جيداً بالماء والصابون قبل أخذ العينة.",
-                    "أخذ العينة في علبة معقمة مخصصة لهذا الغرض تُباع في الصيدليات.",
-                    "للبراز: يُجمع في علبة معقمة، ويجب تجنب اختلاطه بالبول أو ماء المرحاض.",
-                    "يجب تسليم العينة للمختبر خلال ساعتين من أخذها، ويمكن حفظها في الثلاجة (وليس الفريزر) لفترة قصيرة إذا تأخر التسليم."
-                ] 
-            },
-            { 
-                icon: "fa-x-ray", 
-                title: "الأشعة العادية (الصدر، العظام، البطن)", 
-                points: [
-                    "خلع جميع الإكسسوارات المعدنية (ساعات، خواتم، سلاسل، حزام) في المنطقة المراد تصويرها.",
-                    "إبلاغ الفني بوجود حمل أو احتمال حمل (للنساء) قبل إجراء أي أشعة مهما كان نوعها.",
-                    "لأشعة البطن: قد يُطلب منك الصيام لعدة ساعات أو تجنب شرب المياه الغازية لمنع ظهور الغازات في الصورة."
-                ] 
-            },
-            { 
-                icon: "fa-magnifying-glass", 
-                title: "الأشعة الطبقي المحوري (CT Scan) والرنين المغناطيسي (MRI)", 
-                points: [
-                    "الصيام من 4 إلى 6 ساعات قبل الفحص، خاصة إذا كان سيُحقن لك صبغة (الكونتراست).",
-                    "للأشعة بالصبغة: قد يُطلب منك إجراء فحص وظائف الكلى (كرياتينين) مسبقاً للتأكد من سلامة كليتيك.",
-                    "إبلاغ الطبيب بأي حساسية مسبقة من الأدوية، الصبغات، أو المأكولات البحرية (لوجود اليود فيها).",
-                    "إبلاغ الطبيب بوجود أجهزة طبية في جسمك (مثل منظم ضربات القلب، شرائح معدنية لتثبيت الكسور، قسطرة).",
-                    "الرنين المغناطيسي يتطلب إزالة كل القطع المعدنية والإلكترونية، وغالباً ما يكون ممنوعاً لمن لديهم أجهزة قلبية معينة."
-                ] 
-            },
-            { 
-                icon: "fa-stethoscope", 
-                title: "التنظير (المعدة والقولون)", 
-                points: [
-                    "تنظير المعدة: توقف عن الطعام والشراب من منتصف الليل (صيام 8 ساعات على الأقل).",
-                    "تنظير القولون: شرب محلول تنظيف الأمعاء (مثل كليان بيج) والالتزام بالحمية القاسية (سوائل صافية فقط) في اليوم الذي يسبق الفحص.",
-                    "إيقاف مميعات الدم (مثل الأسبرين، البلافيكس، الوارفارين) بتعليمات من الطبيب قبل الفحص بأيام لتجنب النزيف.",
-                    "يجب اصطحاب مرافق بعد الفحص لأن المريض سيكون تحت تأثير التخدير ولا يمكنه القيادة أو العودة وحده."
-                ] 
-            },
-            { 
-                icon: "fa-female", 
-                title: "التصوير الطبي للنساء (الثدي والمهبل)", 
-                points: [
-                    "الماموجرام (تصوير الثدي): يُفضل إجراؤه بعد انتهاء الدورة الشهرية بأسبوع لتقليل حساسية الثدي وضمان وضوح الصورة.",
-                    "تجنب استخدام مزيلات العرق، العطور، أو كريمات الجسم في منطقة الإبط والصدر يوم الفحص (لأنها تظهر كنقاط بيضاء في الأشعة).",
-                    "السونار الحوضي (للرحم والمبايض): قد يُطلب منك شرب كميات كبيرة من الماء (حوالي لتر) وعدم التبول لملء المثانة قبل الفحص عبر البطن."
-                ] 
-            },
-            { 
-                icon: "fa-pills", 
-                title: "تنبيهات هامة بخصوص الأدوية قبل الفحوصات", 
-                points: [
-                    "لا توقف دواء الضغط أو القلب أو الصرع إلا بتعليمات صريحة من الطبيب المعالج.",
-                    "أدوية السكر: لا تأخذها صباح التحليل قبل سحب الدم.",
-                    "المضادات الحيوية: تجنب تناولها قبل زراعة البول أو البراز بـ 48 ساعة على الأقل حتى لا تقتل البكتيريا وتظهر نتيجة الزراعة خاطئة.",
-                    "أخبر المختبر والطبيب بكل الأدوية، الفيتامينات، والمكملات العشبية التي تناولتها مؤخراً لأن بعضها قد يتداخل مع النتائج."
-                ] 
-            }
-        ];
-        const html = data.map(d => `
-            <div class="bg-white p-4 rounded-xl border mb-3" style="border-color: var(--border)">
-                <h4 class="font-bold text-sm mb-2 flex items-center gap-2" style="color: var(--accent)"><i class="fas ${d.icon}"></i> ${d.title}</h4>
-                <ul class="list-disc pr-5 space-y-1 text-xs text-gray-600">
-                    ${d.points.map(p => `<li>${p}</li>`).join('')}
-                </ul>
+        const initialHtml = `
+            <div class="flex flex-col gap-5">
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-blue-800 text-sm flex items-center gap-3">
+                    <i class="fas fa-clipboard-list text-xl"></i>
+                    <span>دليل أرشيفي سريع يجيب على تساؤلاتك قبل الذهاب للمختبر أو الأشعة. اتبعها لضمان دقة النتائج.</span>
+                </div>
+                
+                <!-- بطاقات الأسئلة الشائعة السريعة -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-2xl p-5 border border-red-100 shadow-sm hover:shadow-md transition-all glow-border">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500"><i class="fas fa-clock"></i></div>
+                            <h4 class="font-bold text-sm">كم ساعة صيام لفحص السكر؟</h4>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="fasting-badge fasting-8"><i class="fas fa-moon"></i> 8 - 12 ساعة</span>
+                            <span class="text-xs" style="color:var(--muted)">يُسمح بشرب الماء</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm hover:shadow-md transition-all glow-border">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500"><i class="fas fa-wave-square"></i></div>
+                            <h4 class="font-bold text-sm">تعليمات إيكو / سونار البطن؟</h4>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="fasting-badge fasting-special"><i class="fas fa-moon"></i> 6 - 8 ساعات</span>
+                            <span class="text-xs" style="color:var(--muted)">معدة فارغة + مثانة ممتلئة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تبويبات الفلترة -->
+                <div class="bg-white rounded-2xl border overflow-hidden shadow-sm" style="border-color:var(--border)">
+                    <div class="p-4 border-b flex flex-wrap gap-2" style="border-color:var(--border);background:var(--bg-deep)">
+                        <button class="tab-btn active" onclick="filterPrelab('all',this)">الكل</button>
+                        <button class="tab-btn" onclick="filterPrelab('blood',this)"><i class="fas fa-tint ml-1"></i>تحاليل دم</button>
+                        <button class="tab-btn" onclick="filterPrelab('imaging',this)"><i class="fas fa-x-ray ml-1"></i>أشعة وتصوير</button>
+                        <button class="tab-btn" onclick="filterPrelab('urine',this)"><i class="fas fa-flask ml-1"></i>تحاليل بول</button>
+                        <button class="tab-btn" onclick="filterPrelab('special',this)"><i class="fas fa-star ml-1"></i>فحوصات خاصة</button>
+                    </div>
+                    <div id="prelabList"></div>
+                </div>
+            </div>
+        `;
+        openCtrlPanel('التعليمات قبل التحاليل والفحوصات', initialHtml, '#3B82F6');
+        renderPrelab('all');
+    };
+
+    function renderPrelab(filter='all') {
+        const container = document.getElementById('prelabList');
+        if(!container) return;
+        const items = filter === 'all' ? prelabData : prelabData.filter(d => d.cat === filter);
+        container.innerHTML = items.map(item => `
+            <div class="prelab-accordion-item border-b" style="border-color:var(--border)">
+                <div class="prelab-toggle flex items-center justify-between p-4" onclick="togglePrelab(this)">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white flex-shrink-0" style="background:${item.color}"><i class="fas ${item.icon}"></i></div>
+                        <div>
+                            <div class="font-bold text-sm">${item.name}</div>
+                            <span class="fasting-badge ${item.fastingClass} text-[0.7rem] mt-1"><i class="fas ${item.fastingClass==='fasting-none'?'fa-sun':'fa-moon'}"></i> ${item.fasting}</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down text-xs transition-transform" style="color:var(--muted)"></i>
+                </div>
+                <div class="prelab-accordion">
+                    <div class="px-4 pb-4 pr-[68px]">
+                        <div class="bg-gray-50 rounded-xl p-4 mb-3" style="background:var(--bg-deep)">
+                            <div class="text-xs font-bold mb-2" style="color:var(--accent)"><i class="fas fa-list-check ml-1"></i> التعليمات:</div>
+                            <ul class="space-y-2">${item.instructions.map(i => `<li class="flex items-start gap-2 text-xs" style="color:var(--fg-light)"><i class="fas fa-check-circle mt-0.5 flex-shrink-0" style="color:var(--accent)"></i><span>${i}</span></li>`).join('')}</ul>
+                        </div>
+                        ${item.notes ? `<div class="flex items-start gap-2 text-xs p-3 rounded-lg" style="background:#FEF9C3;color:#92400E"><i class="fas fa-lightbulb mt-0.5 flex-shrink-0"></i><span>${item.notes}</span></div>` : ''}
+                    </div>
+                </div>
             </div>
         `).join('');
-        openCtrlPanel('التعليمات قبل التحاليل والفحوصات', `<div class="flex flex-col gap-4"><div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-blue-800 text-sm flex items-center gap-3"><i class="fas fa-clipboard-list text-xl"></i><span>دليل أرشيفي سريع يجيب على تساؤلاتك قبل الذهاب للمختبر أو الأشعة. اتبعها لضمان دقة النتائج.</span></div><div>${html}</div></div>`, '#3B82F6');
+    }
+
+    window.filterPrelab = (cat, btn) => {
+        document.querySelectorAll('#ctrlContent .tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderPrelab(cat);
+    }
+
+    window.togglePrelab = (el) => {
+        const accordion = el.nextElementSibling;
+        const icon = el.querySelector('.fa-chevron-down');
+        const isOpen = accordion.classList.contains('open');
+        document.querySelectorAll('#ctrlContent .prelab-accordion.open').forEach(a => { a.classList.remove('open'); a.previousElementSibling.querySelector('.fa-chevron-down').style.transform = ''; });
+        if (!isOpen) { accordion.classList.add('open'); icon.style.transform = 'rotate(180deg)'; }
     };
 
         // === Tool 2: Events & Gatherings First Aid ===
@@ -2534,38 +2572,42 @@ let currentFollowupBookingId = null;
     window.updateMedNotes = async (id, notes) => {
         try { await updateDoc(doc(db, 'medicine_requests', id), { notes: notes }); showToast('تم حفظ الملاحظة'); } catch (e) { showToast('خطأ في الحفظ'); }
     }
-        // === دوال الإعلانات ===
-    onSnapshot(collection(db, 'announcements'), (snapshot) => {
-        const list = document.getElementById('adminAnnouncementList');
-        if (!list) return; // يعمل فقط داخل لوحة الإدارة
-        if (snapshot.empty) {
-            list.innerHTML = '<p class="text-center text-gray-400 text-sm py-2">لا توجد إعلانات حالياً.</p>';
-            return;
+            let currentAnnouncement = null;
+    // استماع للإعلانات
+    onSnapshot(query(collection(db, 'announcements'), where('isActive', '==', true)), (snapshot) => {
+        const navbar = document.getElementById('navbar');
+        const annBar = document.getElementById('topAnnouncementBar');
+        const homeSection = document.getElementById('home');
+        if (!annBar || !navbar || !homeSection) return;
+        
+        if (!snapshot.empty) {
+            // استخراج الإعلانات وترتيبها حسب الأحدث (createdAt)
+            const anns = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            const ann = anns.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))[0];
+            currentAnnouncement = ann;
+            
+            document.getElementById('announcementText').innerText = ann.text;
+            const linkEl = document.getElementById('announcementLink');
+            
+            // إظهار أو إخفاء الزر بناءً على وجود الرابط
+            if (ann.link) {
+                linkEl.href = ann.link;
+                linkEl.innerText = ann.linkText || 'اضغط هنا';
+                linkEl.style.display = 'inline'; // إظهار الزر
+            } else {
+                linkEl.style.display = 'none'; // إخفاء الزر تماماً
+            }
+            
+            annBar.classList.remove('hidden');
+            navbar.style.top = '36px'; // دفع الناف بار للأسفل
+            homeSection.style.paddingTop = '11rem'; // دفع محتوى الصفحة للأسفل
+        } else {
+            currentAnnouncement = null;
+            annBar.classList.add('hidden');
+            navbar.style.top = '0px';
+            homeSection.style.paddingTop = '6rem';
         }
-        list.innerHTML = snapshot.docs.map(doc => {
-            const ann = doc.data();
-            return `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)">
-                <div class="text-xs truncate flex-1">${ann.text}</div>
-                <div class="flex gap-1 mr-2">
-                    <button onclick="toggleAnnouncement('${doc.id}', ${!ann.isActive})" class="px-2 py-1 rounded text-xs ${ann.isActive ? 'bg-green-500 text-white' : 'bg-gray-200'}">${ann.isActive ? 'مفعّل' : 'معطّل'}</button>
-                    <button onclick="deleteAnnouncement('${doc.id}')" class="px-2 py-1 rounded text-xs bg-red-500 text-white"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>`;
-        }).join('');
     });
-
-        window.saveAnnouncement = async (e) => {
-        e.preventDefault();
-        const text = document.getElementById('annText').value.trim();
-        const link = document.getElementById('annLink').value.trim();
-        const linkText = document.getElementById('annLinkText').value.trim() || 'اضغط هنا';
-        if (!text) return;
-        try {
-            await addDoc(collection(db, 'announcements'), { text, link, linkText, isActive: true, createdAt: new Date().toISOString() });
-            showToast('تم نشر الإعلان بنجاح!');
-            e.target.reset();
-        } catch (err) { showToast('خطأ في النشر'); }
-    };
 
     window.toggleAnnouncement = async (id, status) => {
         try { await updateDoc(doc(db, 'announcements', id), { isActive: status }); showToast('تم تحديث حالة الإعلان'); } 
