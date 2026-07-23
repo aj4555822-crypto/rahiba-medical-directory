@@ -274,7 +274,11 @@
                         <button onclick="openPharmacyLogin()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold text-white transition-all"><i class="fas fa-prescription-bottle-medical text-green-300"></i> الصيدلية</button>
                     </div>
                 </div>
-                <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()" aria-label="فتح القائمة"><i class="fas fa-bars" id="menuIcon"></i></button>
+                <div class="flex items-center gap-2 ml-2">
+    <button class="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white text-sm bg-white/10 hover:bg-white/20 transition-all" id="darkModeToggle" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
+    <button class="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white text-sm font-bold bg-white/10 hover:bg-white/20 transition-all" id="langToggle" title="English">EN</button>
+    <button class="lg:hidden text-white text-xl p-2" onclick="toggleMobileMenu()" aria-label="فتح القائمة"><i class="fas fa-bars" id="menuIcon"></i></button>
+</div>
             </div>
         </div>
     </nav>
@@ -549,10 +553,6 @@
     <div class="toast" id="toast"></div>
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)"><div class="modal-content" id="modalContent" onclick="event.stopPropagation()"></div></div>
     <div id="lightbox" class="lightbox-overlay"><img src="" alt="معاينة الصورة"></div>
-    <div class="ui-controls">
-        <button class="ui-btn dark-btn" id="darkModeToggle" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
-        <button class="ui-btn lang-btn" id="langToggle" title="English">EN</button>
-    </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
@@ -2306,37 +2306,6 @@ let currentFollowupBookingId = null;
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-        // تحديث الرسائل فقط بدون مسح حقل الكتابة لمنع تعليق الصفحة
-        if (!document.getElementById('chatBox')) {
-            contentEl.innerHTML = `
-                <div class="bg-white p-4 rounded-xl border" style="border-color: var(--border)">
-                    <div class="flex justify-between items-center mb-2">
-                        <div>
-                            <div class="font-bold text-sm">${b.itemName}</div>
-                            <div class="text-xs text-gray-500">${b.dayStr}</div>
-                        </div>
-                        <div id="statusBadgeContainer">${statusBadge}</div>
-                    </div>
-                    <div class="text-xs text-yellow-600 font-bold mt-2">رقم المرجع: #${b.ref}</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border flex flex-col h-96" style="border-color: var(--border)">
-                    <div class="flex-1 overflow-y-auto flex flex-col gap-2 mb-3 pr-1" id="chatBox">
-                        ${chatHtml}
-                    </div>
-                    <div class="flex gap-2 border-t pt-3" style="border-color: var(--border)">
-                        <input type="text" id="chatInput" class="ctrl-input text-sm" placeholder="اكتب رسالتك للطبيب..." onkeydown="if(event.key==='Enter') sendChatMessage('${bookingId}')">
-                        <button onclick="sendChatMessage('${bookingId}')" class="px-4 rounded-xl text-white" style="background: var(--accent)"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            `;
-        } else {
-            document.getElementById('chatBox').innerHTML = chatHtml;
-            document.getElementById('statusBadgeContainer').innerHTML = statusBadge;
-        }
-
-        const chatBox = document.getElementById('chatBox');
-        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
-    }
 
     window.sendChatMessage = async (bookingId) => {
         const input = document.getElementById('chatInput');
