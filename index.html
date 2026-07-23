@@ -170,6 +170,13 @@
         .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: var(--bg); }
         .accordion-item.active .accordion-body { max-height: 500px; }
         .accordion-item.active .accordion-header i { transform: rotate(180deg); }
+                /* إخفاء عناصر ترجمة جوجل المزعجة */
+        body { top: 0 !important; }
+        .goog-te-banner-frame { display: none !important; }
+        .goog-tooltip { display: none !important; }
+        .goog-tooltip:hover { display: none !important; }
+        .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+        #google_translate_element { display: none !important; }
         .accordion-body-inner { padding: 16px; font-size: 0.85rem; color: var(--fg-light); line-height: 1.6; }
     </style>
 </head>
@@ -553,7 +560,16 @@
     <div class="toast" id="toast"></div>
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)"><div class="modal-content" id="modalContent" onclick="event.stopPropagation()"></div></div>
     <div id="lightbox" class="lightbox-overlay"><img src="" alt="معاينة الصورة"></div>
+        <!-- محرك ترجمة جوجل المخفي -->
+    <div id="google_translate_element" style="display:none;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ar', includedLanguages: 'en', autoDisplay: false}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+    <div id="lightbox" class="lightbox-overlay"><img src="" alt="معاينة الصورة"></div>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
@@ -1467,7 +1483,37 @@ let currentFollowupBookingId = null;
             homeSection.style.paddingTop = '6rem';
         }
     });
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', () => {        // === كود الترجمة الإنجليزية ===
+        const langToggle = document.getElementById('langToggle');
+        let isEnglish = document.cookie.includes('googtrans=/ar/en');
+
+        function applyLangLayout() {
+            if (!langToggle) return;
+            if (isEnglish) {
+                langToggle.innerText = 'ع';
+                document.documentElement.lang = 'en';
+                document.documentElement.dir = 'ltr';
+            } else {
+                langToggle.innerText = 'EN';
+                document.documentElement.lang = 'ar';
+                document.documentElement.dir = 'rtl';
+            }
+        }
+
+        if (langToggle) {
+            applyLangLayout();
+            langToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (isEnglish) {
+                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    isEnglish = false;
+                } else {
+                    document.cookie = 'googtrans=/ar/en; path=/';
+                    isEnglish = true;
+                }
+                location.reload();
+            });
+        }
         // Tips Listener
         onSnapshot(collection(db, 'medical_tips'), (snapshot) => {
             healthTips = [];
