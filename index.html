@@ -2572,7 +2572,7 @@ let currentFollowupBookingId = null;
     window.updateMedNotes = async (id, notes) => {
         try { await updateDoc(doc(db, 'medicine_requests', id), { notes: notes }); showToast('تم حفظ الملاحظة'); } catch (e) { showToast('خطأ في الحفظ'); }
     }
-            let currentAnnouncement = null;
+    
     // استماع للإعلانات
     onSnapshot(query(collection(db, 'announcements'), where('isActive', '==', true)), (snapshot) => {
         const navbar = document.getElementById('navbar');
