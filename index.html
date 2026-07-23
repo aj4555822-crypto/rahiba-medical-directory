@@ -2190,7 +2190,7 @@ let currentFollowupBookingId = null;
         }
     }
 
-        window.openBookingFollowup = (bookingId) => {
+            window.openBookingFollowup = (bookingId) => {
         currentFollowupBookingId = bookingId;
         openCtrlPanel('متابعة الحجز والدردشة', `
             <div id="followupContent" class="flex flex-col gap-4">
@@ -2202,10 +2202,14 @@ let currentFollowupBookingId = null;
 
     window.renderFollowupChat = (bookingId) => {
         const booking = bookings.find(b => b.id === bookingId);
+        const contentEl = document.getElementById('followupContent');
+        if (!contentEl) return;
+
         if (!booking) {
-            document.getElementById('followupContent').innerHTML = '<p class="text-center py-8 text-red-500">لم يتم العثور على الحجز.</p>';
+            contentEl.innerHTML = '<p class="text-center py-8 text-red-500">لم يتم العثور على الحجز.</p>';
             return;
         }
+        
         const b = booking;
         let statusBadge = '';
         if (b.status === 'accepted') statusBadge = `<span class="px-3 py-1 rounded text-sm" style="background: #D1FAE5; color: #065F46">🟢 تم التأكيد - ${b.time}</span>`;
@@ -2225,27 +2229,34 @@ let currentFollowupBookingId = null;
             chatHtml = '<p class="text-center text-xs text-gray-400 my-4">لا توجد رسائل بعد. انتظر رد العيادة.</p>';
         }
 
-        document.getElementById('followupContent').innerHTML = `
-            <div class="bg-white p-4 rounded-xl border" style="border-color: var(--border)">
-                <div class="flex justify-between items-center mb-2">
-                    <div>
-                        <div class="font-bold text-sm">${b.itemName}</div>
-                        <div class="text-xs text-gray-500">${b.dayStr}</div>
+        // تحديث الرسائل فقط بدون مسح حقل الكتابة لمنع تعليق الصفحة
+        if (!document.getElementById('chatBox')) {
+            contentEl.innerHTML = `
+                <div class="bg-white p-4 rounded-xl border" style="border-color: var(--border)">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <div class="font-bold text-sm">${b.itemName}</div>
+                            <div class="text-xs text-gray-500">${b.dayStr}</div>
+                        </div>
+                        <div id="statusBadgeContainer">${statusBadge}</div>
                     </div>
-                    ${statusBadge}
+                    <div class="text-xs text-yellow-600 font-bold mt-2">رقم المرجع: #${b.ref}</div>
                 </div>
-                <div class="text-xs text-yellow-600 font-bold mt-2">رقم المرجع: #${b.ref}</div>
-            </div>
-            <div class="bg-white p-4 rounded-xl border flex flex-col h-96" style="border-color: var(--border)">
-                <div class="flex-1 overflow-y-auto flex flex-col gap-2 mb-3 pr-1" id="chatBox">
-                    ${chatHtml}
+                <div class="bg-white p-4 rounded-xl border flex flex-col h-96" style="border-color: var(--border)">
+                    <div class="flex-1 overflow-y-auto flex flex-col gap-2 mb-3 pr-1" id="chatBox">
+                        ${chatHtml}
+                    </div>
+                    <div class="flex gap-2 border-t pt-3" style="border-color: var(--border)">
+                        <input type="text" id="chatInput" class="ctrl-input text-sm" placeholder="اكتب رسالتك للطبيب..." onkeydown="if(event.key==='Enter') sendChatMessage('${bookingId}')">
+                        <button onclick="sendChatMessage('${bookingId}')" class="px-4 rounded-xl text-white" style="background: var(--accent)"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
-                <div class="flex gap-2 border-t pt-3" style="border-color: var(--border)">
-                    <input type="text" id="chatInput" class="ctrl-input text-sm" placeholder="اكتب رسالتك للطبيب..." onkeydown="if(event.key==='Enter') sendChatMessage('${bookingId}')">
-                    <button onclick="sendChatMessage('${bookingId}')" class="px-4 rounded-xl text-white" style="background: var(--accent)"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        `;
+            `;
+        } else {
+            document.getElementById('chatBox').innerHTML = chatHtml;
+            document.getElementById('statusBadgeContainer').innerHTML = statusBadge;
+        }
+
         const chatBox = document.getElementById('chatBox');
         if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
     }
