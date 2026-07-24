@@ -1938,25 +1938,28 @@ let currentFollowupBookingId = null;
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-list ml-2"></i> المنشآت (${allData.length})</h4><div class="flex flex-col gap-2 max-h-96 overflow-y-auto">${listHtml}</div></div>
             <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية</button>
             <button onclick="seedMedicalTips()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: #EC4899; color: #EC4899"><i class="fas fa-lightbulb ml-2"></i> ترحيل 30 نصيحة طبية للفايربايس</button>
-        </div>`, '#073D2E'); 
-    }
-            // جلب وعرض الإعلانات داخل لوحة الإدارة
-        const annSnap = await getDocs(collection(db, 'announcements'));
-        const annList = document.getElementById('adminAnnouncementList');
-        if (annSnap.empty) {
-            annList.innerHTML = '<p class="text-center text-gray-400 text-sm py-2">لا توجد إعلانات حالياً.</p>';
-        } else {
-            annList.innerHTML = annSnap.docs.map(doc => {
-                const ann = doc.data();
-                return `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)">
-                    <div class="text-xs truncate flex-1">${ann.text}</div>
-                    <div class="flex gap-1 mr-2">
-                        <button onclick="toggleAnnouncement('${doc.id}', ${!ann.isActive})" class="px-2 py-1 rounded text-xs ${ann.isActive ? 'bg-green-500 text-white' : 'bg-gray-200'}">${ann.isActive ? 'مفعّل' : 'معطّل'}</button>
-                        <button onclick="deleteAnnouncement('${doc.id}')" class="px-2 py-1 rounded text-xs bg-red-500 text-white"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-            }).join('');
+                    </div>`, '#073D2E'); 
+            
+                    // جلب وعرض الإعلانات داخل لوحة الإدارة
+                const annSnap = await getDocs(collection(db, 'announcements'));
+                const annList = document.getElementById('adminAnnouncementList');
+                if (annSnap.empty) {
+                    annList.innerHTML = '<p class="text-center text-gray-400 text-sm py-2">لا توجد إعلانات حالياً.</p>';
+                } else {
+                    annList.innerHTML = annSnap.docs.map(doc => {
+                        const ann = doc.data();
+                        return `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)">
+                            <div class="text-xs truncate flex-1">${ann.text}</div>
+                            <div class="flex gap-1 mr-2">
+                                <button onclick="toggleAnnouncement('${doc.id}', ${!ann.isActive})" class="px-2 py-1 rounded text-xs ${ann.isActive ? 'bg-green-500 text-white' : 'bg-gray-200'}">${ann.isActive ? 'مفعّل' : 'معطّل'}</button>
+                                <button onclick="deleteAnnouncement('${doc.id}')" class="px-2 py-1 rounded text-xs bg-red-500 text-white"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
         }
+        
+            window.seedDatabase = async () => {
     window.seedDatabase = async () => { try { for (const item of seedData) { let dataToAdd = { ...item }; if (dataToAdd.type === 'doctor' || dataToAdd.type === 'clinic') { dataToAdd.bookingPass = generateUniqueId(); } if (dataToAdd.type === 'pharmacy') { dataToAdd.pharmacyPass = generateUniqueId(); } const docId = dataToAdd.name.replace(/\s/g, '_'); await setDoc(doc(db, 'listings', docId), dataToAdd, { merge: true }); } showToast('تم الترحيل!'); } catch (e) { showToast('خطأ في الترحيل'); } }
     window.editFacility = (id) => { const item = allData.find(d => d.id === id); if (!item) return; document.getElementById('edit_id').value = id; document.getElementById('new_type').value = item.type; document.getElementById('new_name').value = item.name; document.getElementById('new_specialty').value = item.specialty || ''; document.getElementById('new_address').value = item.address || item.clinic || ''; document.getElementById('new_phone').value = item.phone; document.getElementById('new_hours').value = item.hours; document.getElementById('new_desc').value = item.description; document.getElementById('new_extra').value = item.departments || item.services || item.tests || ''; document.getElementById('new_emergency').value = item.emergencyPhone || ''; document.getElementById('new_image_url').value = item.image || ''; document.getElementById('formTitle').textContent = `تعديل: ${item.name}`; window.scrollTo({ top: 0, behavior: 'smooth' }); }
     window.deleteFacility = async (id) => { if (!confirm("متأكد من الحذف؟")) return; try { await deleteDoc(doc(db, 'listings', id)); showToast('تم الحذف'); renderAdminDashboard(); } catch (e) { showToast('خطأ'); } }
