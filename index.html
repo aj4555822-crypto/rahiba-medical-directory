@@ -258,6 +258,14 @@
                                 <i style="background: #DC2626;"><i class="fas fa-tint"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">بنك التبرع بالدم الرقمي</div><div class="text-xs text-gray-500">استغاثات وتبرعات</div></div>
                             </div>
+                            <div onclick="openMedicalMap()" class="tools-dropdown-item">
+    <i style="background: #10B981;"><i class="fas fa-map-marked-alt"></i></i>
+    <div><div class="text-sm font-bold text-gray-800">الخريطة الطبية</div><div class="text-xs text-gray-500">عرض المنشآت على الخريطة</div></div>
+</div>
+                            <div onclick="openAskDoctor()" class="tools-dropdown-item">
+    <i style="background: #0EA5E9;"><i class="fas fa-comments"></i></i>
+    <div><div class="text-sm font-bold text-gray-800">اسأل طبيب الرحيبة</div><div class="text-xs text-gray-500">استشارة طبية مجانية</div></div>
+</div>
                             <div onclick="openBurnCalculator()" class="tools-dropdown-item">
                                 <i style="background: #F97316;"><i class="fas fa-fire-extinguisher"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">مُسعف الحروق الذكي</div><div class="text-xs text-gray-500">حاسبة الحروق المنزلية</div></div>
@@ -278,10 +286,7 @@
     <i style="background: #F97316;"><i class="fas fa-syringe"></i></i>
     <div><div class="text-sm font-bold text-gray-800">جدول لقاحات الطفل</div><div class="text-xs text-gray-500">حاسبة مواعيد التطعيم</div></div>
 </div>
-<div onclick="openMedicalMap()" class="tools-dropdown-item">
-    <i style="background: #10B981;"><i class="fas fa-map-marked-alt"></i></i>
-    <div><div class="text-sm font-bold text-gray-800">الخريطة الطبية</div><div class="text-xs text-gray-500">عرض المنشآت على الخريطة</div></div>
-</div>
+
                             <div onclick="openHealthCalc()" class="tools-dropdown-item">
                                 <i style="background: #4F46E5;"><i class="fas fa-weight-scale"></i></i>
                                 <div><div class="text-sm font-bold text-gray-800">حاسبة الصحة (BMI والسعرات)</div><div class="text-xs text-gray-500">وزنك المثالي واحتياجك</div></div>
@@ -369,12 +374,13 @@
                 <div class="px-4 pt-2 text-yellow-400 text-xs font-bold">أدوات طبية تفاعلية</div>
                 <button onclick="toggleMobileMenu(); openMedicineDonation()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-hand-holding-medical w-5" style="color:#059669"></i> صندوق الأدوية الفائضة</button>
                 <button onclick="toggleMobileMenu(); openBloodBank()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-tint w-5" style="color:#DC2626"></i> بنك التبرع بالدم الرقمي</button>
+                <button onclick="toggleMobileMenu(); openMedicalMap()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-map-marked-alt w-5" style="color:#10B981"></i> الخريطة الطبية التفاعلية</button>
+                <button onclick="toggleMobileMenu(); openAskDoctor()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-comments w-5" style="color:#0EA5E9"></i> اسأل طبيب الرحيبة</button>
                 <button onclick="toggleMobileMenu(); openBurnCalculator()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-fire-extinguisher w-5" style="color:#F97316"></i> مُسعف الحروق الذكي</button>
                 <button onclick="toggleMobileMenu(); openSeasonalDiseases()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-virus-covid w-5" style="color:#8B5CF6"></i> أمراض الرحيبة الموسمية</button>
                 <button onclick="toggleMobileMenu(); openPregnancyCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-baby w-5" style="color:#EC4899"></i> حاسبة الحمل والولادة</button>
                 <button onclick="toggleMobileMenu(); openDoseCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-syringe w-5" style="color:#2563EB"></i> حاسبة جرعات الأطفال</button>
                 <button onclick="toggleMobileMenu(); openVaccineScheduler()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-syringe w-5" style="color:#F97316"></i> جدول لقاحات الطفل</button>
-                <button onclick="toggleMobileMenu(); openMedicalMap()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-map-marked-alt w-5" style="color:#10B981"></i> الخريطة الطبية التفاعلية</button>
                 <button onclick="toggleMobileMenu(); openHealthCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-weight-scale w-5" style="color:#4F46E5"></i> حاسبة الصحة (BMI والسعرات)</button>
                 <button onclick="toggleMobileMenu(); openWaterCalc()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-glass-water w-5" style="color:#0891B2"></i> حاسبة الماء اليومية</button>
                 <button onclick="toggleMobileMenu(); openFirstAid()" class="text-right text-white/70 hover:text-white hover:bg-white/10 rounded-xl px-4 py-3 text-sm transition-all flex items-center gap-3"><i class="fas fa-kit-medical w-5" style="color:#DC2626"></i> دليل الإسعافات الأولية</button>
@@ -442,15 +448,19 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 mt-12 max-w-3xl mx-auto">
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-hospital">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مشفى</div></div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-clinic">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">عيادة</div></div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-center">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مركز طبي</div></div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-lab">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مخبر</div></div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-doctor">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">طبيب</div></div>
-                    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-pharmacy">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">صيدلية</div></div>
-                </div>
-            </div>
+                <div class="grid grid-cols-3 sm:grid-cols-7 gap-2 sm:gap-4 mt-12 max-w-4xl mx-auto">
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-hospital">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مشفى</div></div>
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-clinic">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">عيادة</div></div>
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-center">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مركز طبي</div></div>
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-lab">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">مخبر</div></div>
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-doctor">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">طبيب</div></div>
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center"><div class="text-xl sm:text-3xl font-black text-white" id="stat-pharmacy">0</div><div class="text-[9px] sm:text-xs text-white/50 mt-1">صيدلية</div></div>
+    <!-- بطاقة عدد الزوار -->
+    <div class="stat-card p-3 sm:p-5 rounded-2xl text-center" style="background: rgba(196,150,44,0.15); border-color: rgba(196,150,44,0.3);">
+        <div class="text-xl sm:text-3xl font-black" style="color: var(--gold)" id="visitorCount">0</div>
+        <div class="text-[9px] sm:text-xs text-white/70 mt-1 flex items-center justify-center gap-1"><i class="fas fa-eye text-[8px]"></i> زائر</div>
+    </div>
+</div>
         </div>
         <div class="absolute bottom-0 left-0 right-0"><svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H0Z" fill="var(--bg)"/></svg></div>
     </section>
@@ -633,7 +643,7 @@
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, query, where, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAHQhRHtRb-MN5HkEd_MwJqMIbDbfKwuX0",
@@ -1446,7 +1456,25 @@ let currentFollowupBookingId = null;
                     <div><label class="text-xs font-bold text-gray-500">هاتف جهة الطوارئ</label><input type="tel" id="hfEmergencyPhone" class="ctrl-input" value="${data.emergencyPhone || ''}"></div>
                     <button type="submit" class="col-span-1 sm:col-span-2 py-3 rounded-xl text-white font-bold text-sm" style="background: #EC4899"><i class="fas fa-save ml-2"></i> حفظ التحديثات</button>
                 </form>
-                <button onclick="logoutHealthFile()" class="text-red-500 text-sm font-bold">تسجيل الخروج من الملف</button>
+                <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+    <h4 class="font-bold mb-4 text-sm flex items-center gap-2"><i class="fas fa-file-medical text-blue-600"></i> روشتي الطبية السابقة</h4>
+    <div class="flex flex-col gap-3">
+        ${data.prescriptions && data.prescriptions.length > 0 ? 
+            data.prescriptions.map(rx => `
+                <div class="bg-gray-50 p-3 rounded-xl border text-sm relative" style="border-color: var(--border)">
+                    <button onclick="deletePrescription('${rx.date}')" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors" title="حذف الروشتة">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <div class="flex justify-between items-center mb-2 pr-6">
+                        <div class="font-bold text-blue-700">د. ${rx.doctor}</div>
+                        <div class="text-xs text-gray-400">${new Date(rx.date).toLocaleDateString('ar-EG')}</div>
+                    </div>
+                    <pre class="whitespace-pre-wrap font-sans text-gray-700 text-xs leading-relaxed">${rx.text}</pre>
+                </div>
+            `).join('') 
+            : '<p class="text-center text-gray-400 text-sm py-4">لا توجد روشتات طبية محفوظة.</p>'}
+    </div>
+</div>
             </div>
         `, '#EC4899');
         const qrContainer = document.getElementById('qrcode');
@@ -1523,6 +1551,7 @@ let currentFollowupBookingId = null;
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-bold text-lg"><i class="fas fa-file-medical ml-2" style="color: var(--doctor)"></i> الملف الصحي للمريض</h3>
                             <button onclick="closeModal()" class="text-2xl hover:text-gray-400 leading-none">&times;</button>
+<button onclick="openPrescriptionModal('${userId}', '${p.fullName}')" class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-semibold"><i class="fas fa-file-prescription"></i> إنشاء روشتة</button>
                         </div>
                         <div class="flex flex-col gap-3">
                             <div class="flex items-center gap-4 p-3 rounded-xl" style="background: #DBEAFE">
@@ -1581,6 +1610,8 @@ let currentFollowupBookingId = null;
                     isEnglish = true;
                 }
                 location.reload();
+                // تشغيل عداد الزوار
+trackAndDisplayVisitors();
             });
         }
         // Tips Listener
@@ -2218,7 +2249,8 @@ let currentFollowupBookingId = null;
             if (b.chat && b.chat.length > 0) { chatHtml = b.chat.map(msg => `<div class="text-xs p-2 rounded-lg mb-1 ${msg.sender === 'doctor' ? 'bg-blue-100 text-left' : 'bg-gray-100 text-right'}">${msg.text}</div>`).join(''); }
             return `<div class="flex flex-col p-3 rounded-lg border mb-3" style="border-color: var(--border)"><div class="flex items-center justify-between mb-2"><div><span class="text-sm font-bold">${b.name}</span><br><span class="text-xs" style="color: var(--muted)">${b.dayStr}</span></div><div>${statusBadge}<span class="text-[10px] text-gray-400">مرجع: #${b.ref}</span></div></div><div class="flex items-center justify-between border-t pt-2 mb-2" style="border-color: var(--border)"><a href="tel:${b.phone}" class="text-xs text-blue-600">${b.phone}</a><div class="flex gap-1">${actionButtons}</div></div><div class="border-t pt-2" style="border-color: var(--border)"><div class="text-xs font-bold text-gray-600 mb-1">المحادثة:</div><div class="max-h-32 overflow-y-auto mb-2 bg-gray-50 p-2 rounded-lg">${chatHtml || '<span class="text-xs text-gray-400">لا توجد رسائل</span>'}</div><div class="flex gap-1"><input type="text" id="docChat_${b.id}" placeholder="اكتب ردك للمريض..." class="ctrl-input text-sm py-1 flex-1"><button onclick="sendDocMessage('${b.id}')" class="text-xs text-white px-3 py-1 rounded bg-blue-500"><i class="fas fa-paper-plane"></i></button></div></div></div>`; 
         }).join('');
-        openCtrlPanel(`لوحة: ${doc.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)"><img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p></div></div><button onclick="openDoctorScanner('${doc.id}')" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2" style="background: #0D9488"><i class="fas fa-qrcode"></i> قراءة الملف الصحي للمريض (QR)</button><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-calendar-day ml-2" style="color: var(--doctor)"></i> طلبات المواعيد (${docBookings.length})</h4><div class="flex flex-col gap-2">${bookingsListHtml}</div></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-cog ml-2"></i> أيام العمل</h4><div class="mb-4 grid grid-cols-4 sm:grid-cols-7 gap-2">${daysCheckboxes}</div><button onclick="saveDoctorSettings('${doc.id}')" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--doctor)">حفظ</button></div></div>`, '#2563EB'); 
+        openCtrlPanel(`لوحة: ${doc.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)"><img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p></div></div><button onclick="openDoctorScanner('${doc.id}')" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2" style="background: #0D9488"><i class="fas fa-qrcode"></i> قراءة الملف الصحي للمريض (QR)</button>
+<button onclick="openAskDoctor()" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 mb-3" style="background: #0EA5E9"><i class="fas fa-comments"></i> الإجابة على أسئلة المرضى</button><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-calendar-day ml-2" style="color: var(--doctor)"></i> طلبات المواعيد (${docBookings.length})</h4><div class="flex flex-col gap-2">${bookingsListHtml}</div></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-cog ml-2"></i> أيام العمل</h4><div class="mb-4 grid grid-cols-4 sm:grid-cols-7 gap-2">${daysCheckboxes}</div><button onclick="saveDoctorSettings('${doc.id}')" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--doctor)">حفظ</button></div></div>`, '#2563EB'); 
     }
 
     window.acceptBooking = async (bookingId) => { 
@@ -2657,6 +2689,264 @@ let currentFollowupBookingId = null;
         if (frame) {
             frame.src = `https://maps.google.com/maps?q=${query}&output=embed`;
         }
+    }
+        // === 1. Ask a Doctor Q&A (اسأل طبيب الرحيبة) ===
+    let allQuestions = [];
+    let unsubscribeQuestions = null;
+
+    window.openAskDoctor = () => {
+        openCtrlPanel('اسأل طبيب الرحيبة', `
+            <div class="flex flex-col gap-5">
+                <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 text-sky-800 text-sm flex items-center gap-3">
+                    <i class="fas fa-comments text-xl"></i>
+                    <span>اطرح سؤالك الطبي ليقوم الأطباء بالإجابة عليه. (الأسئلة عامة ولا تغني عن الكشف المباشر).</span>
+                </div>
+                <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                    <h4 class="font-bold mb-4 text-sm flex items-center gap-2"><i class="fas fa-question-circle text-sky-600"></i> اطرح سؤالاً جديداً</h4>
+                    <form onsubmit="submitQuestion(event)" class="flex flex-col gap-3">
+                        <input type="text" id="qaName" class="ctrl-input text-sm" placeholder="الاسم (اختياري - يمكن كتابة مجهول)" required>
+                        <select id="qaCategory" class="ctrl-input text-sm">
+                            <option>طب عام / باطنة</option><option>أطفال</option><option>نسائية وتوليد</option>
+                            <option>جلدية</option><option>عظمية</option><option>أسنان</option><option>أخرى</option>
+                        </select>
+                        <textarea id="qaText" class="ctrl-input text-sm" rows="3" placeholder="اكتب تفاصيل السؤال والأعراض بوضوح..." required></textarea>
+                        <button type="submit" class="py-3 rounded-xl text-white font-bold text-sm" style="background: #0EA5E9">نشر السؤال</button>
+                    </form>
+                </div>
+                <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
+                    <h4 class="font-bold mb-4 text-sm">الأسئلة والإجابات</h4>
+                    <div id="qaListContainer" class="flex flex-col gap-4">
+                        <p class="text-center py-8 text-gray-400 text-sm">جاري تحميل الأسئلة...</p>
+                    </div>
+                </div>
+            </div>
+        `, '#0EA5E9');
+
+        if (unsubscribeQuestions) { unsubscribeQuestions(); unsubscribeQuestions = null; }
+        unsubscribeQuestions = onSnapshot(query(collection(db, 'medical_questions'), where('status', 'in', ['open', 'answered'])), (snapshot) => {
+            allQuestions = [];
+            snapshot.forEach(doc => allQuestions.push({ id: doc.id, ...doc.data() }));
+            renderQAList();
+        });
+    }
+
+    function renderQAList() {
+        const container = document.getElementById('qaListContainer');
+        if (!container) return;
+        if (allQuestions.length === 0) {
+            container.innerHTML = '<p class="text-center py-8 text-gray-400 text-sm">لا توجد أسئلة حالياً. كن أول من يطرح سؤالاً!</p>';
+            return;
+        }
+
+        // التحقق إذا كنا في وضع الطبيب (اللوحة مفتوحة باسم الطبيب)
+        const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
+        const isDoctorMode = ctrlTitle.includes('لوحة:');
+
+        container.innerHTML = allQuestions.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).map(q => {
+            let answersHtml = '';
+            if (q.answers && q.answers.length > 0) {
+                answersHtml = q.answers.map(ans => `
+                    <div class="bg-green-50 border border-green-200 p-3 rounded-lg mt-2 text-right">
+                        <div class="text-xs font-bold text-green-800 flex items-center gap-1"><i class="fas fa-user-md"></i> ${ans.doctorName}</div>
+                        <div class="text-sm text-gray-700 mt-1 whitespace-pre-line">${ans.text}</div>
+                    </div>
+                `).join('');
+            }
+
+            let answerSection = '';
+            if (isDoctorMode) {
+                answerSection = `
+                    <textarea id="ansText_${q.id}" class="ctrl-input text-sm py-1" rows="2" placeholder="اكتب إجابتك كطبيب..."></textarea>
+                    <button onclick="submitAnswer('${q.id}')" class="mt-2 w-full py-2 rounded-lg bg-green-600 text-white text-sm font-semibold">إرسال الإجابة</button>
+                `;
+            } else {
+                answerSection = `<p class="text-xs text-gray-400 text-center">يمكن للأطباء فقط الإجابة على هذا السؤال.</p>`;
+            }
+
+            return `
+                <div class="border rounded-xl p-4" style="border-color: var(--border)">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <span class="text-xs px-2 py-1 rounded bg-sky-100 text-sky-700 inline-block mb-1">${q.category}</span>
+                            <h5 class="font-bold text-sm text-gray-800">${q.name}</h5>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 whitespace-pre-line bg-gray-50 p-2 rounded-lg">${q.text}</p>
+                    ${answersHtml}
+                    <div class="mt-3 border-t pt-3" style="border-color: var(--border)">
+                        ${answerSection}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.submitQuestion = async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('qaName').value.trim() || 'مجهول';
+        const category = document.getElementById('qaCategory').value;
+        const text = document.getElementById('qaText').value.trim();
+        if (!text) return;
+
+        try {
+            await addDoc(collection(db, 'medical_questions'), {
+                name, category, text, status: 'open', answers: [], createdAt: new Date().toISOString()
+            });
+            showToast('تم نشر سؤالك بنجاح!');
+            e.target.reset();
+        } catch (err) { showToast('حدث خطأ أثناء النشر'); }
+    }
+
+    window.submitAnswer = async (qId) => {
+        const input = document.getElementById(`ansText_${qId}`);
+        const text = input.value.trim();
+        if (!text) return;
+
+        const docName = document.getElementById('ctrlTitle')?.textContent.replace('لوحة: ', '').trim() || 'طبيب';
+        
+        try {
+            const docRef = doc(db, 'medical_questions', qId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const currentAnswers = docSnap.data().answers || [];
+                currentAnswers.push({ doctorName: docName, text: text, timestamp: new Date().toISOString() });
+                await updateDoc(docRef, { answers: currentAnswers, status: 'answered' });
+                showToast('تم نشر إجابتك!');
+            }
+        } catch (err) { showToast('خطأ في إرسال الإجابة'); }
+    }
+
+    // === 2. Digital Prescription (الروشتة الإلكترونية) ===
+    window.openPrescriptionModal = (patientId, patientName) => {
+        closeModal(); 
+        document.getElementById('modalContent').innerHTML = `
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg"><i class="fas fa-file-prescription ml-2" style="color: var(--doctor)"></i> إنشاء روشتة طبية</h3>
+                    <button onclick="closeModal()" class="text-2xl hover:text-gray-400 leading-none">&times;</button>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-xl mb-4 text-sm text-blue-800 flex items-center gap-2">
+                    <i class="fas fa-user"></i> المريض: <b>${patientName}</b>
+                </div>
+                <form onsubmit="generatePrescription(event, '${patientId}', '${patientName}')">
+                    <div id="medListContainer" class="flex flex-col gap-3 mb-4">
+                        <div class="bg-gray-50 p-3 rounded-xl border" style="border-color: var(--border)">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <input type="text" required class="ctrl-input text-sm" placeholder="اسم الدواء" name="drugName[]">
+                                <input type="text" required class="ctrl-input text-sm" placeholder="الجرعة (مثال: حبة)" name="dose[]">
+                                <input type="text" required class="ctrl-input text-sm" placeholder="التكرار (مثال: 3 مرات يومياً)" name="freq[]">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addPrescriptionRow()" class="w-full py-2 mb-4 rounded-xl border-2 border-dashed text-sm font-semibold" style="border-color: var(--doctor); color: var(--doctor)">
+                        <i class="fas fa-plus"></i> إضافة دواء آخر
+                    </button>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-2">ملاحظات الطبيب / التعليمات</label>
+                        <textarea class="ctrl-input text-sm" rows="2" placeholder="مثال: يؤخذ بعد الأكل، مراجعة بعد أسبوع..." name="rxNotes"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--doctor)">
+                        <i class="fas fa-save"></i> حفظ الروشتة في ملف المريض
+                    </button>
+                </form>
+            </div>`;
+        document.getElementById('modalOverlay').classList.add('active');
+        lockScroll();
+    }
+
+    window.addPrescriptionRow = () => {
+        const container = document.getElementById('medListContainer');
+        const newRow = document.createElement('div');
+        newRow.className = 'bg-gray-50 p-3 rounded-xl border relative';
+        newRow.style.borderColor = 'var(--border)';
+        newRow.innerHTML = `
+            <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 left-2 text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input type="text" required class="ctrl-input text-sm" placeholder="اسم الدواء" name="drugName[]">
+                <input type="text" required class="ctrl-input text-sm" placeholder="الجرعة" name="dose[]">
+                <input type="text" required class="ctrl-input text-sm" placeholder="التكرار" name="freq[]">
+            </div>`;
+        container.appendChild(newRow);
+    }
+
+    window.generatePrescription = async (e, patientId, patientName) => {
+        e.preventDefault();
+        const form = e.target;
+        const drugNames = form.elements['drugName[]'];
+        const doses = form.elements['dose[]'];
+        const freqs = form.elements['freq[]'];
+        const notes = form.elements['rxNotes'].value;
+
+        let rxText = `📋 *روشتة طبية إلكترونية*\n_______________________\n`;
+        
+        if (drugNames.length === undefined) {
+            rxText += `\n💊 ${drugNames.value}\n   الجرعة: ${doses.value} | ${freqs.value}\n`;
+        } else {
+            for (let i = 0; i < drugNames.length; i++) {
+                rxText += `\n${i + 1}. 💊 ${drugNames[i].value}\n   الجرعة: ${doses[i].value} | ${freqs[i].value}\n`;
+            }
+        }
+        if (notes) rxText += `\n📝 *ملاحظات:* ${notes}\n`;
+        rxText += `_______________________\nيرجى الالتزام بالجرعات ولا تنسَ المراجعة.`;
+
+        const doctorName = document.getElementById('ctrlTitle')?.textContent.replace('لوحة: ', '').trim() || 'طبيب';
+
+        try {
+            const docRef = doc(db, 'health_files', patientId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const currentRx = docSnap.data().prescriptions || [];
+                currentRx.push({ doctor: doctorName, text: rxText, date: new Date().toISOString() });
+                await updateDoc(docRef, { prescriptions: currentRx });
+                showToast('تم حفظ الروشتة في ملف المريض بنجاح!');
+                closeModal();
+                fetchPatientHealthFile(patientId, { specialty: 'general' }); 
+            }
+        } catch (err) { showToast('خطأ في حفظ الروشتة'); }
+    }
+        // === عدد زوار الموقع الاحترافي ===
+    async function trackAndDisplayVisitors() {
+        const statsRef = doc(db, 'site_stats', 'visitor_metrics');
+        try {
+            // 1. التحقق إذا كان المستخدم زار الموقع في هذه الجلسة (لعدم تكرار العداد عند تحديث الصفحة)
+            const isNewSession = !sessionStorage.getItem('hasVisitedRaheba');
+            
+            if (isNewSession) {
+                // زيادة العداد بمقدار 1 في قاعدة البيانات
+                await setDoc(statsRef, { count: increment(1) }, { merge: true });
+                sessionStorage.setItem('hasVisitedRaheba', 'true');
+            }
+
+            // 2. جلب العدد الحديث لعرضه
+            const docSnap = await getDoc(statsRef);
+            if (docSnap.exists()) {
+                const count = docSnap.data().count || 0;
+                animateCounter(count);
+            }
+        } catch (error) {
+            console.error("Error tracking visitors:", error);
+        }
+    }
+
+    // دالة التأثير الحركي للأرقام
+    function animateCounter(target) {
+        const el = document.getElementById('visitorCount');
+        if (!el) return;
+        
+        let current = 0;
+        const duration = 2000; // مدة الحركة بالمللي ثانية (ثانيتان)
+        const stepTime = 30;
+        const steps = duration / stepTime;
+        const incrementAmount = Math.max(1, Math.floor(target / steps));
+        
+        const timer = setInterval(() => {
+            current += incrementAmount;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            el.innerText = current.toLocaleString('ar-EG');
+        }, stepTime);
     }
 </script>
 </body>
