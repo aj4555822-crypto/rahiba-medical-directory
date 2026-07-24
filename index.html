@@ -1506,37 +1506,8 @@ let currentFollowupBookingId = null;
 
     // === Core App Functions ===
     window.openLightbox = (src) => { const lightbox = document.getElementById('lightbox'); lightbox.querySelector('img').src = src.includes('picsum.photos') ? src.replace('/400/250', '/1200/800') : src; lightbox.classList.add('active'); lockScroll(); }
-    let currentAnnouncement = null;
-    // استماع للإعلانات
-    onSnapshot(query(collection(db, 'announcements'), where('isActive', '==', true)), (snapshot) => {
-        const navbar = document.getElementById('navbar');
-        const annBar = document.getElementById('topAnnouncementBar');
-        const homeSection = document.getElementById('home');
-        if (!annBar || !navbar || !homeSection) return;
-        
-        if (!snapshot.empty) {
-            const ann = snapshot.docs[0].data();
-            currentAnnouncement = { id: snapshot.docs[0].id, ...ann };
+    
             
-            document.getElementById('announcementText').innerText = ann.text;
-            const linkEl = document.getElementById('announcementLink');
-                        if (ann.link) {
-                linkEl.href = ann.link;
-                linkEl.innerText = ann.linkText || 'اضغط هنا';
-                linkEl.classList.remove('hidden');
-            } else {
-                linkEl.classList.add('hidden');
-            }
-            annBar.classList.remove('hidden');
-            navbar.style.top = '36px'; // دفع الناف بار للأسفل
-            homeSection.style.paddingTop = '11rem'; // دفع محتوى الصفحة للأسفل
-        } else {
-            currentAnnouncement = null;
-            annBar.classList.add('hidden');
-            navbar.style.top = '0px';
-            homeSection.style.paddingTop = '6rem';
-        }
-    });
     window.addEventListener('DOMContentLoaded', () => {        // === كود الترجمة الإنجليزية ===
         const langToggle = document.getElementById('langToggle');
         let isEnglish = document.cookie.includes('googtrans=/ar/en');
@@ -1915,8 +1886,38 @@ let currentFollowupBookingId = null;
             "استخدام واقي الشمس يومياً يحمي الجلد من التجاعيد المبكرة وسرطان الجلد.",
             "الاطمئنان على سلامة الأطفال وإبعاد المواد الخطيرة والكيميائية عن متناولهم.",
             "الاهتمام بالنظافة الشخصية كالاستحمام المنتظم وتقليم الأظافر يقي من الالتهابات."
+            "الإكثار من تناول الألياف الموجودة في الشوفان والبقوليات يساعد على تحسين الهضم ومنع الإمساك.",
+            "الحفاظ على وضعية صحيحة أثناء الجلوس أمام الكمبيوتر يقي من آلام الرقبة والظهر المزمنة.",
+            "لحماية العينين من إجهاد الشاشات، اتبع قاعدة 20-20-20: كل 20 دقيقة، انظر لشيء على بعد 20 قدماً لمدة 20 ثانية.",
+            "احفظ الأدوية في مكان بارد وجاف بعيداً عن أشعة الشمس، ولا تتركها في خزنة السيارة أو الحمام.",
+            "تأكد دائماً من تاريخ انتهاء الأدوية قبل تناولها وتخلص من الأدوية المنتهية الصلاحية بشكل آمن.",
+            "عند السعال أو العطس، استخدم مرفقك أو منديلاً ورقياً بدلاً من يديك لمنع انتشار العدوى.",
+            "عند رفع الأشياء الثقيلة من الأرض، اثنِ ركبتيك وليس ظهرك لتجنب الإصابة بالفتق أو آلام الظهر.",
+            "تناول حفنة من المكسرات النيئة غير المملحة يومياً يوفر للجسم دهوناً صحية ويعزز صحة القلب.",
+            "استبدل الخبز الأبيض والأرز الأبيض بالخبز الأسمر والأرز البني للاستفادة من العناصر الغذائية الكاملة.",
+            "امضغ طعامك ببطء، فذلك يساعد على الشعور بالشبع ويحسن عملية الهضم.",
+            "ارتداء أحذية مريحة وطبية تناسب شكل القدم يقي من آلام المفاصل والظهر في المستقبل.",
+            "إجراء فحص دوري للعينين كل سنة أو سنتين يكشف مبكراً عن مشاكل كالزرق (الجلوكوما) والمياه البيضاء.",
+            "ممارسة تمارين التنفس العميق لبضع دقائق يومياً تقلل من التوتر وتحسن من تدفق الأكسجين للدم.",
+            "جهّز صندوق إسعافات أولية في منزلك وسيارتك يحتوي على الضمادات والمطهرات والأدوية الأساسية.",
+            "تأكد من طهي اللحوم والدواجن جيداً حتى النضج التام لتجنب التسمم الغذائي والبكتيريا الضارة.",
+            "تجنب رفع صوت السماعات (سماعات الأذن) لمستوى عالٍ، وحافظ على فترة راحة للأذنين حمايةً للسمع.",
+            "اشرب كوباً من الماء بمجرد الاستيقاظ من النوم لتنشيط الأعضاء الداخلية وتعويض السوائل المفقودة.",
+            "اعتد على قراءة الملصقات الغذائية عند التسوق للانتباه لكميات السكر والصوديوم والدهون المتحولة.",
+            "الحفاظ على تواصل اجتماعي مع الأصدقاء والعائلة يعزز الصحة النفسية ويقلل من خطر الاكتئاب.",
+            "خذ فترات راحة قصيرة للوقوف والتمدد كل ساعة أثناء العمل المكتبي لتنشيط الدورة الدموية.",
+            "اغسل أدوات المطبخ وألواح التقطيع جيداً بعد استخدامها للحم النيء لمنع التلوث المتبادل.",
+            "خصص يوماً في الأسبوع لتقليل استخدام الهاتف ووسائل التواصل الاجتماعي لتحسين التركيز والصحة النفسية.",
+            "اعتمد على الشواء أو السلق أو الطبخ بالفرن بدلاً من القلي لتقليل السعرات والدهون الضارة.",
+            "لا تتجاهل الصداع المتكرر أو المستمر، واستشر طبيبك لتحديد السبب الكامن وراءه.",
+            "احرص على تهوية المنزل جيداً وفتح النوافذ يومياً لتجديد الهواء وتقليل تركيز الميكروبات والغبار.",
+            "استخدم أطباقاً أصغر حجماً عند تناول الطعام، فهذه الحيلة البصرية تساعدك على تقليل كميات الطعام.",
+            "تناول البروتين (كالبيض أو الزبادي) في وجبة الفطور يقلل من الشعور بالجوع طوال اليوم.",
+            "الضحك يومياً يقلل من هرمونات التوتر (الكورتيزول) ويعزز مناعة الجسم بشكل طبيعي.",
+            "لا تشارك أدواتك الشخصية كالمناشف أو فرشاة الأسنان مع الآخرين لمنع انتقال الفيروسات والبكتيريا."
         ];
-        try { for (const tip of tips) { await addDoc(collection(db, 'medical_tips'), { text: tip }); } showToast('تم إضافة 30 نصيحة طبية بنجاح!'); } catch (e) { showToast('خطأ في الترحيل'); }
+        ];
+        try { for (const tip of tips) { await addDoc(collection(db, 'medical_tips'), { text: tip }); } showToast('تم إضافة 59 نصيحة طبية بنجاح!'); } catch (e) { showToast('خطأ في الترحيل'); }
     }
     
     window.renderAdminDashboard = async () => { 
@@ -1938,8 +1939,6 @@ let currentFollowupBookingId = null;
         let bloodHtml = bloodRequests.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد استغاثات حالياً.</p>' : bloodRequests.map(b => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><span class="blood-type-badge text-sm py-1 px-3">${b.bloodType}</span><div><div class="text-sm font-semibold">${b.patientName}</div><div class="text-xs text-gray-500">${b.hospital}</div></div></div><button onclick="resolveBloodRequest('${b.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">إنهاء الطلب</button></div>`).join('');
         let medDonHtml = medicineDonations.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد أدوية مُتبرع بها حالياً.</p>' : medicineDonations.map(m => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><i class="fas fa-pills text-green-600"></i><div><div class="text-sm font-semibold">${m.medicineName} (${m.quantity})</div><div class="text-xs text-gray-500">ينتهي: ${m.expiryDate} | المتبرع: ${m.donorName}</div></div></div><button onclick="resolveMedicineDonation('${m.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">حذف/إنهاء</button></div>`).join('');
         openCtrlPanel('لوحة الإدارة', `<div class="flex flex-col gap-6"> ${announcementsHtml} <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-tint text-red-600"></i> إدارة استغاثات الدم (${bloodRequests.length})</h4><div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${bloodHtml}</div></div> <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-hand-holding-medical text-green-600"></i> إدارة الأدوية الفائضة (${medicineDonations.length})</h4><div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${medDonHtml}</div></div> <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-plus-circle ml-2" style="color: var(--accent)"></i> <span id="formTitle">إضافة منشأة</span></h4><form onsubmit="saveFacility(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3"><input type="hidden" id="edit_id"><select id="new_type" class="ctrl-input text-sm" required><option value="clinic">عيادة</option><option value="hospital">مشفى</option><option value="center">مركز</option><option value="lab">مخبر</option><option value="doctor">طبيب</option><option value="pharmacy">صيدلية</option></select><input type="text" id="new_name" class="ctrl-input text-sm" placeholder="الاسم" required><input type="text" id="new_specialty" class="ctrl-input text-sm" placeholder="التخصص" required><input type="text" id="new_address" class="ctrl-input text-sm" placeholder="العنوان" required><input type="text" id="new_phone" class="ctrl-input text-sm" placeholder="الهاتف" required><input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل" required><input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="تفاصيل إضافية"><input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي)"><input type="text" id="new_image_url" class="ctrl-input text-sm" placeholder="رابط الصورة (URL)"><textarea id="new_desc" class="ctrl-input text-sm col-span-2" placeholder="وصف" rows="2" required></textarea><button type="submit" class="col-span-1 sm:col-span-2 py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--accent)"><i class="fas fa-save ml-1"></i> حفظ</button></form></div> <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-list ml-2"></i> المنشآت (${allData.length})</h4><div class="flex flex-col gap-2 max-h-96 overflow-y-auto">${listHtml}</div></div> <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية</button> <button onclick="seedMedicalTips()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: #EC4899; color: #EC4899"><i class="fas fa-lightbulb ml-2"></i> ترحيل 30 نصيحة طبية للفايربايس</button> </div>`, '#073D2E'); 
-                        });
-        }
 
         renderAdminAnnouncements();
     }
