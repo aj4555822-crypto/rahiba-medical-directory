@@ -1785,7 +1785,7 @@ let currentFollowupBookingId = null;
 
     window.openPharmacyLogin = () => { openCtrlPanel('لوحة الصيدليات', `<div class="max-w-sm mx-auto py-8"><div class="text-center mb-6"><div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-3" style="background: var(--accent-light)"><i class="fas fa-prescription-bottle-medical text-2xl" style="color: var(--accent)"></i></div><h3 class="font-bold text-lg">دخول الصيدليات</h3></div><form onsubmit="handlePharmacyLogin(event)" class="flex flex-col gap-4"><input type="text" id="pharmName" class="ctrl-input text-center" placeholder="اسم الصيدلية" required><input type="text" id="pharmPass" class="ctrl-input text-center font-mono" placeholder="كلمة المرور" required><button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm" style="background: var(--accent)">دخول</button></form></div>`, '#0E7C5F'); }
     window.handlePharmacyLogin = (e) => { e.preventDefault(); const name = document.getElementById('pharmName').value.trim(); const pass = document.getElementById('pharmPass').value.trim().toUpperCase(); const pharmData = allData.find(d => d.name === name && d.type === 'pharmacy' && d.pharmacyPass === pass); if (pharmData) { renderPharmacyDashboard(pharmData); } else { showToast('بيانات الدخول غير صحيحة!'); } }
-    window.renderPharmacyDashboard = (pharm) => { 
+        window.renderPharmacyDashboard = (pharm) => { 
         openCtrlPanel(`لوحة تحكم: ${pharm.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center justify-between flex-col sm:flex-row gap-4" style="border-color: var(--border)"><div class="flex items-center gap-4"><img src="${pharm.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${pharm.name}</h3><p class="text-sm" style="color: var(--pharmacy)">صيدلية</p></div></div><button onclick="toggleNightShift('${pharm.id}', ${!pharm.night})" class="px-4 py-2 rounded-xl font-bold text-sm ${pharm.night ? 'bg-yellow-500 text-white' : 'bg-gray-200'}">${pharm.night ? 'إيقاف المناوبة' : 'تفعيل المناوبة'}</button></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm">طلبات الأدوية الواردة</h4><div id="requestsContainer" class="flex flex-col gap-3"><p class="text-center py-10" style="color: var(--muted)">جاري تحميل الطلبات...</p></div></div></div>`, '#0E7C5F'); 
         
         const q = query(collection(db, 'medicine_requests'), where('status', 'in', ['active', 'searching', 'available', 'unavailable'])); 
@@ -1800,20 +1800,63 @@ let currentFollowupBookingId = null;
                 const date = new Date(req.createdAt).toLocaleString('ar-EG', { date: 'short', time: 'short' }); 
                 const phone = req.patientPhone; 
                 
-                let requestStatus = '';
-                if (req.status === 'available') requestStatus = `<span class="text-xs px-2 py-1 rounded bg-green-100 text-green-700 inline-block mb-2">تم التوفير</span>`;
-                else if (req.status === 'unavailable') requestStatus = `<span class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 inline-block mb-2">غير متوفر</span>`;
+                let requestStatus = ''; 
+                if (req.status === 'available') requestStatus = `<span class="text-xs px-2 py-1 rounded bg-green-100 text-green-700 inline-block mb-2">تم التوفير</span>`; 
+                else if (req.status === 'unavailable') requestStatus = `<span class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 inline-block mb-2">غير متوفر</span>`; 
                 else requestStatus = `<span class="text-xs px-2 py-1 rounded bg-yellow-100 text-yellow-700 inline-block mb-2">قيد البحث</span>`;
 
-                let actionButtons = `
-                    <div class="flex gap-2 mt-2">
-                        <button onclick="setMedAvailable('${doc.id}', '${pharm.name}')" class="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-green-600">
-                            <i class="fas fa-check"></i> توفّر الدواء
+                // منطق الإجراءات بناءً على حالة الطلب والصيدلية التي وفرته
+                let interactionArea = '';
+
+                if (req.status === 'available') {
+                    if (req.availablePharmacy === pharm.name) {
+                        // هذه الصيدلية هي من وفرت الدواء
+                        interactionArea = `
+                            <div class="bg-green-50 text-green-700 text-sm font-bold p-3 rounded-lg text-center mb-2 flex items-center justify-center gap-2">
+                                <i class="fas fa-check-circle"></i> أنت من وفر هذا الدواء للمريض
+                            </div>
+                            <a href="tel:${phone}" class="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-blue-600"><i class="fas fa-phone"></i> اتصال بالمريض للاستلام</a>
+                            <button onclick="updateMedStatus('${doc.id}', 'searching')" class="w-full mt-2 bg-gray-200 text-gray-600 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-gray-300">
+                                <i class="fas fa-undo"></i> تراجع عن التوفير (إعادة فتح الطلب)
+                            </button>
+                        `;
+                    } else {
+                        // صيدلية أخرى هي من وفرت الدواء
+                        interactionArea = `
+                            <div class="bg-gray-100 text-gray-500 text-sm font-bold p-3 rounded-lg text-center flex items-center justify-center gap-2 cursor-not-allowed">
+                                <i class="fas fa-lock"></i> تم إغلاق هذا الطلب (تم توفير الدواء من صيدلية أخرى)
+                            </div>
+                        `;
+                    }
+                } else if (req.status === 'unavailable') {
+                    interactionArea = `
+                        <div class="bg-gray-100 text-gray-400 text-sm font-bold p-3 rounded-lg text-center flex items-center justify-center gap-2">
+                            <i class="fas fa-times-circle"></i> قمت بإغلاق هذا الطلب كونه غير متوفر لديك
+                        </div>
+                        <button onclick="updateMedStatus('${doc.id}', 'searching')" class="w-full mt-2 bg-gray-200 text-gray-600 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-gray-300">
+                            <i class="fas fa-undo"></i> إعادة فتح الطلب (توفر لديك الآن)
                         </button>
-                        <button onclick="updateMedStatus('${doc.id}', 'unavailable')" class="flex-1 bg-gray-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-gray-600">
-                            <i class="fas fa-times"></i> غير متوفر
-                        </button>
-                    </div>`;
+                    `;
+                } else {
+                    // الطلب قيد البحث (متاح للجميع)
+                    let actionButtons = `
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="setMedAvailable('${doc.id}', '${pharm.name}')" class="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-green-600">
+                                <i class="fas fa-check"></i> توفّر الدواء
+                            </button>
+                            <button onclick="updateMedStatus('${doc.id}', 'unavailable')" class="flex-1 bg-gray-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-gray-600">
+                                <i class="fas fa-times"></i> غير متوفر
+                            </button>
+                        </div>`;
+                    
+                    interactionArea = `
+                        <input type="text" id="medNotes_${doc.id}" placeholder="ملاحظة للمواطن (مثال: استلمه خلال ساعة)" value="${req.notes || ''}" onblur="updateMedNotes('${doc.id}', this.value)" class="ctrl-input text-sm py-1">
+                        ${actionButtons}
+                        <div class="flex gap-2 mt-2">
+                            <a href="tel:${phone}" class="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-blue-600"><i class="fas fa-phone"></i> اتصال بالمريض</a>
+                        </div>
+                    `;
+                }
 
                 html += `<div class="bg-white border rounded-xl p-4 flex flex-col gap-3" style="border-color: var(--border)">
                     <div class="flex flex-col sm:flex-row gap-3 items-center">
@@ -1827,11 +1870,7 @@ let currentFollowupBookingId = null;
                         </div>
                     </div>
                     <div class="flex flex-col gap-2 mt-2 border-t pt-3" style="border-color: var(--border)">
-                        <input type="text" id="medNotes_${doc.id}" placeholder="ملاحظة للمواطن (مثال: استلمه خلال ساعة)" value="${req.notes || ''}" onblur="updateMedNotes('${doc.id}', this.value)" class="ctrl-input text-sm py-1">
-                        ${actionButtons}
-                        <div class="flex gap-2 mt-2">
-                            <a href="tel:${phone}" class="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:bg-blue-600"><i class="fas fa-phone"></i> اتصال بالمريض</a>
-                        </div>
+                        ${interactionArea}
                     </div>
                 </div>`; 
             }); 
