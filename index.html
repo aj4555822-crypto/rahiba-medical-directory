@@ -1610,8 +1610,7 @@ let currentFollowupBookingId = null;
                     isEnglish = true;
                 }
                 location.reload();
-                // تشغيل عداد الزوار
-trackAndDisplayVisitors();
+                
             });
         }
         // Tips Listener
@@ -1690,9 +1689,12 @@ trackAndDisplayVisitors();
             if (ctrlTitle === 'لوحة الإدارة') renderAdminDashboard();
         });
 
-        document.getElementById('lightbox').addEventListener('click', () => { document.getElementById('lightbox').classList.remove('active'); unlockScroll(); });
+                document.getElementById('lightbox').addEventListener('click', () => { document.getElementById('lightbox').classList.remove('active'); unlockScroll(); });
         document.getElementById('darkModeToggle').addEventListener('click', () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('darkMode', document.documentElement.classList.contains('dark')); });
         if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
+        
+        // تشغيل عداد الزوار عند فتح الموقع
+        trackAndDisplayVisitors();
     });
 
     function updateStats() {
