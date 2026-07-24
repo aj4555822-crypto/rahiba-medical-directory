@@ -191,12 +191,16 @@
         #announcementText {
             white-space: nowrap;
             display: inline-block;
-            animation: marquee 12s linear infinite; /* سرعة الحركة 18 ثانية */
+            animation: marquee 30s linear infinite; /* سرعة الحركة 30 ثانية */
             padding-left: 100%;
         }
         /* إيقاف الحركة عند مرور الماوس لتسهيل القراءة */
         #announcementText:hover {
             animation-play-state: paused;
+        }
+                #announcementText.no-marquee {
+            animation: none;
+            padding-left: 0;
         }
                 /* === قسم التعليمات قبل التحاليل === */
         .fasting-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
@@ -222,7 +226,7 @@
         <!-- شريط الإعلانات العلوي -->
         <div id="topAnnouncementBar" class="hidden fixed top-0 right-0 left-0 z-[60] bg-gradient-to-l from-[#052E22] via-[#0E7C5F] to-[#052E22] text-white text-center py-2 px-12 text-xs sm:text-sm font-semibold shadow-md flex items-center justify-center gap-3 border-b border-[var(--gold)]/40">
             <i class="fas fa-bullhorn text-[var(--gold)] animate-pulse"></i>
-            <span id="announcementText" class="flex-1"></span>
+            <span id="announcementText"></span>
             <a id="announcementLink" href="#" target="_blank" class="text-[var(--gold)] hover:underline text-xs whitespace-nowrap" style="display: none;">اضغط هنا</a>
         </div>
     <nav class="navbar fixed top-0 right-0 left-0 z-50 bg-transparent" id="navbar">
@@ -1933,25 +1937,7 @@ let currentFollowupBookingId = null;
         let medDonHtml = medicineDonations.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد أدوية مُتبرع بها حالياً.</p>' : medicineDonations.map(m => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><i class="fas fa-pills text-green-600"></i><div><div class="text-sm font-semibold">${m.medicineName} (${m.quantity})</div><div class="text-xs text-gray-500">ينتهي: ${m.expiryDate} | المتبرع: ${m.donorName}</div></div></div><button onclick="resolveMedicineDonation('${m.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">حذف/إنهاء</button></div>`).join('');
         openCtrlPanel('لوحة الإدارة', `<div class="flex flex-col gap-6"> ${announcementsHtml} <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-tint text-red-600"></i> إدارة استغاثات الدم (${bloodRequests.length})</h4><div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${bloodHtml}</div></div> <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-hand-holding-medical text-green-600"></i> إدارة الأدوية الفائضة (${medicineDonations.length})</h4><div class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">${medDonHtml}</div></div> <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-plus-circle ml-2" style="color: var(--accent)"></i> <span id="formTitle">إضافة منشأة</span></h4><form onsubmit="saveFacility(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3"><input type="hidden" id="edit_id"><select id="new_type" class="ctrl-input text-sm" required><option value="clinic">عيادة</option><option value="hospital">مشفى</option><option value="center">مركز</option><option value="lab">مخبر</option><option value="doctor">طبيب</option><option value="pharmacy">صيدلية</option></select><input type="text" id="new_name" class="ctrl-input text-sm" placeholder="الاسم" required><input type="text" id="new_specialty" class="ctrl-input text-sm" placeholder="التخصص" required><input type="text" id="new_address" class="ctrl-input text-sm" placeholder="العنوان" required><input type="text" id="new_phone" class="ctrl-input text-sm" placeholder="الهاتف" required><input type="text" id="new_hours" class="ctrl-input text-sm" placeholder="أوقات العمل" required><input type="text" id="new_extra" class="ctrl-input text-sm" placeholder="تفاصيل إضافية"><input type="text" id="new_emergency" class="ctrl-input text-sm" placeholder="رقم الطوارئ (للمشافي)"><input type="text" id="new_image_url" class="ctrl-input text-sm" placeholder="رابط الصورة (URL)"><textarea id="new_desc" class="ctrl-input text-sm col-span-2" placeholder="وصف" rows="2" required></textarea><button type="submit" class="col-span-1 sm:col-span-2 py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--accent)"><i class="fas fa-save ml-1"></i> حفظ</button></form></div> <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-list ml-2"></i> المنشآت (${allData.length})</h4><div class="flex flex-col gap-2 max-h-96 overflow-y-auto">${listHtml}</div></div> <button onclick="seedDatabase()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: var(--gold); color: var(--gold)"><i class="fas fa-database ml-2"></i> ترحيل البيانات الافتراضية</button> <button onclick="seedMedicalTips()" class="py-2.5 rounded-xl border border-dashed font-semibold text-sm" style="border-color: #EC4899; color: #EC4899"><i class="fas fa-lightbulb ml-2"></i> ترحيل 30 نصيحة طبية للفايربايس</button> </div>`, '#073D2E'); 
         
-            
-                    // جلب وعرض الإعلانات داخل لوحة الإدارة
-                const annSnap = await getDocs(collection(db, 'announcements'));
-                const annList = document.getElementById('adminAnnouncementList');
-                if (annSnap.empty) {
-                    annList.innerHTML = '<p class="text-center text-gray-400 text-sm py-2">لا توجد إعلانات حالياً.</p>';
-                } else {
-                    annList.innerHTML = annSnap.docs.map(doc => {
-                        const ann = doc.data();
-                        return `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)">
-                            <div class="text-xs truncate flex-1">${ann.text}</div>
-                            <div class="flex gap-1 mr-2">
-                                <button onclick="toggleAnnouncement('${doc.id}', ${!ann.isActive})" class="px-2 py-1 rounded text-xs ${ann.isActive ? 'bg-green-500 text-white' : 'bg-gray-200'}">${ann.isActive ? 'مفعّل' : 'معطّل'}</button>
-                                <button onclick="deleteAnnouncement('${doc.id}')" class="px-2 py-1 rounded text-xs bg-red-500 text-white"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>`;
-                    }).join('');
-                }
-        }
+            }
         
     window.seedDatabase = async () => { try { for (const item of seedData) { let dataToAdd = { ...item }; if (dataToAdd.type === 'doctor' || dataToAdd.type === 'clinic') { dataToAdd.bookingPass = generateUniqueId(); } if (dataToAdd.type === 'pharmacy') { dataToAdd.pharmacyPass = generateUniqueId(); } const docId = dataToAdd.name.replace(/\s/g, '_'); await setDoc(doc(db, 'listings', docId), dataToAdd, { merge: true }); } showToast('تم الترحيل!'); } catch (e) { showToast('خطأ في الترحيل'); } }
 
@@ -2615,39 +2601,67 @@ let currentFollowupBookingId = null;
         try { await updateDoc(doc(db, 'medicine_requests', id), { notes: notes }); showToast('تم حفظ الملاحظة'); } catch (e) { showToast('خطأ في الحفظ'); }
     }
 
-    // استماع للإعلانات
-    onSnapshot(query(collection(db, 'announcements'), where('isActive', '==', true)), (snapshot) => {
+        // استماع لجميع الإعلانات لتحديث الصفحة الرئيسية ولوحة الإدارة تلقائياً
+    onSnapshot(collection(db, 'announcements'), (snapshot) => {
         const navbar = document.getElementById('navbar');
         const annBar = document.getElementById('topAnnouncementBar');
         const homeSection = document.getElementById('home');
-        if (!annBar || !navbar || !homeSection) return;
         
-        if (!snapshot.empty) {
-            // استخراج الإعلانات وترتيبها حسب الأحدث (createdAt)
-            const anns = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            const ann = anns.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))[0];
-            currentAnnouncement = ann;
-            
-            document.getElementById('announcementText').innerText = ann.text;
-            const linkEl = document.getElementById('announcementLink');
-            
-            // إظهار أو إخفاء الزر بناءً على وجود الرابط
-            if (ann.link) {
-                linkEl.href = ann.link;
-                linkEl.innerText = ann.linkText || 'اضغط هنا';
-                linkEl.style.display = 'inline'; // إظهار الزر
+        // 1. تحديث الشريط العلوي (أحدث إعلان مفعّل فقط)
+        if (annBar && navbar && homeSection) {
+            const activeAnns = snapshot.docs.filter(d => d.data().isActive).map(d => ({ id: d.id, ...d.data() }));
+            if (activeAnns.length > 0) {
+                const ann = activeAnns.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''))[0];
+                currentAnnouncement = ann;
+                
+                const textEl = document.getElementById('announcementText');
+                textEl.innerText = ann.text;
+                const linkEl = document.getElementById('announcementLink');
+                
+                if (ann.link) {
+                    // تصحيح الرابط إذا لم يبدأ بـ http
+                    let url = ann.link;
+                    if (!url.match(/^https?:\/\//i)) {
+                        url = 'https://' + url;
+                    }
+                    linkEl.href = url;
+                    linkEl.innerText = ann.linkText || 'اضغط هنا';
+                    linkEl.style.display = 'inline';
+                    textEl.classList.add('no-marquee'); // إيقاف الحركة لظهور الرابط بوضوح
+                } else {
+                    linkEl.style.display = 'none';
+                    textEl.classList.remove('no-marquee'); // إعادة الحركة
+                }
+                
+                annBar.classList.remove('hidden');
+                navbar.style.top = '36px';
+                homeSection.style.paddingTop = '11rem';
             } else {
-                linkEl.style.display = 'none'; // إخفاء الزر تماماً
+                currentAnnouncement = null;
+                annBar.classList.add('hidden');
+                navbar.style.top = '0px';
+                homeSection.style.paddingTop = '6rem';
             }
-            
-            annBar.classList.remove('hidden');
-            navbar.style.top = '36px'; // دفع الناف بار للأسفل
-            homeSection.style.paddingTop = '11rem'; // دفع محتوى الصفحة للأسفل
-        } else {
-            currentAnnouncement = null;
-            annBar.classList.add('hidden');
-            navbar.style.top = '0px';
-            homeSection.style.paddingTop = '6rem';
+        }
+
+        // 2. تحديث قائمة الإعلانات في لوحة الإدارة (تلقائياً دون فتح/إغلاق)
+        const annList = document.getElementById('adminAnnouncementList');
+        if (annList) {
+            if (snapshot.empty) {
+                annList.innerHTML = '<p class="text-center text-gray-400 text-sm py-2">لا توجد إعلانات حالياً.</p>';
+            } else {
+                const sortedDocs = snapshot.docs.sort((a, b) => ((b.data().createdAt || '').localeCompare(a.data().createdAt || '')));
+                annList.innerHTML = sortedDocs.map(doc => {
+                    const ann = doc.data();
+                    return `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)">
+                        <div class="text-xs truncate flex-1">${ann.text}</div>
+                        <div class="flex gap-1 mr-2">
+                            <button onclick="toggleAnnouncement('${doc.id}', ${!ann.isActive})" class="px-2 py-1 rounded text-xs ${ann.isActive ? 'bg-green-500 text-white' : 'bg-gray-200'}">${ann.isActive ? 'مفعّل' : 'معطّل'}</button>
+                            <button onclick="deleteAnnouncement('${doc.id}')" class="px-2 py-1 rounded text-xs bg-red-500 text-white"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
         }
     });
 
