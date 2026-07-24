@@ -1402,7 +1402,7 @@ let currentFollowupBookingId = null;
         renderHealthDashboard(snap.docs[0].data());
     }
 
-    window.renderHealthDashboard = (data) => {
+        window.renderHealthDashboard = (data) => {
         openCtrlPanel(`الملف الصحي: ${data.fullName}`, `
             <div class="flex flex-col gap-5">
                 <div class="bg-white p-6 rounded-2xl border-2 flex flex-col items-center" style="border-color: #EC4899;">
@@ -1419,6 +1419,19 @@ let currentFollowupBookingId = null;
                     <div class="col-span-1 sm:col-span-2"><label class="text-xs font-bold text-gray-500">الأمراض المزمنة</label><input type="text" id="hfDiseases" class="ctrl-input" value="${data.diseases || ''}" placeholder="مثال: سكري، ضغط"></div>
                     <div class="col-span-1 sm:col-span-2"><label class="text-xs font-bold text-gray-500">الحساسية (دوائية/غذائية)</label><input type="text" id="hfAllergies" class="ctrl-input" value="${data.allergies || ''}" placeholder="مثال: بنسلين، مكسرات"></div>
                     <div class="col-span-1 sm:col-span-2"><label class="text-xs font-bold text-gray-500">الأدوية الحالية</label><input type="text" id="hfMedications" class="ctrl-input" value="${data.medications || ''}"></div>
+                    
+                    <!-- سجل الأسنان -->
+                    <div class="col-span-1 sm:col-span-2 mt-2 p-3 rounded-xl border" style="border-color: #FED7AA; background: #FFF7ED;">
+                        <label class="text-xs font-bold text-orange-700 flex items-center gap-1"><i class="fas fa-tooth"></i> سجل الأسنان (يُقرأ فقط من قبل طبيب الأسنان)</label>
+                        <textarea id="hfDental" class="ctrl-input mt-2" rows="2" placeholder="عمليات سابقة، تقويم، حساسية معينة...">${data.dental || ''}</textarea>
+                    </div>
+
+                    <!-- سجل العيون -->
+                    <div class="col-span-1 sm:col-span-2 p-3 rounded-xl border" style="border-color: #BFDBFE; background: #EFF6FF;">
+                        <label class="text-xs font-bold text-blue-700 flex items-center gap-1"><i class="fas fa-eye"></i> سجل العيون (يُقرأ فقط من قبل طبيب العيون)</label>
+                        <textarea id="hfEye" class="ctrl-input mt-2" rows="2" placeholder="وصفة النظارة، ضغط العين، عمليات ليزك...">${data.eye || ''}</textarea>
+                    </div>
+
                     <div><label class="text-xs font-bold text-gray-500">اسم جهة الطوارئ</label><input type="text" id="hfEmergencyName" class="ctrl-input" value="${data.emergencyName || ''}"></div>
                     <div><label class="text-xs font-bold text-gray-500">هاتف جهة الطوارئ</label><input type="tel" id="hfEmergencyPhone" class="ctrl-input" value="${data.emergencyPhone || ''}"></div>
                     <button type="submit" class="col-span-1 sm:col-span-2 py-3 rounded-xl text-white font-bold text-sm" style="background: #EC4899"><i class="fas fa-save ml-2"></i> حفظ التحديثات</button>
@@ -1431,13 +1444,15 @@ let currentFollowupBookingId = null;
         new QRCode(qrContainer, { text: currentHealthFileId, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
     }
 
-    window.saveHealthProfile = async (e) => {
+        window.saveHealthProfile = async (e) => {
         e.preventDefault();
         const data = {
             fullName: document.getElementById('hfFullName').value, age: document.getElementById('hfAge').value,
             gender: document.getElementById('hfGender').value, bloodType: document.getElementById('hfBloodType').value,
             weight: document.getElementById('hfWeight').value, diseases: document.getElementById('hfDiseases').value,
             allergies: document.getElementById('hfAllergies').value, medications: document.getElementById('hfMedications').value,
+            dental: document.getElementById('hfDental').value, // سجل الأسنان
+            eye: document.getElementById('hfEye').value, // سجل العيون
             emergencyName: document.getElementById('hfEmergencyName').value, emergencyPhone: document.getElementById('hfEmergencyPhone').value,
             updatedAt: new Date().toISOString()
         };
@@ -1447,7 +1462,8 @@ let currentFollowupBookingId = null;
     window.logoutHealthFile = () => { localStorage.removeItem('healthFileId'); currentHealthFileId = null; closeCtrlPanel(); showToast('تم تسجيل الخروج'); }
 
     // === DOCTOR QR SCANNER ===
-    window.openDoctorScanner = () => {
+        window.openDoctorScanner = (docId) => {
+        const docData = allData.find(d => d.id === docId) || {};
         openCtrlPanel('قارئ الملفات الصحية للمريض', `
             <div class="flex flex-col gap-4">
                 <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-blue-800 text-sm flex items-center gap-3">
@@ -1461,18 +1477,37 @@ let currentFollowupBookingId = null;
         const html5QrCode = new Html5Qrcode("qr-reader");
         html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
             (decodedText) => {
-                html5QrCode.stop().then(() => { fetchPatientHealthFile(decodedText); }).catch(err => console.log(err));
+                html5QrCode.stop().then(() => { fetchPatientHealthFile(decodedText, docData); }).catch(err => console.log(err));
             },
             (errorMessage) => { /* ignore */ }
         ).catch(err => { showToast("تعذر الوصول للكاميرا. يرجى السماح بالأذونات."); });
     }
 
-    window.fetchPatientHealthFile = async (userId) => {
+        window.fetchPatientHealthFile = async (userId, doctorData) => {
         try {
             const docSnap = await getDoc(doc(db, 'health_files', userId));
             if (docSnap.exists()) {
                 const p = docSnap.data();
                 closeCtrlPanel();
+                
+                // التحقق من تخصص الطبيب لعرض السجل المناسب
+                let specializedRecordHtml = '';
+                if (doctorData && doctorData.specialty) {
+                    if (doctorData.specialty.includes('أسنان')) {
+                        specializedRecordHtml = `
+                            <div class="p-3 rounded-xl border" style="border-color: #FED7AA; background: #FFF7ED;">
+                                <div class="text-xs text-orange-700 mb-1 font-bold flex items-center gap-1"><i class="fas fa-tooth"></i> سجل الأسنان الخاص بالمريض</div>
+                                <div class="font-semibold text-sm text-gray-700 whitespace-pre-line">${p.dental || 'لم يقم المريض بإدخال سجل أسنان بعد.'}</div>
+                            </div>`;
+                    } else if (doctorData.specialty.includes('عين') || doctorData.specialty.includes('عيون')) {
+                        specializedRecordHtml = `
+                            <div class="p-3 rounded-xl border" style="border-color: #BFDBFE; background: #EFF6FF;">
+                                <div class="text-xs text-blue-700 mb-1 font-bold flex items-center gap-1"><i class="fas fa-eye"></i> سجل العيون الخاص بالمريض</div>
+                                <div class="font-semibold text-sm text-gray-700 whitespace-pre-line">${p.eye || 'لم يقم المريض بإدخال سجل عيون بعد.'}</div>
+                            </div>`;
+                    }
+                }
+
                 document.getElementById('modalContent').innerHTML = `
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-6">
@@ -1491,6 +1526,9 @@ let currentFollowupBookingId = null;
                             <div class="p-3 rounded-xl border" style="border-color: var(--border)"><div class="text-xs text-gray-500 mb-1">الأمراض المزمنة</div><div class="font-semibold">${p.diseases || 'لا يوجد'}</div></div>
                             <div class="p-3 rounded-xl border" style="border-color: var(--border)"><div class="text-xs text-gray-500 mb-1">الحساسية الدوائية أو الغذائية</div><div class="font-semibold text-red-600">${p.allergies || 'لا يوجد'}</div></div>
                             <div class="p-3 rounded-xl border" style="border-color: var(--border)"><div class="text-xs text-gray-500 mb-1">الأدوية الحالية</div><div class="font-semibold">${p.medications || 'لا يوجد'}</div></div>
+                            
+                            ${specializedRecordHtml}
+                            
                             <div class="p-3 rounded-xl bg-green-50 border border-green-200"><div class="text-xs text-green-700 mb-1">جهة طوارئ للتواصل</div><div class="font-semibold">${p.emergencyName || ''} - <span dir="ltr">${p.emergencyPhone || ''}</span></div></div>
                         </div>
                     </div>`;
@@ -2170,7 +2208,7 @@ let currentFollowupBookingId = null;
             if (b.chat && b.chat.length > 0) { chatHtml = b.chat.map(msg => `<div class="text-xs p-2 rounded-lg mb-1 ${msg.sender === 'doctor' ? 'bg-blue-100 text-left' : 'bg-gray-100 text-right'}">${msg.text}</div>`).join(''); }
             return `<div class="flex flex-col p-3 rounded-lg border mb-3" style="border-color: var(--border)"><div class="flex items-center justify-between mb-2"><div><span class="text-sm font-bold">${b.name}</span><br><span class="text-xs" style="color: var(--muted)">${b.dayStr}</span></div><div>${statusBadge}<span class="text-[10px] text-gray-400">مرجع: #${b.ref}</span></div></div><div class="flex items-center justify-between border-t pt-2 mb-2" style="border-color: var(--border)"><a href="tel:${b.phone}" class="text-xs text-blue-600">${b.phone}</a><div class="flex gap-1">${actionButtons}</div></div><div class="border-t pt-2" style="border-color: var(--border)"><div class="text-xs font-bold text-gray-600 mb-1">المحادثة:</div><div class="max-h-32 overflow-y-auto mb-2 bg-gray-50 p-2 rounded-lg">${chatHtml || '<span class="text-xs text-gray-400">لا توجد رسائل</span>'}</div><div class="flex gap-1"><input type="text" id="docChat_${b.id}" placeholder="اكتب ردك للمريض..." class="ctrl-input text-sm py-1 flex-1"><button onclick="sendDocMessage('${b.id}')" class="text-xs text-white px-3 py-1 rounded bg-blue-500"><i class="fas fa-paper-plane"></i></button></div></div></div>`; 
         }).join('');
-        openCtrlPanel(`لوحة: ${doc.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)"><img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p></div></div><button onclick="openDoctorScanner()" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2" style="background: #0D9488"><i class="fas fa-qrcode"></i> قراءة الملف الصحي للمريض (QR)</button><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-calendar-day ml-2" style="color: var(--doctor)"></i> طلبات المواعيد (${docBookings.length})</h4><div class="flex flex-col gap-2">${bookingsListHtml}</div></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-cog ml-2"></i> أيام العمل</h4><div class="mb-4 grid grid-cols-4 sm:grid-cols-7 gap-2">${daysCheckboxes}</div><button onclick="saveDoctorSettings('${doc.id}')" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--doctor)">حفظ</button></div></div>`, '#2563EB'); 
+        openCtrlPanel(`لوحة: ${doc.name}`, `<div class="flex flex-col gap-5"><div class="bg-white p-5 rounded-xl border flex items-center gap-4" style="border-color: var(--border)"><img src="${doc.image}" class="w-20 h-20 rounded-2xl object-cover"><div><h3 class="font-bold text-lg">${doc.name}</h3><p class="text-sm" style="color: var(--doctor)">${doc.specialty}</p></div></div><button onclick="openDoctorScanner('${doc.id}')" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2" style="background: #0D9488"><i class="fas fa-qrcode"></i> قراءة الملف الصحي للمريض (QR)</button><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-calendar-day ml-2" style="color: var(--doctor)"></i> طلبات المواعيد (${docBookings.length})</h4><div class="flex flex-col gap-2">${bookingsListHtml}</div></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-cog ml-2"></i> أيام العمل</h4><div class="mb-4 grid grid-cols-4 sm:grid-cols-7 gap-2">${daysCheckboxes}</div><button onclick="saveDoctorSettings('${doc.id}')" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--doctor)">حفظ</button></div></div>`, '#2563EB'); 
     }
 
     window.acceptBooking = async (bookingId) => { 
