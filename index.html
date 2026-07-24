@@ -2284,7 +2284,7 @@ let currentFollowupBookingId = null;
     </button>
 </div>
 <button onclick="openDoctorScanner('${doc.id}')" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 mt-2" style="background: #0D9488"><i class="fas fa-qrcode"></i> قراءة الملف الصحي للمريض (QR)</button>
-<button onclick="openAskDoctor()" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 mb-3" style="background: #0EA5E9"><i class="fas fa-comments"></i> الإجابة على أسئلة المرضى</button><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-calendar-day ml-2" style="color: var(--doctor)"></i> طلبات المواعيد (${docBookings.length})</h4><div class="flex flex-col gap-2">${bookingsListHtml}</div></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-cog ml-2"></i> أيام العمل</h4><div class="mb-4 grid grid-cols-4 sm:grid-cols-7 gap-2">${daysCheckboxes}</div><button onclick="saveDoctorSettings('${doc.id}')" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--doctor)">حفظ</button></div></div>`, '#2563EB'); 
+<button onclick="openAskDoctor('${doc.name}')" class="w-full py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 mb-3" style="background: #0EA5E9"><i class="fas fa-comments"></i> الإجابة على أسئلة المرضى</button><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-calendar-day ml-2" style="color: var(--doctor)"></i> طلبات المواعيد (${docBookings.length})</h4><div class="flex flex-col gap-2">${bookingsListHtml}</div></div><div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)"><h4 class="font-bold mb-4 text-sm"><i class="fas fa-cog ml-2"></i> أيام العمل</h4><div class="mb-4 grid grid-cols-4 sm:grid-cols-7 gap-2">${daysCheckboxes}</div><button onclick="saveDoctorSettings('${doc.id}')" class="w-full py-2.5 rounded-xl text-white font-semibold text-sm" style="background: var(--doctor)">حفظ</button></div></div>`, '#2563EB'); 
     }
 
     window.acceptBooking = async (bookingId) => { 
@@ -2728,7 +2728,13 @@ let currentFollowupBookingId = null;
     let allQuestions = [];
     let unsubscribeQuestions = null;
 
-    window.openAskDoctor = () => {
+        // === 1. Ask a Doctor Q&A (اسأل طبيب الرحيبة) ===
+    let allQuestions = [];
+    let unsubscribeQuestions = null;
+
+    window.openAskDoctor = (docName) => {
+        window.tempDoctorName = docName || null; // حفظ اسم الطبيب مؤقتاً
+
         openCtrlPanel('اسأل طبيب الرحيبة', `
             <div class="flex flex-col gap-5">
                 <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 text-sky-800 text-sm flex items-center gap-3">
@@ -2772,9 +2778,8 @@ let currentFollowupBookingId = null;
             return;
         }
 
-        // التحقق إذا كنا في وضع الطبيب (اللوحة مفتوحة باسم الطبيب)
-        const ctrlTitle = document.getElementById('ctrlTitle')?.textContent || '';
-        const isDoctorMode = ctrlTitle.includes('لوحة:');
+        // التحقق من المتغير المؤقت لنعرف إذا كان المستخدم طبيباً
+        const isDoctorMode = window.tempDoctorName ? true : false;
 
         container.innerHTML = allQuestions.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).map(q => {
             let answersHtml = '';
@@ -2813,6 +2818,42 @@ let currentFollowupBookingId = null;
                 </div>
             `;
         }).join('');
+    }
+
+    window.submitQuestion = async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('qaName').value.trim() || 'مجهول';
+        const category = document.getElementById('qaCategory').value;
+        const text = document.getElementById('qaText').value.trim();
+        if (!text) return;
+
+        try {
+            await addDoc(collection(db, 'medical_questions'), {
+                name, category, text, status: 'open', answers: [], createdAt: new Date().toISOString()
+            });
+            showToast('تم نشر سؤالك بنجاح!');
+            e.target.reset();
+        } catch (err) { showToast('حدث خطأ أثناء النشر'); }
+    }
+
+    window.submitAnswer = async (qId) => {
+        const input = document.getElementById(`ansText_${qId}`);
+        const text = input.value.trim();
+        if (!text) return;
+
+        // استخدام اسم الطبيب المحفوظ مؤقتاً
+        const docName = window.tempDoctorName || 'طبيب';
+        
+        try {
+            const docRef = doc(db, 'medical_questions', qId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const currentAnswers = docSnap.data().answers || [];
+                currentAnswers.push({ doctorName: docName, text: text, timestamp: new Date().toISOString() });
+                await updateDoc(docRef, { answers: currentAnswers, status: 'answered' });
+                showToast('تم نشر إجابتك!');
+            }
+        } catch (err) { showToast('خطأ في إرسال الإجابة'); }
     }
 
     window.submitQuestion = async (e) => {
