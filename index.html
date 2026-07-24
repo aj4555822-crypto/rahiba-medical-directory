@@ -2155,7 +2155,7 @@ let currentFollowupBookingId = null;
         document.getElementById('adminExtraFields').innerHTML = html;
     }
 
-    window.renderAdminDashboard = async () => { 
+        window.renderAdminDashboard = async () => { 
         const announcementsHtml = `
             <div class="bg-white p-5 rounded-xl border" style="border-color: var(--border)">
                 <h4 class="font-bold mb-4 text-sm flex items-center gap-2" style="font-family: 'Noto Kufi Arabic'"><i class="fas fa-bullhorn text-blue-600"></i> إدارة الشريط الإعلاني العلوي</h4>
@@ -2170,18 +2170,6 @@ let currentFollowupBookingId = null;
                 </div>
             </div>
         `;
-                <div class="bg-white p-4 rounded-xl border flex items-center justify-between" style="border-color: ${doc.isOpen === true ? '#10B981' : '#EF4444'}; border-width: 2px;">
-    <div>
-        <div class="text-xs text-gray-500">حالة العيادة حالياً</div>
-        <div class="font-bold text-lg flex items-center gap-2 ${doc.isOpen === true ? 'text-green-600' : 'text-red-500'}">
-            <i class="fas ${doc.isOpen === true ? 'fa-door-open' : 'fa-door-closed'}"></i>
-            ${doc.isOpen === true ? 'مفتوح الآن' : 'مغلقة الآن'}
-        </div>
-    </div>
-    <button onclick="toggleOpenStatus('${doc.id}', ${!doc.isOpen})" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-all ${doc.isOpen === true ? 'bg-red-500 hover:bg-red-600' : 'bg-green-600 hover:bg-green-700'}">
-        ${doc.isOpen === true ? 'إغلاق العيادة' : 'فتح العيادة'}
-    </button>
-</div>
         let listHtml = allData.map(item => `<div class="flex items-center justify-between p-3 rounded-xl border bg-white" style="border-color: var(--border)"><div class="flex flex-col gap-1"><div class="flex items-center gap-3"><span class="badge badge-${item.type}">${item.type}</span><span class="font-semibold text-sm">${item.name}</span></div>${item.bookingPass ? `<span class="text-[11px] text-gray-500">رمز الطبيب: <span class="font-mono font-bold text-blue-600">${item.bookingPass}</span></span>` : ''}${item.pharmacyPass ? `<span class="text-[11px] text-gray-500">رمز الصيدلية: <span class="font-mono font-bold text-green-600">${item.pharmacyPass}</span></span>` : ''}</div><div class="flex gap-2 items-center">${['doctor', 'clinic', 'pharmacy'].includes(item.type) ? `<button onclick="toggleOpenStatus('${item.id}', ${!item.isOpen})" class="text-[11px] px-3 py-1.5 rounded-lg font-bold border transition-all ${item.isOpen === true ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' : item.isOpen === false ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100' : 'bg-gray-50 text-gray-500 border-gray-200'}"><i class="fas ${item.isOpen === true ? 'fa-door-open' : 'fa-door-closed'} ml-1"></i> ${item.isOpen === true ? 'مفتوح' : item.isOpen === false ? 'مغلق' : 'غير محدد'}</button>` : ''}<button onclick="editFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue/50"><i class="fas fa-edit"></i></button><button onclick="deleteFacility('${item.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50"><i class="fas fa-trash"></i></button></div></div>`).join(''); 
         let bloodHtml = bloodRequests.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد استغاثات حالياً.</p>' : bloodRequests.map(b => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><span class="blood-type-badge text-sm py-1 px-3">${b.bloodType}</span><div><div class="text-sm font-semibold">${b.patientName}</div><div class="text-xs text-gray-500">${b.hospital}</div></div></div><button onclick="resolveBloodRequest('${b.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">إنهاء الطلب</button></div>`).join('');
         let medDonHtml = medicineDonations.length === 0 ? '<p class="text-center py-4 text-gray-400 text-sm">لا توجد أدوية مُتبرع بها حالياً.</p>' : medicineDonations.map(m => `<div class="flex items-center justify-between p-2 rounded-lg border" style="border-color: var(--border)"><div class="flex items-center gap-3"><i class="fas fa-pills text-green-600"></i><div><div class="text-sm font-semibold">${m.medicineName} (${m.quantity})</div><div class="text-xs text-gray-500">ينتهي: ${m.expiryDate} | المتبرع: ${m.donorName}</div></div></div><button onclick="resolveMedicineDonation('${m.id}')" class="text-xs text-white px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 transition-colors">حذف/إنهاء</button></div>`).join('');
